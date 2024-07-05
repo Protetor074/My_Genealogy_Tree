@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Drzewo Genealogiczne</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+    <h1>Drzewo Genealogiczne: {{ person[1] }} {{ person[2] }}</h1>
+    <div id="tree-container"></div>
+
+    <script>
+        const data = {{ tree_data|safe }};
+
+        const width = 960;
+        const height = 500;
+
+        const treeLayout = d3.tree().size([width, height]);
+
+        const root = d3.hierarchy(data);
+
+        treeLayout(root);
+
+        const svg = d3.select("#tree-container").append("svg")
+            .attr("width", width + 200)
+            .attr("height", height + 200)
+            .append("g")
+            .attr("transform", "translate(100, 100)");
+
+        svg.selectAll('line')
+            .data(root.links())
+            .enter()
+            .append('line')
+            .attr('x1', d => d.source.x)
+            .attr('y1', d => d.source.y)
+            .attr('x2', d => d.target.x)
+            .attr('y2', d => d.target.y)
+            .attr('stroke', 'black');
+
+        svg.selectAll('circle')
+            .data(root.descendants())
+            .enter()
+            .append('circle')
+            .attr('cx', d => d.x)
+            .attr('cy', d => d.y)
+            .attr('r', 5);
+
+        svg.selectAll('text')
+            .data(root.descendants())
+            .enter()
+            .append('text')
+            .attr('x', d => d.x + 10)
+            .attr('y', d => d.y + 3)
+            .text(d => d.data.name);
+    </script>
+</body>
+</html>
+

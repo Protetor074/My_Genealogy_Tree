@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_add_person.css') }}">
+    <title>Modyfikuj Dane Osoby</title>
+</head>
+<body>
+<div class="container">
+    <h1>Modyfikuj Dane Osoby</h1>
+    <form action="{{ url_for('modify_person_data', person_id=person.id) }}" method="post" enctype="multipart/form-data">
+        <label for="imie">Imię:</label>
+        <input type="text" id="imie" name="imie" value="{{ person.imie }}" required>
+
+        <label for="nazwisko">Nazwisko:</label>
+        <input type="text" id="nazwisko" name="nazwisko" value="{{ person.nazwisko }}" required>
+
+        <label for="plec">Płeć:</label>
+        <select id="plec" name="plec" required>
+            <option value="Mężczyzna" {% if person.plec == "Mężczyzna" %}selected{% endif %}>Mężczyzna</option>
+            <option value="Kobieta" {% if person.plec == "Kobieta" %}selected{% endif %}>Kobieta</option>
+            <option value="Inna" {% if person.plec == "Inna" %}selected{% endif %}>Inna</option>
+        </select>
+
+        <label for="data_urodzenia">Data urodzenia:</label>
+        <input type="date" id="data_urodzenia" name="data_urodzenia" value="{{ person.data_urodzenia }}" required>
+
+        <label for="data_slubu">Data ślubu:</label>
+        <input type="date" id="data_slubu" name="data_slubu" value="{{ person.data_slubu }}">
+
+        <label for="data_smierci">Data śmierci:</label>
+        <input type="date" id="data_smierci" name="data_smierci" value="{{ person.data_smierci }}">
+
+        <label for="zdjecie">Zdjęcie (lokalne):</label>
+        <input type="file" id="zdjecie" name="zdjecie" accept="image/*">
+
+        <button type="submit">Modyfikuj Dane</button>
+    </form>
+
+    <form action="{{ url_for('remove_person_image', person_id=person.id) }}" method="post">
+        <button type="submit" class="remove-button">Usuń zdjęcie</button>
+    </form>
+
+    <a href="{{ url_for('person', person_id=person.id) }}" class="back-button">Wróć do profilu</a>
+</div>
+</body>
+</html>

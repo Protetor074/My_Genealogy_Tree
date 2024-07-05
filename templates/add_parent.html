@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_add_person.css') }}">
+    <title>Dodaj Rodzica</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Dodaj Rodzica</h1>
+        <form action="{{ url_for('add_parent', person_id=person.id) }}" method="post" enctype="multipart/form-data">
+            <h2>Ojciec</h2>
+            <label for="imie_ojca">Imię:</label>
+            <input type="text" id="imie_ojca" name="imie_ojca">
+
+            <label for="nazwisko_ojca_rodowe">Nazwisko:</label>
+            <input type="text" id="nazwisko_ojca" name="nazwisko_ojca">
+
+            <label for="data_urodzenia_ojca">Data urodzenia:</label>
+            <input type="date" id="data_urodzenia_ojca" name="data_urodzenia_ojca">
+
+            <label for="data_slubu_ojca">Data ślubu:</label>
+            <input type="date" id="data_slubu_ojca" name="data_slubu_ojca">
+
+            <label for="data_smierci_ojca">Data śmierci:</label>
+            <input type="date" id="data_smierci_ojca" name="data_smierci_ojca">
+
+            <label for="zdjecie_ojca">Zdjęcie (lokalne):</label>
+            <input type="file" id="zdjecie_ojca" name="zdjecie_ojca" accept="image/*">
+
+            <h2>Matka</h2>
+            <label for="imie_matki">Imię:</label>
+            <input type="text" id="imie_matki" name="imie_matki">
+
+            <label for="nazwisko_matki_rodowe">Nazwisko:</label>
+            <input type="text" id="nazwisko_matki" name="nazwisko_matki">
+
+            <label for="data_urodzenia_matki">Data urodzenia:</label>
+            <input type="date" id="data_urodzenia_matki" name="data_urodzenia_matki">
+
+            <label for="data_slubu_matki">Data ślubu:</label>
+            <input type="date" id="data_slubu_matki" name="data_slubu_matki">
+
+            <label for="data_smierci_matki">Data śmierci:</label>
+            <input type="date" id="data_smierci_matki" name="data_smierci_matki">
+
+            <label for="zdjecie_matki">Zdjęcie (lokalne):</label>
+            <input type="file" id="zdjecie_matki" name="zdjecie_matki" accept="image/*">
+
+            <button type="submit">Dodaj Rodziców</button>
+        </form>
+        <a href="{{ url_for('person', person_id=person.id) }}" class="back-button">Wróć do profilu</a>
+    </div>
+</body>
+</html>

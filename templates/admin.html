@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_admin.css') }}">
+    <title>Panel Administratora</title>
+    <script>
+        async function generateUniversalCode() {
+            const response = await fetch('/generate_universal_code', {method: 'POST'});
+            const data = await response.json();
+            document.getElementById('universal-code').innerText = 'Uniwersalny kod: ' + data.code;
+        }
+
+        async function generateTemporaryCode() {
+            const response = await fetch('/generate_temporary_code', {method: 'POST'});
+            const data = await response.json();
+            alert('Wygenerowany kod tymczasowy: ' + data.code);
+            location.reload();
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <a href="{{ url_for('user_page') }}" class="back-button">Wróć do profilu</a>
+        <h1>Panel Administratora</h1>
+        <button onclick="generateUniversalCode()">Generuj Uniwersalny Kod</button>
+        <p id="universal-code">Uniwersalny kod: {{ universal_key[0][0] if universal_key else 'Brak' }}</p>
+        <button onclick="generateTemporaryCode()">Generuj Tymczasowy Kod</button>
+
+        <h2>Aktualne klucze tymczasowe</h2>
+        <table>
+            <tr>
+                <th>Klucz</th>
+                <th>Poziom</th>
+                <th>Data Wygaśnięcia</th>
+                <th>W użyciu</th>
+                <th>Utworzeony przez</th>
+            </tr>
+            {% for key in keys %}
+                <tr>
+                    <td>{{ key[0] }}</td>
+                    <td>{{ key[1] }}</td>
+                    <td>{% if key[2] == None  %}-{% else %} {{  key[2] }} {% endif %}</td>
+                    <td>{% if key[3] == True  %}TAK{% else %}NIE{% endif %}</td>
+                    <td>{{ key[4] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <h2>Użytkownicy korzystający z kluczy tymczasowych</h2>
+        <table>
+            <tr>
+                <th>Nazwa Użytkownika</th>
+                <th>ID</th>
+                <th>Klucz</th>
+                <th>Poziom uprawnień</th>
+            </tr>
+            {% for user in users_with_temp_keys %}
+                <tr>
+                    <td>{{ user[0] }}</td>
+                    <td>{{ user[1] }}</td>
+                    <td>{{ user[2] }}</td>
+                    <td>{{ user[3] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <h2>Lista zalogowanych użytkowników</h2>
+        <table>
+            <tr>
+                <th>Nazwa Użytkownika</th>
+                <th>Ostatnie logowanie</th>
+            </tr>
+            {% for user in logged_in_users %}
+                <tr>
+                    <td>{{ user[0] }}</td>
+                    <td>{{ user[1] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

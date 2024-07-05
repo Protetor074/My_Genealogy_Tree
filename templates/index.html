@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_index.css') }}">
+    <title>Moje drzewo genealogiczne</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Moje drzewo genealogiczne</h1>
+            <img src="{{ url_for('static', filename='images/tree.jpg') }}" alt="Drzewo genealogiczne" class="tree-image">
+        </div>
+        <div class="buttons">
+            <a href="{{ url_for('login') }}" class="button">Logowanie</a>
+            <a href="{{ url_for('register') }}" class="button">Rejestracja</a>
+        </div>
+    </div>
+</body>
+</html>

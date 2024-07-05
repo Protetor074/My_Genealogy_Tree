@@ -1,0 +1,457 @@
+/*Wygląd początku*/
+body {
+	transform: scale(0.9);
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Rozdziela elementy */
+    padding: 20px;
+    background-color: #ffffff;
+    width: 100%; /* Dostosowanie szerokości */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+@media (max-width: 768px) {
+    .header {
+        width: 100%;
+        min-width: 900px;
+        max-width: 100%; /* Możesz ustawić maksymalną szerokość, jeśli to konieczne */
+        padding: 10px; /* Dostosowanie paddingu na mniejszych ekranach */
+        margin-left: 1530px; /* Usunięcie marginesu z lewej strony */
+        margin-right: 0; /* Usunięcie marginesu z prawej strony */
+    }
+}
+
+
+.header h1 {
+    font-size: 36px;
+    margin: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%); /* Wyśrodkowanie horyzontalne */
+}
+
+.search-container {
+    position: absolute;
+    right: 20px; /* Odstęp od prawej krawędzi */
+}
+
+.back-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 18px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.back-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.search-container input[type="text"] {
+    width: 200px;
+    padding: 5px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#results-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+#results-container ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#results-container li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+#results-container li a {
+    text-decoration: none;
+    color: #000;
+}
+
+#results-container li:hover {
+    background-color: #f0f0f0;
+}
+
+.picture-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+@media (max-width: 768px) {
+    .picture-container {
+        margin: 10px 0; /* Zmniejszenie marginesu na mniejszych ekranach */
+        margin-left: 1530px; /* Usunięcie marginesu z lewej strony */
+    }
+}
+
+
+        
+.info-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+@media (max-width: 768px) {
+    .info-container {
+        flex-direction: column; /* Układ kolumnowy na mniejszych ekranach */
+        gap: 10px; /* Zmniejszenie odstępów między elementami */
+        margin: 10px 0; /* Zmniejszenie marginesu na mniejszych ekranach */
+        align-items: center; /* Wyśrodkowanie zawartości na mniejszych ekranach */
+        margin-left: 1530px; /* Usunięcie marginesu z lewej strony */
+    }
+}
+
+
+
+.info-box {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+    width: 150px;
+    text-align: center;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+@media (max-width: 768px) {
+    .button-container  {
+        flex-direction: column; /* Układ kolumnowy na mniejszych ekranach */
+        gap: 10px; /* Zmniejszenie odstępów między elementami */
+        margin: 10px 0; /* Zmniejszenie marginesu na mniejszych ekranach */
+        align-items: center; /* Wyśrodkowanie zawartości na mniejszych ekranach */
+        margin-left: 1530px; /* Usunięcie marginesu z lewej strony */
+    }
+}
+
+.parent-button, .child-button, .spouse-button{
+        background-color: #4CAF50; /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+    }
+.modify-button{
+	background-color: #FF0000; /* Green */
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+}
+
+.tree-container {
+    width: 100%;
+    max-width: 2100px;
+    /*display: flex;*/
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 0;
+}
+
+@media (max-width: 768px) {
+    .tree-container {
+        padding: 10px; /* Zmniejszamy padding na małych ekranach */
+        justify-content: center; /* Wyśrodkowanie poziome na małych ekranach */
+        background-color: transparent; /* Usunięcie tła na małych ekranach */
+        box-shadow: none; /* Usunięcie cienia na małych ekranach */
+    }
+}
+
+     
+        
+.tree_children_container {
+    display: flex;
+    justify-content: center; /* Wyśrodkowanie poziome */
+    align-items: center;     /* Wyśrodkowanie pionowe, jeśli potrzebne */
+    width: 100%;             /* Szerokość na 100% kontenera nadrzędnego */
+}
+
+.children-list {
+    display: inline-block; /* Ważne, aby lista była traktowana jak blok o szerokości dopasowanej do zawartości */
+    padding: 0;
+    margin: 0;
+}
+
+.children-list li {
+    list-style-type: none; /* Usuń stylowanie listy */
+    z-index: 9999
+}
+
+/* Tree */
+.tree {
+	display: flex;
+	
+    height: auto; /* Ustawienie wysokości na 1000px */
+    justify-content: center; /* Wyśrodkowanie poziome */
+    align-items: center;     /* Wyśrodkowanie pionowe, jeśli potrzebne */
+}
+
+@media (max-width: 768px) {
+    .tree {
+        min-width: 1900px; /* Minimalna szerokość dla małych ekranów */
+        height: auto;     /* Automatyczna wysokość */
+    }
+}
+
+.tree ul {
+	justify-content: center; /* Wyśrodkowanie poziome */
+    align-items: center;     /* Wyśrodkowanie pionowe, jeśli potrzebne */
+    padding-top: 20px;
+    position: relative;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+    -moz-transition: all 0.5s;
+}
+
+.tree .family {
+    height: auto; /* Ustawienie wysokości na 1000px */
+}
+
+
+.centered-list {
+    display: flex;
+    justify-content: center; /* Wyśrodkowanie poziome elementów listy */
+    padding: 0;
+    list-style-type: none;
+}
+
+/* Person */
+.person {
+	border: 1px solid black;
+	padding: 10px;
+	min-width: 150px;
+	background-color: #FFFFFF;
+	display: inline-block;
+	cursor: pointer;
+}
+
+.person.female {
+	border-color: #F45B69;
+}
+
+.person.male {
+	border-color: #456990;
+}
+
+.person.highlight {
+	background-color: #ADD8E6; /* Jasno niebieski kolor */
+}
+
+.person div {	
+	text-align: center;
+}
+
+.person .name {
+	font-size: 16px;
+}
+
+.person .parentDrop, .person .spouseDrop, .person .childDrop {
+	border: 1px dashed #000000;
+	width: auto;
+	min-width: 400px;
+	min-height: 80px;
+	display: inline-block;
+	vertical-align: top;
+	position: relative;
+	padding-top: 15px;
+}
+
+.person .parentDrop>span,
+.person .spouseDrop>span,
+.person .childDrop>span {
+	position: absolute;
+	top: 2px;
+	left: 2px;
+	font-weight: bold;
+}
+.parentDrop>.person,
+.spouseDrop>.person,
+.childDrop>.person {
+	margin-top: 20px;
+}
+
+/* Tree */
+.tree ul {
+	padding-top: 20px;
+	position: relative;
+	transition: all 0.5s;
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+}
+
+.tree li {
+	display: table-cell;
+	text-align: center;
+	list-style-type: none;
+	position: relative;
+	padding: 20px 5px 0 5px;
+	transition: all 0.5s;
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+}
+
+/*We will use ::before and ::after to draw the connectors*/
+.tree li::before, .tree li::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 50%;
+	border-top: 1px solid #ccc;
+	width: 50%;
+	height: 20px;
+}
+
+.tree li::after {
+	right: auto;
+	left: 50%;
+	border-left: 1px solid #ccc;
+}
+
+/*We need to remove left-right connectors from elements without 
+any siblings*/
+.tree li:only-child::after, .tree li:only-child::before {
+	display: none;
+}
+
+/*Remove space from the top of single children*/
+.tree li:only-child {
+	padding-top: 0;
+}
+
+/*Remove left connector from first child and 
+right connector from last child*/
+.tree li:first-child::before, .tree li:last-child::after {
+	border: 0 none;
+}
+/*Adding back the vertical connector to the last nodes*/
+.tree li:last-child::before {
+	border-right: 1px solid #ccc;
+	border-radius: 0 5px 0 0;
+	-webkit-border-radius: 0 5px 0 0;
+	-moz-border-radius: 0 5px 0 0;
+}
+
+.tree li:first-child::after {
+	border-radius: 5px 0 0 0;
+	-webkit-border-radius: 5px 0 0 0;
+	-moz-border-radius: 5px 0 0 0;
+}
+
+/*Time to add downward connectors from parents*/
+.tree ul ul::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 50%;
+	border-left: 1px solid #ccc;
+	width: 0;
+	height: 20px;
+}
+
+.tree li .parent {
+	transition: all 0.5s;
+	-webkit-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	margin-top: 10px;
+}
+/*Znacznik małżeństwa najwyższego poziomu*/
+.tree li .parent::before {
+    content: '';
+    position: absolute;
+    top: 114px;
+    left: 50%;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    width: 3px;
+    height: 10px;
+}
+.tree li .family {
+	position: relative;
+}
+.tree li .family .spouse {
+	position: absolute;
+	top: 0;
+	left: 50%;
+    margin-left: 95px;
+}
+.tree li .family .spouse::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -10px;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    width: 10px;
+    height: 3px;
+}
+
+/*Zdjęcie*/
+.profile-pic-small {
+	width: 50px;
+	height: 50px;
+	object-fit: cover; /* ensures the image covers the given dimensions */
+}
+        
+  .profile-pic-large {
+            width: 250px;
+            height: 250px;
+            object-fit: cover; /* ensures the image covers the given dimensions */
+            border: 5px solid #ccc; /* gray border */
+            border-radius: 15px; /* rounded corners */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* subtle shadow */
+        }
+
+.profile-pic-bordered {
+	border: 1px solid black; /* 1px border with black color */
+}

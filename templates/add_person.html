@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_add_person.css') }}">
+    <title>Dodaj Osobę</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Dodaj Osobę</h1>
+        <form action="{{ url_for('add_person') }}" method="post" enctype="multipart/form-data">
+            <label for="imie">Imię:</label>
+            <input type="text" id="imie" name="imie" required>
+            
+            <label for="nazwisko">Nazwisko:</label>
+            <input type="text" id="nazwisko" name="nazwisko" required>
+            
+            <label for="plec">Płeć:</label>
+            <select id="plec" name="plec" required>
+                <option value="Mężczyzna">Mężczyzna</option>
+                <option value="Kobieta">Kobieta</option>
+                <option value="Inna">Inna</option>
+            </select>
+
+            <label for="data_urodzenia">Data urodzenia:</label>
+            <input type="date" id="data_urodzenia" name="data_urodzenia" required>
+
+            <label for="data_slubu">Data ślubu:</label>
+            <input type="date" id="data_slubu" name="data_slubu">
+
+            <label for="data_smierci">Data śmierci:</label>
+            <input type="date" id="data_smierci" name="data_smierci">
+
+            <label for="zdjecie">Zdjęcie (lokalne):</label>
+            <input type="file" id="zdjecie" name="zdjecie" accept="image/*">
+
+            <label for="image_url">Zdjęcie (URL):</label>
+            <input type="url" id="image_url" name="image_url">
+            
+            <button type="submit">Dodaj Osobę</button>
+        </form>
+        <a href="{{ url_for('user_page') }}" class="back-button">Wróć do profilu</a>
+    </div>
+</body>
+</html>

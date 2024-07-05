@@ -1,0 +1,1993 @@
+[2024-07-05 10:31:08 +0200] [8994] [INFO] Starting gunicorn 22.0.0
+[2024-07-05 10:31:08 +0200] [8994] [INFO] Listening at: http://192.168.1.108:5000 (8994)
+[2024-07-05 10:31:08 +0200] [8994] [INFO] Using worker: sync
+[2024-07-05 10:31:08 +0200] [8995] [INFO] Booting worker with pid: 8995
+[2024-07-05 10:31:08 +0200] [8996] [INFO] Booting worker with pid: 8996
+[2024-07-05 10:31:08 +0200] [8998] [INFO] Booting worker with pid: 8998
+[2024-07-05 10:31:08 +0200] [8999] [INFO] Booting worker with pid: 8999
+[2024-07-05 10:31:08 +0200] [9000] [INFO] Booting worker with pid: 9000
+[2024-07-05 10:31:08 +0200] [9001] [INFO] Booting worker with pid: 9001
+[2024-07-05 10:31:08 +0200] [9002] [INFO] Booting worker with pid: 9002
+[2024-07-05 10:31:08 +0200] [9003] [INFO] Booting worker with pid: 9003
+[2024-07-05 10:31:08 +0200] [9004] [INFO] Booting worker with pid: 9004
+[2024-07-05 10:31:08 +0200] [9005] [INFO] Booting worker with pid: 9005
+[2024-07-05 10:31:08 +0200] [9006] [INFO] Booting worker with pid: 9006
+[2024-07-05 10:31:08 +0200] [9007] [INFO] Booting worker with pid: 9007
+[2024-07-05 10:31:08 +0200] [9008] [INFO] Booting worker with pid: 9008
+[2024-07-05 10:31:08 +0200] [9009] [INFO] Booting worker with pid: 9009
+[2024-07-05 10:31:08 +0200] [9010] [INFO] Booting worker with pid: 9010
+[2024-07-05 10:31:09 +0200] [9011] [INFO] Booting worker with pid: 9011
+[2024-07-05 10:31:09 +0200] [9012] [INFO] Booting worker with pid: 9012
+[2024-07-05 10:31:09 +0200] [9013] [INFO] Booting worker with pid: 9013
+[2024-07-05 10:31:09 +0200] [9014] [INFO] Booting worker with pid: 9014
+[2024-07-05 10:31:09 +0200] [9015] [INFO] Booting worker with pid: 9015
+[2024-07-05 10:32:21 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:8996)
+[2024-07-05 10:32:21 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9003)
+[2024-07-05 10:32:21 +0200] [9003] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 10:32:21 +0200] [8996] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 10:32:21 +0200] [9003] [INFO] Worker exiting (pid: 9003)
+[2024-07-05 10:32:21 +0200] [8996] [INFO] Worker exiting (pid: 8996)
+[2024-07-05 10:32:21 +0200] [9204] [INFO] Booting worker with pid: 9204
+[2024-07-05 10:32:21 +0200] [9205] [INFO] Booting worker with pid: 9205
+[2024-07-05 11:04:14 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:8995)
+[2024-07-05 11:04:14 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9015)
+[2024-07-05 11:04:14 +0200] [8995] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 11:04:14 +0200] [9015] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 11:04:14 +0200] [8995] [INFO] Worker exiting (pid: 8995)
+[2024-07-05 11:04:14 +0200] [9015] [INFO] Worker exiting (pid: 9015)
+[2024-07-05 11:04:14 +0200] [9935] [INFO] Booting worker with pid: 9935
+[2024-07-05 11:04:14 +0200] [9936] [INFO] Booting worker with pid: 9936
+[2024-07-05 11:05:30 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9007)
+[2024-07-05 11:05:30 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9013)
+[2024-07-05 11:05:30 +0200] [9007] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 11:05:30 +0200] [9013] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 11:05:30 +0200] [9007] [INFO] Worker exiting (pid: 9007)
+[2024-07-05 11:05:30 +0200] [9013] [INFO] Worker exiting (pid: 9013)
+[2024-07-05 11:05:30 +0200] [9987] [INFO] Booting worker with pid: 9987
+[2024-07-05 11:05:30 +0200] [9988] [INFO] Booting worker with pid: 9988
+[2024-07-05 11:06:44 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9002)
+[2024-07-05 11:06:44 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9014)
+[2024-07-05 11:06:44 +0200] [9002] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 11:06:44 +0200] [9014] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 11:06:44 +0200] [9002] [INFO] Worker exiting (pid: 9002)
+[2024-07-05 11:06:44 +0200] [9014] [INFO] Worker exiting (pid: 9014)
+[2024-07-05 11:06:44 +0200] [10032] [INFO] Booting worker with pid: 10032
+[2024-07-05 11:06:44 +0200] [10033] [INFO] Booting worker with pid: 10033
+[2024-07-05 11:07:35 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:8998)
+[2024-07-05 11:07:35 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9988)
+[2024-07-05 11:07:35 +0200] [8998] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 11:07:35 +0200] [9988] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 11:07:35 +0200] [8998] [INFO] Worker exiting (pid: 8998)
+[2024-07-05 11:07:35 +0200] [9988] [INFO] Worker exiting (pid: 9988)
+[2024-07-05 11:07:35 +0200] [10067] [INFO] Booting worker with pid: 10067
+[2024-07-05 11:07:35 +0200] [10068] [INFO] Booting worker with pid: 10068
+[2024-07-05 11:08:27 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:10032)
+[2024-07-05 11:08:27 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:10068)
+[2024-07-05 11:08:27 +0200] [10032] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 11:08:27 +0200] [10068] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 11:08:27 +0200] [10032] [INFO] Worker exiting (pid: 10032)
+[2024-07-05 11:08:27 +0200] [10068] [INFO] Worker exiting (pid: 10068)
+[2024-07-05 11:08:28 +0200] [10104] [INFO] Booting worker with pid: 10104
+[2024-07-05 11:08:28 +0200] [10105] [INFO] Booting worker with pid: 10105
+[2024-07-05 11:20:39 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9009)
+[2024-07-05 11:20:39 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:10104)
+[2024-07-05 11:20:39 +0200] [10104] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 11:20:39 +0200] [9009] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 11:20:39 +0200] [10104] [INFO] Worker exiting (pid: 10104)
+[2024-07-05 11:20:39 +0200] [9009] [INFO] Worker exiting (pid: 9009)
+[2024-07-05 11:20:40 +0200] [10344] [INFO] Booting worker with pid: 10344
+[2024-07-05 11:20:40 +0200] [10345] [INFO] Booting worker with pid: 10345
+[2024-07-05 12:30:28 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9008)
+[2024-07-05 12:30:28 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9011)
+[2024-07-05 12:30:28 +0200] [9008] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 12:30:28 +0200] [9011] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 12:30:28 +0200] [9008] [INFO] Worker exiting (pid: 9008)
+[2024-07-05 12:30:28 +0200] [9011] [INFO] Worker exiting (pid: 9011)
+[2024-07-05 12:30:28 +0200] [11453] [INFO] Booting worker with pid: 11453
+[2024-07-05 12:30:28 +0200] [11454] [INFO] Booting worker with pid: 11454
+[2024-07-05 12:41:02 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:10345)
+[2024-07-05 12:41:02 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:11453)
+[2024-07-05 12:41:02 +0200] [10345] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 12:41:02 +0200] [11453] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 12:41:02 +0200] [10345] [INFO] Worker exiting (pid: 10345)
+[2024-07-05 12:41:02 +0200] [11453] [INFO] Worker exiting (pid: 11453)
+[2024-07-05 12:41:02 +0200] [11622] [INFO] Booting worker with pid: 11622
+[2024-07-05 12:41:02 +0200] [11623] [INFO] Booting worker with pid: 11623
+[2024-07-05 13:28:58 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9012)
+[2024-07-05 13:28:58 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9936)
+[2024-07-05 13:28:58 +0200] [9012] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 13:28:58 +0200] [9936] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 13:28:58 +0200] [9936] [INFO] Worker exiting (pid: 9936)
+[2024-07-05 13:28:58 +0200] [9012] [INFO] Worker exiting (pid: 9012)
+[2024-07-05 13:28:58 +0200] [12407] [INFO] Booting worker with pid: 12407
+[2024-07-05 13:28:58 +0200] [12408] [INFO] Booting worker with pid: 12408
+[2024-07-05 13:29:32 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:8999)
+[2024-07-05 13:29:32 +0200] [8999] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 13:29:32 +0200] [8999] [INFO] Worker exiting (pid: 8999)
+[2024-07-05 13:29:32 +0200] [12433] [INFO] Booting worker with pid: 12433
+[2024-07-05 13:29:48 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9987)
+[2024-07-05 13:29:48 +0200] [9987] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 13:29:48 +0200] [9987] [INFO] Worker exiting (pid: 9987)
+[2024-07-05 13:29:48 +0200] [12444] [INFO] Booting worker with pid: 12444
+[2024-07-05 13:30:20 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9010)
+[2024-07-05 13:30:20 +0200] [9010] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 13:30:20 +0200] [9010] [INFO] Worker exiting (pid: 9010)
+[2024-07-05 13:30:20 +0200] [12470] [INFO] Booting worker with pid: 12470
+[2024-07-05 13:30:36 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:10067)
+[2024-07-05 13:30:36 +0200] [10067] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 13:30:36 +0200] [10067] [INFO] Worker exiting (pid: 10067)
+[2024-07-05 13:30:36 +0200] [12481] [INFO] Booting worker with pid: 12481
+[2024-07-05 13:31:01 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9204)
+[2024-07-05 13:31:01 +0200] [9204] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 13:31:01 +0200] [9204] [INFO] Worker exiting (pid: 9204)
+[2024-07-05 13:31:01 +0200] [12492] [INFO] Booting worker with pid: 12492
+[2024-07-05 13:33:03 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9006)
+[2024-07-05 13:33:03 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:10344)
+[2024-07-05 13:33:03 +0200] [9006] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 13:33:03 +0200] [10344] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 13:33:03 +0200] [9006] [INFO] Worker exiting (pid: 9006)
+[2024-07-05 13:33:03 +0200] [10344] [INFO] Worker exiting (pid: 10344)
+[2024-07-05 13:33:03 +0200] [12570] [INFO] Booting worker with pid: 12570
+[2024-07-05 13:33:03 +0200] [12571] [INFO] Booting worker with pid: 12571
+[2024-07-05 13:38:28 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9001)
+[2024-07-05 13:38:28 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9004)
+[2024-07-05 13:38:28 +0200] [9004] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 13:38:28 +0200] [9001] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 13:38:28 +0200] [9004] [INFO] Worker exiting (pid: 9004)
+[2024-07-05 13:38:28 +0200] [9001] [INFO] Worker exiting (pid: 9001)
+[2024-07-05 13:38:28 +0200] [12757] [INFO] Booting worker with pid: 12757
+[2024-07-05 13:38:28 +0200] [12758] [INFO] Booting worker with pid: 12758
+[2024-07-05 13:41:52 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:10033)
+[2024-07-05 13:41:52 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:12408)
+[2024-07-05 13:41:52 +0200] [10033] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 13:41:52 +0200] [10033] [INFO] Worker exiting (pid: 10033)
+[2024-07-05 13:41:52 +0200] [12408] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 13:41:52 +0200] [12408] [INFO] Worker exiting (pid: 12408)
+[2024-07-05 13:41:52 +0200] [12909] [INFO] Booting worker with pid: 12909
+[2024-07-05 13:41:52 +0200] [12910] [INFO] Booting worker with pid: 12910
+[2024-07-05 13:50:08 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:12481)
+[2024-07-05 13:50:08 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:12757)
+[2024-07-05 13:50:08 +0200] [12757] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 13:50:08 +0200] [12481] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 13:50:08 +0200] [12757] [INFO] Worker exiting (pid: 12757)
+[2024-07-05 13:50:08 +0200] [12481] [INFO] Worker exiting (pid: 12481)
+[2024-07-05 13:50:08 +0200] [13286] [INFO] Booting worker with pid: 13286
+[2024-07-05 13:50:08 +0200] [13287] [INFO] Booting worker with pid: 13287
+[2024-07-05 13:56:27 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:11622)
+[2024-07-05 13:56:27 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:12492)
+[2024-07-05 13:56:27 +0200] [12492] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 13:56:27 +0200] [11622] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 13:56:27 +0200] [12492] [INFO] Worker exiting (pid: 12492)
+[2024-07-05 13:56:27 +0200] [11622] [INFO] Worker exiting (pid: 11622)
+[2024-07-05 13:56:27 +0200] [13710] [INFO] Booting worker with pid: 13710
+[2024-07-05 13:56:28 +0200] [13711] [INFO] Booting worker with pid: 13711
+[2024-07-05 14:04:09 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:12758)
+[2024-07-05 14:04:09 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:13710)
+[2024-07-05 14:04:09 +0200] [12758] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 14:04:09 +0200] [13710] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 14:04:09 +0200] [12758] [INFO] Worker exiting (pid: 12758)
+[2024-07-05 14:04:09 +0200] [13710] [INFO] Worker exiting (pid: 13710)
+[2024-07-05 14:04:09 +0200] [14347] [INFO] Booting worker with pid: 14347
+[2024-07-05 14:04:09 +0200] [14348] [INFO] Booting worker with pid: 14348
+[2024-07-05 14:06:01 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9205)
+[2024-07-05 14:06:01 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:12909)
+[2024-07-05 14:06:01 +0200] [9205] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 14:06:01 +0200] [12909] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 14:06:01 +0200] [9205] [INFO] Worker exiting (pid: 9205)
+[2024-07-05 14:06:01 +0200] [12909] [INFO] Worker exiting (pid: 12909)
+[2024-07-05 14:06:02 +0200] [14550] [INFO] Booting worker with pid: 14550
+[2024-07-05 14:06:02 +0200] [14551] [INFO] Booting worker with pid: 14551
+[2024-07-05 14:08:18 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:12407)
+[2024-07-05 14:08:18 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:12433)
+[2024-07-05 14:08:18 +0200] [12407] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 14:08:18 +0200] [12433] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 14:08:18 +0200] [12407] [INFO] Worker exiting (pid: 12407)
+[2024-07-05 14:08:18 +0200] [12433] [INFO] Worker exiting (pid: 12433)
+[2024-07-05 14:08:18 +0200] [14716] [INFO] Booting worker with pid: 14716
+[2024-07-05 14:08:18 +0200] [14747] [INFO] Booting worker with pid: 14747
+[2024-07-05 14:15:09 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:9005)
+[2024-07-05 14:15:09 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:13286)
+[2024-07-05 14:15:09 +0200] [13286] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 14:15:09 +0200] [9005] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 14:15:09 +0200] [13286] [INFO] Worker exiting (pid: 13286)
+[2024-07-05 14:15:09 +0200] [9005] [INFO] Worker exiting (pid: 9005)
+[2024-07-05 14:15:09 +0200] [15441] [INFO] Booting worker with pid: 15441
+[2024-07-05 14:15:09 +0200] [15442] [INFO] Booting worker with pid: 15442
+[2024-07-05 14:17:12 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:12571)
+[2024-07-05 14:17:12 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:14716)
+[2024-07-05 14:17:12 +0200] [12571] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 14:17:12 +0200] [14716] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 14:17:12 +0200] [12571] [INFO] Worker exiting (pid: 12571)
+[2024-07-05 14:17:12 +0200] [14716] [INFO] Worker exiting (pid: 14716)
+[2024-07-05 14:17:12 +0200] [15579] [INFO] Booting worker with pid: 15579
+[2024-07-05 14:17:12 +0200] [15581] [INFO] Booting worker with pid: 15581
+[2024-07-05 14:29:30 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:15442)
+[2024-07-05 14:29:30 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:15579)
+[2024-07-05 14:29:30 +0200] [15442] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 14:29:30 +0200] [15579] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 14:29:30 +0200] [15442] [INFO] Worker exiting (pid: 15442)
+[2024-07-05 14:29:30 +0200] [15579] [INFO] Worker exiting (pid: 15579)
+[2024-07-05 14:29:30 +0200] [16383] [INFO] Booting worker with pid: 16383
+[2024-07-05 14:29:30 +0200] [16384] [INFO] Booting worker with pid: 16384
+[2024-07-05 14:45:08 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:11454)
+[2024-07-05 14:45:08 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:16384)
+[2024-07-05 14:45:08 +0200] [11454] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 14:45:08 +0200] [16384] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 14:45:08 +0200] [11454] [INFO] Worker exiting (pid: 11454)
+[2024-07-05 14:45:08 +0200] [16384] [INFO] Worker exiting (pid: 16384)
+[2024-07-05 14:45:08 +0200] [17798] [INFO] Booting worker with pid: 17798
+[2024-07-05 14:45:08 +0200] [17799] [INFO] Booting worker with pid: 17799
+[2024-07-05 15:08:05 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:14747)
+[2024-07-05 15:08:05 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:17799)
+[2024-07-05 15:08:05 +0200] [17799] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 15:08:05 +0200] [14747] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 15:08:05 +0200] [17799] [INFO] Worker exiting (pid: 17799)
+[2024-07-05 15:08:05 +0200] [14747] [INFO] Worker exiting (pid: 14747)
+[2024-07-05 15:08:05 +0200] [20104] [INFO] Booting worker with pid: 20104
+[2024-07-05 15:08:05 +0200] [20105] [INFO] Booting worker with pid: 20105
+[2024-07-05 15:09:31 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:15581)
+[2024-07-05 15:09:31 +0200] [8994] [CRITICAL] WORKER TIMEOUT (pid:17798)
+[2024-07-05 15:09:31 +0200] [17798] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 15:09:31 +0200] [15581] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 15:09:31 +0200] [15581] [INFO] Worker exiting (pid: 15581)
+[2024-07-05 15:09:31 +0200] [17798] [INFO] Worker exiting (pid: 17798)
+[2024-07-05 15:09:31 +0200] [20201] [INFO] Booting worker with pid: 20201
+[2024-07-05 15:09:31 +0200] [20203] [INFO] Booting worker with pid: 20203
+[2024-07-05 17:15:44 +0200] [2874] [INFO] Starting gunicorn 22.0.0
+[2024-07-05 17:15:44 +0200] [2874] [ERROR] Invalid address: ('192.168.1.108', 5000)
+[2024-07-05 17:15:44 +0200] [2874] [ERROR] Retrying in 1 second.
+[2024-07-05 17:15:45 +0200] [2874] [ERROR] Invalid address: ('192.168.1.108', 5000)
+[2024-07-05 17:15:45 +0200] [2874] [ERROR] Retrying in 1 second.
+[2024-07-05 17:15:46 +0200] [2874] [ERROR] Invalid address: ('192.168.1.108', 5000)
+[2024-07-05 17:15:46 +0200] [2874] [ERROR] Retrying in 1 second.
+[2024-07-05 17:15:47 +0200] [2874] [ERROR] Invalid address: ('192.168.1.108', 5000)
+[2024-07-05 17:15:47 +0200] [2874] [ERROR] Retrying in 1 second.
+[2024-07-05 17:15:48 +0200] [2874] [ERROR] Invalid address: ('192.168.1.108', 5000)
+[2024-07-05 17:15:48 +0200] [2874] [ERROR] Retrying in 1 second.
+[2024-07-05 17:15:49 +0200] [2874] [ERROR] Can't connect to ('192.168.1.108', 5000)
+[2024-07-05 17:15:54 +0200] [2878] [INFO] Starting gunicorn 22.0.0
+[2024-07-05 17:15:54 +0200] [2878] [ERROR] Invalid address: ('192.168.1.108', 5000)
+[2024-07-05 17:15:54 +0200] [2878] [ERROR] Retrying in 1 second.
+[2024-07-05 17:15:55 +0200] [2878] [ERROR] Invalid address: ('192.168.1.108', 5000)
+[2024-07-05 17:15:55 +0200] [2878] [ERROR] Retrying in 1 second.
+[2024-07-05 17:15:56 +0200] [2878] [ERROR] Invalid address: ('192.168.1.108', 5000)
+[2024-07-05 17:15:56 +0200] [2878] [ERROR] Retrying in 1 second.
+[2024-07-05 17:15:57 +0200] [2878] [ERROR] Invalid address: ('192.168.1.108', 5000)
+[2024-07-05 17:15:57 +0200] [2878] [ERROR] Retrying in 1 second.
+[2024-07-05 17:15:58 +0200] [2878] [ERROR] Invalid address: ('192.168.1.108', 5000)
+[2024-07-05 17:15:58 +0200] [2878] [ERROR] Retrying in 1 second.
+[2024-07-05 17:15:59 +0200] [2878] [ERROR] Can't connect to ('192.168.1.108', 5000)
+[2024-07-05 17:18:48 +0200] [2783] [INFO] Starting gunicorn 22.0.0
+[2024-07-05 17:18:48 +0200] [2783] [INFO] Listening at: http://192.168.1.108:5000 (2783)
+[2024-07-05 17:18:48 +0200] [2783] [INFO] Using worker: sync
+[2024-07-05 17:18:48 +0200] [2808] [INFO] Booting worker with pid: 2808
+[2024-07-05 17:18:48 +0200] [2810] [INFO] Booting worker with pid: 2810
+[2024-07-05 17:18:48 +0200] [2825] [INFO] Booting worker with pid: 2825
+[2024-07-05 17:18:48 +0200] [2829] [INFO] Booting worker with pid: 2829
+[2024-07-05 17:18:48 +0200] [2837] [INFO] Booting worker with pid: 2837
+[2024-07-05 17:18:48 +0200] [2865] [INFO] Booting worker with pid: 2865
+[2024-07-05 17:18:49 +0200] [2867] [INFO] Booting worker with pid: 2867
+[2024-07-05 17:18:49 +0200] [2885] [INFO] Booting worker with pid: 2885
+[2024-07-05 17:18:49 +0200] [2904] [INFO] Booting worker with pid: 2904
+[2024-07-05 17:18:49 +0200] [2916] [INFO] Booting worker with pid: 2916
+[2024-07-05 17:18:49 +0200] [2939] [INFO] Booting worker with pid: 2939
+[2024-07-05 17:18:49 +0200] [2950] [INFO] Booting worker with pid: 2950
+[2024-07-05 17:18:49 +0200] [2953] [INFO] Booting worker with pid: 2953
+[2024-07-05 17:18:49 +0200] [2964] [INFO] Booting worker with pid: 2964
+[2024-07-05 17:18:49 +0200] [3008] [INFO] Booting worker with pid: 3008
+[2024-07-05 17:18:49 +0200] [3030] [INFO] Booting worker with pid: 3030
+[2024-07-05 17:18:49 +0200] [3048] [INFO] Booting worker with pid: 3048
+[2024-07-05 17:18:49 +0200] [3082] [INFO] Booting worker with pid: 3082
+[2024-07-05 17:18:49 +0200] [3100] [INFO] Booting worker with pid: 3100
+[2024-07-05 17:18:49 +0200] [3118] [INFO] Booting worker with pid: 3118
+[2024-07-05 17:21:24 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:2885)
+[2024-07-05 17:21:24 +0200] [2885] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 272, in parse
+    line, rbuf = self.read_line(unreader, buf, self.limit_request_line)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 324, in read_line
+    self.get_data(unreader, buf)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:21:24 +0200] [2885] [INFO] Worker exiting (pid: 2885)
+[2024-07-05 17:21:25 +0200] [4052] [INFO] Booting worker with pid: 4052
+[2024-07-05 17:21:31 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:2916)
+[2024-07-05 17:21:31 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:2953)
+[2024-07-05 17:21:31 +0200] [2953] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:21:31 +0200] [2916] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:21:31 +0200] [2953] [INFO] Worker exiting (pid: 2953)
+[2024-07-05 17:21:31 +0200] [2916] [INFO] Worker exiting (pid: 2916)
+[2024-07-05 17:21:31 +0200] [4059] [INFO] Booting worker with pid: 4059
+[2024-07-05 17:21:31 +0200] [4060] [INFO] Booting worker with pid: 4060
+[2024-07-05 17:21:46 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:2964)
+[2024-07-05 17:21:46 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:3118)
+[2024-07-05 17:21:46 +0200] [3118] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:21:46 +0200] [2964] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:21:46 +0200] [3118] [INFO] Worker exiting (pid: 3118)
+[2024-07-05 17:21:46 +0200] [2964] [INFO] Worker exiting (pid: 2964)
+[2024-07-05 17:21:46 +0200] [4065] [INFO] Booting worker with pid: 4065
+[2024-07-05 17:21:46 +0200] [4066] [INFO] Booting worker with pid: 4066
+[2024-07-05 17:23:36 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:4059)
+[2024-07-05 17:23:36 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:4060)
+[2024-07-05 17:23:36 +0200] [4060] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:23:36 +0200] [4059] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:23:36 +0200] [4060] [INFO] Worker exiting (pid: 4060)
+[2024-07-05 17:23:36 +0200] [4059] [INFO] Worker exiting (pid: 4059)
+[2024-07-05 17:23:36 +0200] [4189] [INFO] Booting worker with pid: 4189
+[2024-07-05 17:23:36 +0200] [4190] [INFO] Booting worker with pid: 4190
+[2024-07-05 17:30:05 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:3008)
+[2024-07-05 17:30:05 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:3030)
+[2024-07-05 17:30:05 +0200] [3008] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:30:05 +0200] [3030] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:30:05 +0200] [3008] [INFO] Worker exiting (pid: 3008)
+[2024-07-05 17:30:05 +0200] [3030] [INFO] Worker exiting (pid: 3030)
+[2024-07-05 17:30:05 +0200] [4329] [INFO] Booting worker with pid: 4329
+[2024-07-05 17:30:05 +0200] [4330] [INFO] Booting worker with pid: 4330
+[2024-07-05 17:43:41 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:2810)
+[2024-07-05 17:43:41 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:4052)
+[2024-07-05 17:43:41 +0200] [2810] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:43:41 +0200] [4052] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:43:41 +0200] [2810] [INFO] Worker exiting (pid: 2810)
+[2024-07-05 17:43:41 +0200] [4052] [INFO] Worker exiting (pid: 4052)
+[2024-07-05 17:43:41 +0200] [4594] [INFO] Booting worker with pid: 4594
+[2024-07-05 17:43:41 +0200] [4595] [INFO] Booting worker with pid: 4595
+[2024-07-05 17:44:37 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:4066)
+[2024-07-05 17:44:37 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:4190)
+[2024-07-05 17:44:37 +0200] [4190] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:44:37 +0200] [4066] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:44:37 +0200] [4190] [INFO] Worker exiting (pid: 4190)
+[2024-07-05 17:44:37 +0200] [4066] [INFO] Worker exiting (pid: 4066)
+[2024-07-05 17:44:38 +0200] [4632] [INFO] Booting worker with pid: 4632
+[2024-07-05 17:44:38 +0200] [4633] [INFO] Booting worker with pid: 4633
+[2024-07-05 17:45:19 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:2950)
+[2024-07-05 17:45:19 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:4065)
+[2024-07-05 17:45:19 +0200] [2950] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:45:19 +0200] [4065] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:45:19 +0200] [2950] [INFO] Worker exiting (pid: 2950)
+[2024-07-05 17:45:19 +0200] [4065] [INFO] Worker exiting (pid: 4065)
+[2024-07-05 17:45:19 +0200] [4668] [INFO] Booting worker with pid: 4668
+[2024-07-05 17:45:19 +0200] [4669] [INFO] Booting worker with pid: 4669
+[2024-07-05 17:46:35 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:2808)
+[2024-07-05 17:46:35 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:2825)
+[2024-07-05 17:46:35 +0200] [2808] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:46:35 +0200] [2825] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:46:35 +0200] [2808] [INFO] Worker exiting (pid: 2808)
+[2024-07-05 17:46:35 +0200] [2825] [INFO] Worker exiting (pid: 2825)
+[2024-07-05 17:46:35 +0200] [4723] [INFO] Booting worker with pid: 4723
+[2024-07-05 17:46:35 +0200] [4724] [INFO] Booting worker with pid: 4724
+[2024-07-05 17:47:24 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:2904)
+[2024-07-05 17:47:24 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:2939)
+[2024-07-05 17:47:24 +0200] [2904] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:47:24 +0200] [2939] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 17:47:24 +0200] [2904] [INFO] Worker exiting (pid: 2904)
+[2024-07-05 17:47:24 +0200] [2939] [INFO] Worker exiting (pid: 2939)
+[2024-07-05 17:47:24 +0200] [4764] [INFO] Booting worker with pid: 4764
+[2024-07-05 17:47:24 +0200] [4765] [INFO] Booting worker with pid: 4765
+[2024-07-05 18:25:44 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:3048)
+[2024-07-05 18:25:44 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:4668)
+[2024-07-05 18:25:44 +0200] [3048] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 18:25:44 +0200] [4668] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 18:25:44 +0200] [3048] [INFO] Worker exiting (pid: 3048)
+[2024-07-05 18:25:44 +0200] [4668] [INFO] Worker exiting (pid: 4668)
+[2024-07-05 18:25:45 +0200] [6756] [INFO] Booting worker with pid: 6756
+[2024-07-05 18:25:45 +0200] [2783] [ERROR] Worker (pid:3048) was sent SIGKILL! Perhaps out of memory?
+[2024-07-05 18:25:45 +0200] [6757] [INFO] Booting worker with pid: 6757
+[2024-07-05 18:30:13 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:4329)
+[2024-07-05 18:30:13 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:4595)
+[2024-07-05 18:30:13 +0200] [4329] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 18:30:13 +0200] [4595] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 18:30:13 +0200] [4329] [INFO] Worker exiting (pid: 4329)
+[2024-07-05 18:30:13 +0200] [4595] [INFO] Worker exiting (pid: 4595)
+[2024-07-05 18:30:13 +0200] [7041] [INFO] Booting worker with pid: 7041
+[2024-07-05 18:30:13 +0200] [7042] [INFO] Booting worker with pid: 7042
+[2024-07-05 20:34:01 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:4669)
+[2024-07-05 20:34:01 +0200] [4669] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 20:34:01 +0200] [4669] [INFO] Worker exiting (pid: 4669)
+[2024-07-05 20:34:01 +0200] [9021] [INFO] Booting worker with pid: 9021
+[2024-07-05 21:15:33 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:4723)
+[2024-07-05 21:15:33 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:4764)
+[2024-07-05 21:15:33 +0200] [4723] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 21:15:33 +0200] [4764] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 21:15:33 +0200] [4723] [INFO] Worker exiting (pid: 4723)
+[2024-07-05 21:15:33 +0200] [4764] [INFO] Worker exiting (pid: 4764)
+[2024-07-05 21:15:33 +0200] [9699] [INFO] Booting worker with pid: 9699
+[2024-07-05 21:15:33 +0200] [9700] [INFO] Booting worker with pid: 9700
+[2024-07-05 21:17:47 +0200] [2783] [CRITICAL] WORKER TIMEOUT (pid:7042)
+[2024-07-05 21:17:47 +0200] [7042] [ERROR] Error handling request (no URI read)
+Traceback (most recent call last):
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/sync.py", line 134, in handle
+    req = next(parser)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/parser.py", line 42, in __next__
+    self.mesg = self.mesg_class(self.cfg, self.unreader, self.source_addr, self.req_count)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 257, in __init__
+    super().__init__(cfg, unreader, peer_addr)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 60, in __init__
+    unused = self.parse(self.unreader)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 269, in parse
+    self.get_data(unreader, buf, stop=True)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/message.py", line 260, in get_data
+    data = unreader.read()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 37, in read
+    d = self.chunk()
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/http/unreader.py", line 64, in chunk
+    return self.sock.recv(self.mxchunk)
+  File "/home/kamilg/.local/lib/python3.10/site-packages/gunicorn/workers/base.py", line 203, in handle_abort
+    sys.exit(1)
+SystemExit: 1
+[2024-07-05 21:17:47 +0200] [7042] [INFO] Worker exiting (pid: 7042)
+[2024-07-05 21:17:47 +0200] [9757] [INFO] Booting worker with pid: 9757

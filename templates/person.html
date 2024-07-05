@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles2.css') }}">
+    <title>{{ person[1] }} {{ person[2] }}</title>
+</head>
+<body>
+<div class="header">
+    <a href="{{ url_for('user_page') }}" class="button back-button">Wróć do profilu</a>
+    <h1>{{ person[1] }} {{ person[2] }}</h1>
+    <div class="search-container">
+        <input type="text" placeholder="Szukaj osoby..." id="search" onkeyup="liveSearch()">
+        <div id="results-container"></div>
+    </div>
+</div>
+<div class="picture-container">
+    <img src="data:image/jpeg;base64,{{ person[7] }}" alt="Zdjęcie {{ person[1] }} {{ person[2] }}"
+         class="profile-pic-large profile-pic-bordered">
+</div>
+<div class="info-container">
+    <div class="info-box">
+        <p>Data urodzenia:<br> {% if person[4] != None %}{{ person[4] }}{% else %}-{% endif %}</p>
+    </div>
+    <div class="info-box">
+        <p>Data śmierci:<br> {% if person[5] != None %}{{ person[5] }}{% else %}-{% endif %}</p>
+    </div>
+    <div class="info-box">
+        <p>Data ślubu:<br> {% if person[6] != None %}{{ person[6] }}{% else %}-{% endif %}</p>
+    </div>
+</div>
+
+<div class="button-container">
+    <button type="button" class="modify-button"
+            onclick="window.location.href='{{ url_for('modify_person_data', person_id=person[0]) }}'">Modyfikuj Dane
+    </button>
+    <button type="button" class="parent-button"
+            onclick="window.location.href='{{ url_for('add_parent', person_id=person[0]) }}'">Dodaj Rodziców
+    </button>
+    <button type="button" class="child-button"
+            onclick="window.location.href='{{ url_for('add_child', person_id=person[0]) }}'">Dodaj Dziecko
+    </button>
+    <button type="button" class="spouse-button"
+            onclick="window.location.href='{{ url_for('add_spouse', person_id=person[0]) }}'">Dodaj Małżonka/Żonę
+    </button>
+</div>
+
+<div class="tree-container">
+    {% if spouses %}
+        {% for spouse in spouses %}
+            <div class="tree">
+                <ul>
+                    <li>
+                        <div class="family">
+                            {% if father %}
+                                <div class="person child male"
+                                     onclick="redirectTo('{{ url_for('person', person_id=father[0]) }}')">
+                                    <img src="data:image/jpeg;base64,{{ father[5] }}" alt="Zdjęcie Ojca"
+                                         class="profile-pic-small profile-pic-bordered">
+                                    <div class="name">{{ father[1] }} {{ father[2] }}<br>{% if father[3] != None %}
+                                        {{ father[3] }}{% else %}-{% endif %}{% if father[4] != None %} -
+                                        {{ father[4] }}{% endif %}</div>
+                                </div>
+                            {% endif %}
+                            <div class="parent">
+                                {% if mother %}
+                                    <div class="person female"
+                                         onclick="redirectTo('{{ url_for('person', person_id=mother[0]) }}')">
+                                        <img src="data:image/jpeg;base64,{{ mother[5] }}" alt="Zdjęcie Matki"
+                                             class="profile-pic-small profile-pic-bordered">
+                                        <div class="name">{{ mother[1] }} {{ mother[2] }}<br>{% if mother[3] != None %}
+                                            {{ mother[3] }}{% else %}-{% endif %}{% if mother[4] != None %} -
+                                            {{ mother[4] }}{% endif %}</div>
+                                    </div>
+                                {% endif %}
+                                <ul>
+                                    {% for sibling in siblings_first_half %}
+                                        <li>
+                                            <div class="family" style="width: 172px">
+                                                <div class="person child {{ 'male' if sibling[3] == 'M' else 'female' }}"
+                                                     onclick="redirectTo('{{ url_for('person', person_id=sibling[0]) }}')">
+                                                    <img src="data:image/jpeg;base64,{{ sibling[6] }}"
+                                                         alt="Zdjęcie {{ sibling[1] }} {{ sibling[2] }}"
+                                                         class="profile-pic-small profile-pic-bordered">
+                                                    <div class="name">{{ sibling[1] }} {{ sibling[2] }}<br>
+                                                        {% if sibling[4] != None %}
+                                                            {{ sibling[4] }}{% else %}-{% endif %}
+                                                        {% if sibling[5] != None %} -
+                                                            {{ sibling[5] }}{% endif %}</div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                    <li>
+                                        <div class="family" style="width: 172px">
+                                            <div class="person child {{ 'male' if person[3] == 'M' else 'female' }}">
+                                                <img src="data:image/jpeg;base64,{{ person[7] }}"
+                                                     alt="Zdjęcie {{ person[1] }} {{ person[2] }}"
+                                                     class="profile-pic-small profile-pic-bordered">
+                                                <div class="name">{{ person[1] }} {{ person[2] }}<br>
+                                                    {% if person[4] != None %}
+                                                        {{ person[4] }}{% else %}-{% endif %}{% if person[5] != None %}
+                                                        -
+                                                        {{ person[5] }}{% endif %}</div>
+                                            </div>
+                                            {% if spouse %}
+                                                <div class="parent">
+                                                    <div class="person {{ 'male' if spouse[3] == 'M' else 'female' }}"
+                                                         onclick="redirectTo('{{ url_for('person', person_id=spouse[0]) }}')">
+                                                        <img src="data:image/jpeg;base64,{{ spouse[6] }}"
+                                                             alt="Zdjęcie {{ spouse[1] }} {{ spouse[2] }}"
+                                                             class="profile-pic-small profile-pic-bordered">
+                                                        <div class="name">{{ spouse[1] }} {{ spouse[2] }}<br>
+                                                            {% if spouse[4] != None %}
+                                                                {{ spouse[4] }}{% else %}-{% endif %}
+                                                            {% if spouse[5] != None %} -
+                                                                {{ spouse[5] }}{% endif %}</div>
+                                                    </div>
+                                                    <div class="tree_children_container">
+                                                        <ul class="children-list">
+                                                            {% if spouses|length > 1 %}
+                                                                {% for children in childrens[spouse[0]] %}
+                                                                    <li>
+                                                                        <div class="family" style="width: 172px">
+                                                                            <div class="person child {{ 'male' if children[3] == 'M' else 'female' }}"
+                                                                                 onclick="redirectTo('{{ url_for('person', person_id=children[0]) }}')">
+                                                                                <img src="data:image/jpeg;base64,{{ children[6] }}"
+                                                                                     alt="Zdjęcie {{ children[1] }} {{ children[2] }}"
+                                                                                     class="profile-pic-small profile-pic-bordered">
+                                                                                <div class="name">{{ children[1] }} {{ children[2] }}<br>
+                                                                                    {% if children[4] != None %}
+                                                                                        {{ children[4] }}{% else %}
+                                                                                        -{% endif %}
+                                                                                    {% if children[5] != None %} -
+                                                                                        {{ children[5] }}{% endif %}
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                {% endfor %}
+                                                            {% else %}
+                                                                {% for children in children %}
+                                                                    <li>
+                                                                        <div class="family" style="width: 172px">
+                                                                            <div class="person child {{ 'male' if children[3] == 'M' else 'female' }}"
+                                                                                 onclick="redirectTo('{{ url_for('person', person_id=children[0]) }}')">
+                                                                                <img src="data:image/jpeg;base64,{{ children[6] }}"
+                                                                                     alt="Zdjęcie {{ children[1] }} {{ children[2] }}"
+                                                                                     class="profile-pic-small profile-pic-bordered">
+                                                                                <div class="name">{{ children[1] }} {{ children[2] }}<br>
+                                                                                    {% if children[4] != None %}
+                                                                                        {{ children[4] }}{% else %}
+                                                                                        -{% endif %}
+                                                                                    {% if children[5] != None %} -
+                                                                                        {{ children[5] }}{% endif %}
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                {% endfor %}
+                                                            {% endif %}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </li>
+
+                                    {% for sibling in siblings_second_half %}
+                                        <li>
+                                            <div class="family" style="width: 172px">
+                                                <div class="person child {{ 'male' if sibling[3] == 'M' else 'female' }}"
+                                                     onclick="redirectTo('{{ url_for('person', person_id=sibling[0]) }}')">
+                                                    <img src="data:image/jpeg;base64,{{ sibling[6] }}"
+                                                         alt="Zdjęcie {{ sibling[1] }} {{ sibling[2] }}"
+                                                         class="profile-pic-small profile-pic-bordered">
+                                                    <div class="name">{{ sibling[1] }} {{ sibling[2] }}<br>
+                                                        {% if sibling[4] != None %}
+                                                            {{ sibling[4] }}{% else %}-{% endif %}
+                                                        {% if sibling[5] != None %} -
+                                                            {{ sibling[5] }}{% endif %}</div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <br>
+        {% endfor %}
+    {% else %}
+        <div class="tree">
+            <ul>
+                <li>
+                    <div class="family">
+                        {% if father %}
+                            <div class="person child male"
+                                 onclick="redirectTo('{{ url_for('person', person_id=father[0]) }}')">
+                                <img src="data:image/jpeg;base64,{{ father[5] }}" alt="Zdjęcie Ojca"
+                                     class="profile-pic-small profile-pic-bordered">
+                                <div class="name">{{ father[1] }} {{ father[2] }}<br>{% if father[3] != None %}
+                                    {{ father[3] }}{% else %}-{% endif %}{% if father[4] != None %} -
+                                    {{ father[4] }}{% endif %}</div>
+                            </div>
+                        {% endif %}
+                        <div class="parent">
+                            {% if mother %}
+                                <div class="person female"
+                                     onclick="redirectTo('{{ url_for('person', person_id=mother[0]) }}')">
+                                    <img src="data:image/jpeg;base64,{{ mother[5] }}" alt="Zdjęcie Matki"
+                                         class="profile-pic-small profile-pic-bordered">
+                                    <div class="name">{{ mother[1] }} {{ mother[2] }}<br>{% if mother[3] != None %}
+                                        {{ mother[3] }}{% else %}-{% endif %}{% if mother[4] != None %} -
+                                        {{ mother[4] }}{% endif %}</div>
+                                </div>
+                            {% endif %}
+                            <ul>
+                                {% for sibling in siblings_first_half %}
+                                    <li>
+                                        <div class="family" style="width: 172px">
+                                            <div class="person child {{ 'male' if sibling[3] == 'M' else 'female' }}"
+                                                 onclick="redirectTo('{{ url_for('person', person_id=sibling[0]) }}')">
+                                                <img src="data:image/jpeg;base64,{{ sibling[6] }}"
+                                                     alt="Zdjęcie {{ sibling[1] }} {{ sibling[2] }}"
+                                                     class="profile-pic-small profile-pic-bordered">
+                                                <div class="name">{{ sibling[1] }} {{ sibling[2] }}<br>
+                                                    {% if sibling[4] != None %}
+                                                        {{ sibling[4] }}{% else %}-{% endif %}
+                                                    {% if sibling[5] != None %} -
+                                                        {{ sibling[5] }}{% endif %}</div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                                <li>
+                                    <div class="family" style="width: 172px">
+                                        <div class="person child {{ 'male' if person[3] == 'M' else 'female' }}">
+                                            <img src="data:image/jpeg;base64,{{ person[7] }}"
+                                                 alt="Zdjęcie {{ person[1] }} {{ person[2] }}"
+                                                 class="profile-pic-small profile-pic-bordered">
+                                            <div class="name">{{ person[1] }} {{ person[2] }}<br>
+                                                {% if person[4] != None %}
+                                                    {{ person[4] }}{% else %}-{% endif %}{% if person[5] != None %} -
+                                                    {{ person[5] }}{% endif %}</div>
+                                        </div>
+                                        {% if spouse %}
+                                            <div class="parent">
+                                                <div class="person {{ 'male' if spouse[3] == 'M' else 'female' }}"
+                                                     onclick="redirectTo('{{ url_for('person', person_id=spouse[0]) }}')">
+                                                    <img src="data:image/jpeg;base64,{{ spouse[6] }}"
+                                                         alt="Zdjęcie {{ spouse[1] }} {{ spouse[2] }}"
+                                                         class="profile-pic-small profile-pic-bordered">
+                                                    <div class="name">{{ spouse[1] }} {{ spouse[2] }}<br>
+                                                        {% if spouse[4] != None %}
+                                                            {{ spouse[4] }}{% else %}-{% endif %}
+                                                        {% if spouse[5] != None %} -
+                                                            {{ spouse[5] }}{% endif %}</div>
+                                                </div>
+                                                <div class="tree_children_container">
+                                                    <ul class="children-list">
+                                                        {% for children in children %}
+                                                            <li>
+                                                                <div class="family" style="width: 172px">
+                                                                    <div class="person child {{ 'male' if children[3] == 'M' else 'female' }}"
+                                                                         onclick="redirectTo('{{ url_for('person', person_id=children[0]) }}')">
+                                                                        <img src="data:image/jpeg;base64,{{ children[6] }}"
+                                                                             alt="Zdjęcie {{ children[1] }} {{ children[2] }}"
+                                                                             class="profile-pic-small profile-pic-bordered">
+                                                                        <div class="name">{{ children[1] }} {{ children[2] }}<br>
+                                                                            {% if children[4] != None %}
+                                                                                {{ children[4] }}{% else %}-{% endif %}
+                                                                            {% if children[5] != None %} -
+                                                                                {{ children[5] }}{% endif %}</div>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </li>
+
+
+                                {% for sibling in siblings_second_half %}
+                                    <li>
+                                        <div class="family" style="width: 172px">
+                                            <div class="person child {{ 'male' if sibling[3] == 'M' else 'female' }}"
+                                                 onclick="redirectTo('{{ url_for('person', person_id=sibling[0]) }}')">
+                                                <img src="data:image/jpeg;base64,{{ sibling[6] }}"
+                                                     alt="Zdjęcie {{ sibling[1] }} {{ sibling[2] }}"
+                                                     class="profile-pic-small profile-pic-bordered">
+                                                <div class="name">{{ sibling[1] }} {{ sibling[2] }}<br>
+                                                    {% if sibling[4] != None %}
+                                                        {{ sibling[4] }}{% else %}-{% endif %}
+                                                    {% if sibling[5] != None %} -
+                                                        {{ sibling[5] }}{% endif %}</div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    {% endif %}
+</div>
+
+<script src="{{ url_for('static', filename='js/search.js') }}"></script>
+
+</body>
+</html>
+
