@@ -1,5 +1,3 @@
-import atexit
-
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, flash
 from werkzeug.utils import secure_filename
 import os
@@ -11,25 +9,23 @@ import random
 from datetime import datetime, timedelta
 from functools import wraps
 from PIL import Image
-import requests
-import io
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
-
-# sslify = SSLify(app)
-
 # Konfiguracja połączenia z bazą danych
 def get_db_connection():
     conn = psycopg2.connect(
-        dbname="gen_tree",
-        user="admin",
-        password="admin",
-        host="localhost"
+        dbname='gen_tree',  # Nazwa bazy danych
+        user='gen_tree_owner',  # Nazwa użytkownika bazy danych
+        password='zXpdLhHUR9F2',  # Hasło do bazy danych
+        host='ep-divine-term-a2ib4suo-pooler.eu-central-1.aws.neon.tech',  # Adres hosta
+        port='5432',  # Port (domyślny port PostgreSQL)
+        sslmode='require'
     )
     return conn
 
+#GLOBAL FUNCTION
 
 def generate_access_key(level, expiration_days=None):
     key = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
@@ -43,7 +39,6 @@ def generate_access_key(level, expiration_days=None):
     conn.close()
     return key
 
-
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -52,7 +47,6 @@ def admin_required(f):
         return f(*args, **kwargs)
 
     return decorated_function
-
 
 def work_progres(f):
     @wraps(f)
@@ -63,19 +57,10 @@ def work_progres(f):
 
     return decorated_function
 
-
 def convert_image_to_bytea(image_path):
     with open(image_path, 'rb') as file:
         binary_data = file.read()
     return binary_data
-
-
-def convert_image_file_to_bytea(image_file):
-    binary_data = None
-    if image_file:
-        binary_data = image_file.read()
-    return binary_data
-
 
 def convert_to_jpeg(input_path, output_path):
     try:
@@ -95,56 +80,55 @@ def convert_to_jpeg(input_path, output_path):
         print(f'Błąd konwersji: {e}')
         return False
 
-
-@app.route('/admin')
-@admin_required
-def admin():
+##MAIN SAIT
+@app.route('/')
+def index():
     if 'user_id' not in session:
-        return redirect(url_for('login'))
+        return render_template('index.html')
+    return redirect(url_for('user_page'))
 
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT username, last_login FROM users WHERE last_login IS NOT NULL ORDER BY last_login DESC")
-    logged_in_users = cur.fetchall()
+##LOGIN/REGISTER - SAITS
 
-    cur.execute("SELECT * FROM accesskeys WHERE level = 1")
-    universal_key = cur.fetchall()
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
 
-    cur.execute("SELECT access_key, level, expiration_date, used, created_by_id FROM accesskeys WHERE used = TRUE")
-    keys = cur.fetchall()
+        current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
 
-    cur.execute("""
-        SELECT u.username, u.id, u.temp_key, a.level
-        FROM users u
-        JOIN accesskeys a ON u.temp_key = a.access_key
-        WHERE u.temp_key IS NOT NULL
-    """)
-    users_with_temp_keys = cur.fetchall()
+        conn = get_db_connection()
+        cur = conn.cursor()
+        cur.execute("SELECT id, password, temp_key FROM Users WHERE username = %s", (username,))
+        user = cur.fetchone()
 
-    cur.close()
-    conn.close()
+        if user and check_password_hash(user[1], password):
+            session['user_id'] = user[0]
+            temp_key = user[2]
 
-    # Formatowanie last_login dla każdego użytkownika
-    formatted_logged_in_users = [
-        (username, last_login.strftime('%Y-%m-%d %H:%M')) for username, last_login in logged_in_users
-    ]
+            cur.execute("SELECT level FROM accesskeys WHERE access_key = %s", (temp_key,))
+            level = cur.fetchone()
+            session['user_level'] = level[0]
 
-    return render_template('admin.html', universal_key=universal_key, keys=keys,
-                           users_with_temp_keys=users_with_temp_keys, logged_in_users=logged_in_users)
+            # Aktualizacja czasu logowania
+            cur.execute("UPDATE Users SET last_login = %s WHERE id = %s", (current_datetime, user[0]))
+            conn.commit()
+            cur.close()
+            conn.close()
 
+            return redirect(url_for('index'))
+        else:
+            cur.close()
+            conn.close()
+            flash('Invalid username or password.', 'danger')
 
-@app.route('/generate_universal_code', methods=['POST'])
-@work_progres
-def generate_universal_code():
-    key = generate_access_key(level=1)
-    return jsonify({'code': key})
+    return render_template('login.html')
 
-
-@app.route('/generate_temporary_code', methods=['POST'])
-@work_progres
-def generate_temporary_code():
-    key = generate_access_key(level=2, expiration_days=2)
-    return jsonify({'code': key})
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    session.pop('user_level', None)
+    return redirect(url_for('index'))  # Poprawiono url_for('/')
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -184,58 +168,324 @@ def register():
 
     return render_template('register.html')
 
+##ADMIN FUNCTION
+@app.route('/admin')
+@admin_required
+def admin():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
 
-@app.route('/add_person', methods=['GET', 'POST'])
-@work_progres
-def add_person():
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT username, last_login FROM users WHERE last_login IS NOT NULL ORDER BY last_login DESC")
+    logged_in_users = cur.fetchall()
+
+    cur.execute("SELECT * FROM accesskeys WHERE level = 1")
+    universal_key = cur.fetchall()
+
+    cur.execute("SELECT access_key, level, expiration_date, used, created_by_id FROM accesskeys WHERE used = TRUE")
+    keys = cur.fetchall()
+
+    cur.execute("""
+        SELECT u.username, u.id, u.temp_key, a.level
+        FROM users u
+        JOIN accesskeys a ON u.temp_key = a.access_key
+        WHERE u.temp_key IS NOT NULL
+    """)
+    users_with_temp_keys = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    # Formatowanie last_login dla każdego użytkownika
+    formatted_logged_in_users = [
+        (username, last_login.strftime('%Y-%m-%d %H:%M')) for username, last_login in logged_in_users
+    ]
+
+    return render_template('admin.html', universal_key=universal_key, keys=keys,
+                           users_with_temp_keys=users_with_temp_keys, logged_in_users=logged_in_users)
+
+
+@app.route('/generate_universal_code', methods=['POST'])
+@admin_required
+def generate_universal_code():
+    key = generate_access_key(level=1)
+    return jsonify({'code': key})
+
+
+@app.route('/generate_temporary_code', methods=['POST'])
+@admin_required
+def generate_temporary_code():
+    key = generate_access_key(level=2, expiration_days=2)
+    return jsonify({'code': key})
+
+@app.route('/work_sait')
+def work_sait():
+    if 'user_id' not in session:
+        return render_template('index.html')
+    return render_template('work_sait.html')
+
+@app.route('/user_page')
+def user_page():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    # Pobranie nazwy użytkownika
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT username FROM Users WHERE Id = %s", (session['user_id'],))
+    user = cur.fetchone()
+    cur.close()
+    conn.close()
+
+    # Pobranie poziomu uprawnień użytkownika
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT a.level FROM Users u JOIN accesskeys a ON a.access_key = u.temp_key WHERE u.Id = %s",
+                (session['user_id'],))
+    user_permission_level = cur.fetchone()
+    cur.close()
+    conn.close()
+    # user_permission_level = 3
+
+    if user and user_permission_level:
+        return render_template('user.html', username=user[0], user_permission_level=user_permission_level)
+    else:
+        return redirect(url_for('login'))
+
+
+@app.route('/change_password', methods=['POST'])
+def change_password():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    current_password = request.form['current_password']
+    new_password = request.form['new_password']
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT password FROM users WHERE Id = %s", (session['user_id'],))
+    user = cur.fetchone()
+
+    if user and check_password_hash(user[0], current_password):
+        hashed_password = generate_password_hash(new_password, method='pbkdf2:sha256')
+        cur.execute("UPDATE users SET password = %s WHERE Id = %s", (hashed_password, session['user_id']))
+        conn.commit()
+        flash('Password changed successfully!', 'success')
+    else:
+        flash('Incorrect current password.', 'danger')
+
+    cur.close()
+    conn.close()
+
+    return redirect(url_for('user_page'))
+
+
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
     if request.method == 'POST':
-        imie = request.form['imie']
-        nazwisko = request.form['nazwisko']
-        plec = request.form['plec']
-        data_urodzenia = request.form['data_urodzenia']
-        data_slubu = request.form.get('data_slubu')
-        data_smierci = request.form.get('data_smierci')
-        zdjecie = request.files['zdjecie']
-        image_data = None
+        query = request.form.get('name', '')
+    else:
+        query = request.args.get('query', '')
 
-        if plec == "Mężczyzna":
-            plec = 'M'
-        else:
-            plec = 'K'
+    if ' ' in query:
+        name_parts = query.split(' ')
+        first_name = name_parts[0]
+        last_name = name_parts[1] if len(name_parts) > 1 else ''
+    else:
+        first_name = query
+        last_name = ''
 
-        if data_slubu == "":
-            data_slubu = None
-        if data_smierci == "":
-            data_smierci = None
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT id, imię, nazwisko, EXTRACT(YEAR FROM data_urodzenia) AS rok_urodzenia
+        FROM osoba
+        WHERE (imię ILIKE %s AND nazwisko ILIKE %s)
+        OR (imię ILIKE %s OR nazwisko ILIKE %s)
+        LIMIT 5;
+    """, (f'{first_name}%', f'{last_name}%', f'{query}%', f'{query}%'))
+    results = cur.fetchall()
+    cur.close()
+    conn.close()
 
-        if zdjecie and zdjecie.content_length > 0:
-            filename = secure_filename(zdjecie.filename)
-            zdjecie_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            zdjecie.save(zdjecie_path)
-        else:
-            if plec == 'M':
-                image_data = convert_image_to_bytea('Import_Image/me2.jpg')
-            else:
-                image_data = convert_image_to_bytea('Import_Image/fe2.jpg')
+    if request.method == 'POST':
+        return render_template('index.html', results=results)
+    return jsonify({'results': results})
 
-        user_id = session.get('user_id')
 
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute(
-            "INSERT INTO osoba (imię, nazwisko, płeć, data_urodzenia, data_ślubu, data_śmierci, zdjęcie, modified_by) "
-            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-            (imie, nazwisko, plec, data_urodzenia, data_slubu, data_smierci, image_data, user_id)
-        )
-        print(imie, nazwisko, plec, data_urodzenia, data_slubu, data_smierci, image_data, user_id)
-        # conn.commit()
-        cur.close()
-        conn.close()
+# Wyświetlanie szczegółów osoby
+@app.route('/person/<int:person_id>')
+def person(person_id):
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+    conn = get_db_connection()
+    cur = conn.cursor()
 
-        flash('Osoba została dodana pomyślnie!')
-        return redirect(url_for('add_person'))
+    # Pobieranie informacji o osobie
+    cur.execute("""
+        SELECT Id, Imię, Nazwisko, Płeć, EXTRACT(YEAR FROM data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM data_śmierci) AS rok_śmierci, Data_ślubu, zdjęcie
+        FROM Osoba
+        WHERE Id = %s
+    """, (person_id,))
+    person = cur.fetchone()
 
-    return render_template('add_person.html')
+    # Pobieranie małżonka
+    cur.execute("""
+        SELECT o.Id, o.Imię, o.Nazwisko, o.Płeć, EXTRACT(YEAR FROM o.data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM o.data_śmierci) AS rok_śmierci, o.zdjęcie
+        FROM Osoba o
+        JOIN Relacje r ON o.Id = r.Id_Osoby_w_Relacji
+        WHERE r.Id_Osoby = %s AND r.Relacja = 'małżonek'
+    """, (person_id,))
+    spouses = cur.fetchall()
+
+    childrens = {}
+
+    # Pobieranie dzieci
+    cur.execute("""
+        SELECT o.Id, o.Imię, o.Nazwisko, o.Płeć, EXTRACT(YEAR FROM o.data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM o.data_śmierci) AS rok_śmierci, o.zdjęcie
+        FROM Osoba o
+        JOIN Relacje r ON o.Id = r.Id_Osoby
+        WHERE r.Id_Osoby_w_Relacji = %s AND r.Relacja = 'rodzic'
+    ORDER BY rok_urodzenia
+    """, (person_id,))
+    children = cur.fetchall()
+
+    # Pobieranie dzieci dla poszczególnych matek
+    for spouse in spouses:
+        spouse_id = spouse[0]  # Zakładając, że ID małżonka jest na pierwszej pozycji
+        cur.execute("""
+            SELECT o.Id, o.Imię, o.Nazwisko, o.Płeć, EXTRACT(YEAR FROM o.data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM o.data_śmierci) AS rok_śmierci, o.zdjęcie
+            FROM Osoba o
+            JOIN Relacje r ON o.Id = r.Id_Osoby
+            WHERE r.Id_Osoby_w_Relacji = %s AND r.Relacja = 'rodzic'
+            ORDER BY rok_urodzenia
+        """, (spouse_id,))
+        children_0 = cur.fetchall()
+        childrens[spouse_id] = children_0
+
+    # Pobieranie rodziców
+    cur.execute("""
+        SELECT o.Id, o.Imię, o.Nazwisko, o.Płeć, o.zdjęcie
+        FROM Osoba o
+        JOIN Relacje r ON o.Id = r.Id_Osoby_w_Relacji
+        WHERE r.Id_Osoby = %s AND r.Relacja = 'rodzic';
+    """, (person_id,))
+    parents = cur.fetchall()
+
+    # Pobieranie ojca
+    cur.execute("""
+        SELECT o.Id, o.Imię, o.Nazwisko, EXTRACT(YEAR FROM o.data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM o.data_śmierci) AS rok_śmierci, o.zdjęcie
+        FROM Osoba o
+        JOIN Relacje r ON o.Id = r.Id_Osoby_w_Relacji
+        WHERE r.Id_Osoby = %s AND r.Relacja = 'rodzic' AND o.Płeć = 'M'
+    """, (person_id,))
+    father = cur.fetchone()
+
+    # Pobieranie matki
+    cur.execute("""
+        SELECT o.Id, o.Imię, o.Nazwisko, EXTRACT(YEAR FROM o.data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM o.data_śmierci) AS rok_śmierci, o.zdjęcie
+        FROM Osoba o
+        JOIN Relacje r ON o.Id = r.Id_Osoby_w_Relacji
+        WHERE r.Id_Osoby = %s AND r.Relacja = 'rodzic' AND o.Płeć = 'F'
+    """, (person_id,))
+    mother = cur.fetchone()
+
+    # Pobieranie rodzeństwa całego
+    cur.execute("""
+        SELECT DISTINCT sib.Id, sib.Imię, sib.Nazwisko, sib.Płeć, EXTRACT(YEAR FROM sib.data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM sib.data_śmierci) AS rok_śmierci, sib.zdjęcie
+        FROM osoba sib
+        JOIN relacje p ON sib.id = p.id_osoby
+        WHERE p.id_osoby_w_relacji IN (
+            SELECT Id_Osoby_w_Relacji
+            FROM Relacje
+            WHERE Id_Osoby = %s AND Relacja = 'rodzic')
+            AND relacja = 'rodzic' AND Id_Osoby != %s
+            order by rok_urodzenia
+        """, (person_id, person_id))
+    siblings = cur.fetchall()
+
+    # Pobieranie rodzeństwa dla obydwu rodziców
+    cur.execute("""
+               SELECT DISTINCT sib.Id, sib.Imię, sib.Nazwisko, sib.Płeć, EXTRACT(YEAR FROM sib.data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM sib.data_śmierci) AS rok_śmierci, sib.zdjęcie
+            FROM osoba sib
+            JOIN relacje p1 ON sib.id = p1.id_osoby
+            JOIN relacje p2 ON sib.id = p2.id_osoby
+            WHERE p1.id_osoby_w_relacji IN (
+                    SELECT r1.id_osoby_w_relacji
+                    FROM relacje r1
+                    WHERE r1.Id_Osoby = %s AND r1.Relacja = 'rodzic'
+                )
+              AND p2.id_osoby_w_relacji IN (
+                    SELECT r2.id_osoby_w_relacji
+                    FROM relacje r2
+                    WHERE r2.Id_Osoby = %s AND r2.Relacja = 'rodzic'
+                )
+              AND p1.id_osoby_w_relacji != p2.id_osoby_w_relacji
+              AND sib.Id != %s
+              AND p1.Relacja = 'rodzic'
+              AND p2.Relacja = 'rodzic'
+            ORDER BY rok_urodzenia;
+                """, (person_id, person_id, person_id))
+    siblings2 = cur.fetchall()
+
+    siblings = [list(sibling) for sibling in siblings]
+    for sibling in siblings:
+        sibling[6] = base64.b64encode(sibling[6]).decode('utf-8')
+
+    siblings2 = [list(sibling2) for sibling2 in siblings2]
+    for sibling2 in siblings2:
+        sibling2[6] = base64.b64encode(sibling2[6]).decode('utf-8')
+
+    half = len(siblings2) // 2
+    siblings_first_half = siblings2[:half]
+    siblings_second_half = siblings2[half:]
+
+    cur.close()
+    conn.close()
+
+    def convert_image(image_data):
+        if image_data:
+            return base64.b64encode(image_data).decode('utf-8')
+        return None
+
+    person = list(person)
+    if person[7]:  # Zakładając, że Zdjęcie jest na 9 pozycji
+        person[7] = convert_image(person[7])
+
+    spouses = [list(spouse) for spouse in spouses]
+    for spouse in spouses:
+        if spouse[6]:  # Zakładając, że Zdjęcie jest na 4 pozycji
+            spouse[6] = convert_image(spouse[6])
+
+    if father != None:
+        father = list(father)
+        if father[5]:  # Zakładając, że Zdjęcie jest na 5 pozycji
+            father[5] = convert_image(father[5])
+
+    if mother != None:
+        mother = list(mother)
+        if mother[5]:  # Zakładając, że Zdjęcie jest na 5 pozycji
+            mother[5] = convert_image(mother[5])
+
+    children = [list(child) for child in children]
+    for child in children:
+        if child[6]:  # Zakładając, że Zdjęcie jest na 4 pozycji
+            child[6] = convert_image(child[6])
+
+    for spouse_id, children_0 in childrens.items():
+        childrens[spouse_id] = [list(child_0) for child_0 in children_0]
+        for child_0 in childrens[spouse_id]:
+            if child_0[6]:  # Zakładając, że Zdjęcie jest na 6 pozycji
+                child_0[6] = convert_image(child_0[6])
+
+    return render_template('person.html', person=person, spouses=spouses, children=children, childrens=childrens,
+                           parents=parents, siblings=siblings, father=father, mother=mother,
+                           siblings_first_half=siblings_first_half, siblings_second_half=siblings_second_half)
+
 
 
 @app.route('/modify_person_data/<int:person_id>', methods=['GET', 'POST'])
@@ -605,327 +855,6 @@ def add_spouse(person_id):
     return render_template('add_spouse.html', person=person_dict)
 
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-
-        current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
-
-        conn = get_db_connection()
-        cur = conn.cursor()
-        cur.execute("SELECT id, password, temp_key FROM Users WHERE username = %s", (username,))
-        user = cur.fetchone()
-
-        if user and check_password_hash(user[1], password):
-            session['user_id'] = user[0]
-            temp_key = user[2]
-
-            cur.execute("SELECT level FROM accesskeys WHERE access_key = %s", (temp_key,))
-            level = cur.fetchone()
-            session['user_level'] = level[0]
-
-            # Aktualizacja czasu logowania
-            cur.execute("UPDATE Users SET last_login = %s WHERE id = %s", (current_datetime, user[0]))
-            conn.commit()
-            cur.close()
-            conn.close()
-
-            return redirect(url_for('index'))
-        else:
-            cur.close()
-            conn.close()
-            flash('Invalid username or password.', 'danger')
-
-    return render_template('login.html')
-
-
-@app.route('/')
-def index():
-    if 'user_id' not in session:
-        return render_template('index.html')
-    return redirect(url_for('user_page'))
-
-
-@app.route('/work_sait')
-def work_sait():
-    if 'user_id' not in session:
-        return render_template('index.html')
-    return render_template('work_sait.html')
-
-
-@app.route('/logout')
-def logout():
-    session.pop('user_id', None)
-    session.pop('user_level', None)
-    return redirect(url_for('index'))  # Poprawiono url_for('/')
-
-
-@app.route('/user_page')
-def user_page():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
-    # Pobranie nazwy użytkownika
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT username FROM Users WHERE Id = %s", (session['user_id'],))
-    user = cur.fetchone()
-    cur.close()
-    conn.close()
-
-    # Pobranie poziomu uprawnień użytkownika
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT a.level FROM Users u JOIN accesskeys a ON a.access_key = u.temp_key WHERE u.Id = %s",
-                (session['user_id'],))
-    user_permission_level = cur.fetchone()
-    cur.close()
-    conn.close()
-    # user_permission_level = 3
-
-    if user and user_permission_level:
-        return render_template('user.html', username=user[0], user_permission_level=user_permission_level)
-    else:
-        return redirect(url_for('login'))
-
-
-@app.route('/change_password', methods=['POST'])
-def change_password():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
-    current_password = request.form['current_password']
-    new_password = request.form['new_password']
-
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT password FROM users WHERE Id = %s", (session['user_id'],))
-    user = cur.fetchone()
-
-    if user and check_password_hash(user[0], current_password):
-        hashed_password = generate_password_hash(new_password, method='pbkdf2:sha256')
-        cur.execute("UPDATE users SET password = %s WHERE Id = %s", (hashed_password, session['user_id']))
-        conn.commit()
-        flash('Password changed successfully!', 'success')
-    else:
-        flash('Incorrect current password.', 'danger')
-
-    cur.close()
-    conn.close()
-
-    return redirect(url_for('user_page'))
-
-
-@app.route('/search', methods=['GET', 'POST'])
-def search():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
-    if request.method == 'POST':
-        query = request.form.get('name', '')
-    else:
-        query = request.args.get('query', '')
-
-    if ' ' in query:
-        name_parts = query.split(' ')
-        first_name = name_parts[0]
-        last_name = name_parts[1] if len(name_parts) > 1 else ''
-    else:
-        first_name = query
-        last_name = ''
-
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("""
-        SELECT id, imię, nazwisko, EXTRACT(YEAR FROM data_urodzenia) AS rok_urodzenia
-        FROM osoba
-        WHERE (imię ILIKE %s AND nazwisko ILIKE %s)
-        OR (imię ILIKE %s OR nazwisko ILIKE %s)
-        LIMIT 5;
-    """, (f'{first_name}%', f'{last_name}%', f'{query}%', f'{query}%'))
-    results = cur.fetchall()
-    cur.close()
-    conn.close()
-
-    if request.method == 'POST':
-        return render_template('index.html', results=results)
-    return jsonify({'results': results})
-
-
-# Wyświetlanie szczegółów osoby
-@app.route('/person/<int:person_id>')
-def person(person_id):
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    # Pobieranie informacji o osobie
-    cur.execute("""
-        SELECT Id, Imię, Nazwisko, Płeć, EXTRACT(YEAR FROM data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM data_śmierci) AS rok_śmierci, Data_ślubu, zdjęcie
-        FROM Osoba
-        WHERE Id = %s
-    """, (person_id,))
-    person = cur.fetchone()
-
-    # Pobieranie małżonka
-    cur.execute("""
-        SELECT o.Id, o.Imię, o.Nazwisko, o.Płeć, EXTRACT(YEAR FROM o.data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM o.data_śmierci) AS rok_śmierci, o.zdjęcie
-        FROM Osoba o
-        JOIN Relacje r ON o.Id = r.Id_Osoby_w_Relacji
-        WHERE r.Id_Osoby = %s AND r.Relacja = 'małżonek'
-    """, (person_id,))
-    spouses = cur.fetchall()
-
-    childrens = {}
-
-    # Pobieranie dzieci
-    cur.execute("""
-        SELECT o.Id, o.Imię, o.Nazwisko, o.Płeć, EXTRACT(YEAR FROM o.data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM o.data_śmierci) AS rok_śmierci, o.zdjęcie
-        FROM Osoba o
-        JOIN Relacje r ON o.Id = r.Id_Osoby
-        WHERE r.Id_Osoby_w_Relacji = %s AND r.Relacja = 'rodzic'
-    ORDER BY rok_urodzenia
-    """, (person_id,))
-    children = cur.fetchall()
-
-    # Pobieranie dzieci dla poszczególnych matek
-    for spouse in spouses:
-        spouse_id = spouse[0]  # Zakładając, że ID małżonka jest na pierwszej pozycji
-        cur.execute("""
-            SELECT o.Id, o.Imię, o.Nazwisko, o.Płeć, EXTRACT(YEAR FROM o.data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM o.data_śmierci) AS rok_śmierci, o.zdjęcie
-            FROM Osoba o
-            JOIN Relacje r ON o.Id = r.Id_Osoby
-            WHERE r.Id_Osoby_w_Relacji = %s AND r.Relacja = 'rodzic'
-            ORDER BY rok_urodzenia
-        """, (spouse_id,))
-        children_0 = cur.fetchall()
-        childrens[spouse_id] = children_0
-
-    # Pobieranie rodziców
-    cur.execute("""
-        SELECT o.Id, o.Imię, o.Nazwisko, o.Płeć, o.zdjęcie
-        FROM Osoba o
-        JOIN Relacje r ON o.Id = r.Id_Osoby_w_Relacji
-        WHERE r.Id_Osoby = %s AND r.Relacja = 'rodzic';
-    """, (person_id,))
-    parents = cur.fetchall()
-
-    # Pobieranie ojca
-    cur.execute("""
-        SELECT o.Id, o.Imię, o.Nazwisko, EXTRACT(YEAR FROM o.data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM o.data_śmierci) AS rok_śmierci, o.zdjęcie
-        FROM Osoba o
-        JOIN Relacje r ON o.Id = r.Id_Osoby_w_Relacji
-        WHERE r.Id_Osoby = %s AND r.Relacja = 'rodzic' AND o.Płeć = 'M'
-    """, (person_id,))
-    father = cur.fetchone()
-
-    # Pobieranie matki
-    cur.execute("""
-        SELECT o.Id, o.Imię, o.Nazwisko, EXTRACT(YEAR FROM o.data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM o.data_śmierci) AS rok_śmierci, o.zdjęcie
-        FROM Osoba o
-        JOIN Relacje r ON o.Id = r.Id_Osoby_w_Relacji
-        WHERE r.Id_Osoby = %s AND r.Relacja = 'rodzic' AND o.Płeć = 'F'
-    """, (person_id,))
-    mother = cur.fetchone()
-
-    # Pobieranie rodzeństwa całego
-    cur.execute("""
-        SELECT DISTINCT sib.Id, sib.Imię, sib.Nazwisko, sib.Płeć, EXTRACT(YEAR FROM sib.data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM sib.data_śmierci) AS rok_śmierci, sib.zdjęcie
-        FROM osoba sib
-        JOIN relacje p ON sib.id = p.id_osoby
-        WHERE p.id_osoby_w_relacji IN (
-            SELECT Id_Osoby_w_Relacji
-            FROM Relacje
-            WHERE Id_Osoby = %s AND Relacja = 'rodzic')
-            AND relacja = 'rodzic' AND Id_Osoby != %s
-            order by rok_urodzenia
-        """, (person_id, person_id))
-    siblings = cur.fetchall()
-
-    # Pobieranie rodzeństwa dla obydwu rodziców
-    cur.execute("""
-               SELECT DISTINCT sib.Id, sib.Imię, sib.Nazwisko, sib.Płeć, EXTRACT(YEAR FROM sib.data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM sib.data_śmierci) AS rok_śmierci, sib.zdjęcie
-            FROM osoba sib
-            JOIN relacje p1 ON sib.id = p1.id_osoby
-            JOIN relacje p2 ON sib.id = p2.id_osoby
-            WHERE p1.id_osoby_w_relacji IN (
-                    SELECT r1.id_osoby_w_relacji
-                    FROM relacje r1
-                    WHERE r1.Id_Osoby = %s AND r1.Relacja = 'rodzic'
-                )
-              AND p2.id_osoby_w_relacji IN (
-                    SELECT r2.id_osoby_w_relacji
-                    FROM relacje r2
-                    WHERE r2.Id_Osoby = %s AND r2.Relacja = 'rodzic'
-                )
-              AND p1.id_osoby_w_relacji != p2.id_osoby_w_relacji
-              AND sib.Id != %s
-              AND p1.Relacja = 'rodzic'
-              AND p2.Relacja = 'rodzic'
-            ORDER BY rok_urodzenia;
-                """, (person_id, person_id, person_id))
-    siblings2 = cur.fetchall()
-
-    siblings = [list(sibling) for sibling in siblings]
-    for sibling in siblings:
-        sibling[6] = base64.b64encode(sibling[6]).decode('utf-8')
-
-    siblings2 = [list(sibling2) for sibling2 in siblings2]
-    for sibling2 in siblings2:
-        sibling2[6] = base64.b64encode(sibling2[6]).decode('utf-8')
-
-    half = len(siblings2) // 2
-    siblings_first_half = siblings2[:half]
-    siblings_second_half = siblings2[half:]
-
-    cur.close()
-    conn.close()
-
-    def convert_image(image_data):
-        if image_data:
-            return base64.b64encode(image_data).decode('utf-8')
-        return None
-
-    person = list(person)
-    if person[7]:  # Zakładając, że Zdjęcie jest na 9 pozycji
-        person[7] = convert_image(person[7])
-
-    spouses = [list(spouse) for spouse in spouses]
-    for spouse in spouses:
-        if spouse[6]:  # Zakładając, że Zdjęcie jest na 4 pozycji
-            spouse[6] = convert_image(spouse[6])
-
-    if father != None:
-        father = list(father)
-        if father[5]:  # Zakładając, że Zdjęcie jest na 5 pozycji
-            father[5] = convert_image(father[5])
-
-    if mother != None:
-        mother = list(mother)
-        if mother[5]:  # Zakładając, że Zdjęcie jest na 5 pozycji
-            mother[5] = convert_image(mother[5])
-
-    children = [list(child) for child in children]
-    for child in children:
-        if child[6]:  # Zakładając, że Zdjęcie jest na 4 pozycji
-            child[6] = convert_image(child[6])
-
-    for spouse_id, children_0 in childrens.items():
-        childrens[spouse_id] = [list(child_0) for child_0 in children_0]
-        for child_0 in childrens[spouse_id]:
-            if child_0[6]:  # Zakładając, że Zdjęcie jest na 6 pozycji
-                child_0[6] = convert_image(child_0[6])
-
-    return render_template('person.html', person=person, spouses=spouses, children=children, childrens=childrens,
-                           parents=parents, siblings=siblings, father=father, mother=mother,
-                           siblings_first_half=siblings_first_half, siblings_second_half=siblings_second_half)
-
-
 if __name__ == '__main__':
-    # context = ('cert.pem', 'key.pem')
     app.config['UPLOAD_FOLDER'] = 'images'
-    #app.run(host="127.0.0.0", port=5000, debug=True)
     app.run(debug=True)
