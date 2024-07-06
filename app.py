@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, flash
-from werkzeug.utils import secure_filename
+#from werkzeug.utils import secure_filename
 import os
 import psycopg2
 import base64
@@ -513,10 +513,12 @@ def modify_person_data(person_id):
             data_smierci = None
 
         if zdjecie.filename != '':
-            filename = secure_filename(zdjecie.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            zdjecie.save(file_path)
-            temp_image_path = file_path
+            pass
+            #TODO Zdjęcie
+            #filename = secure_filename(zdjecie.filename)
+            #file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            #zdjecie.save(file_path)
+            #temp_image_path = file_path
 
         if zdjecie and zdjecie != '' and os.path.exists(temp_image_path):
             image_data = convert_image_to_bytea(temp_image_path)
@@ -624,11 +626,13 @@ def add_parent(person_id):
         def add_parent_to_db(imie, nazwisko, data_urodzenia, data_slubu, data_smierci, zdjecie, plec, person_id):
             image_data = None
             if zdjecie and zdjecie.filename != '':
-                filename = secure_filename(zdjecie.filename)
-                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                zdjecie.save(file_path)
-                image_data = convert_image_to_bytea(file_path)
-                os.remove(file_path)
+                pass
+                #TODO Zdjęcie
+                #filename = secure_filename(zdjecie.filename)
+                #file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                #zdjecie.save(file_path)
+                #image_data = convert_image_to_bytea(file_path)
+                #os.remove(file_path)
             else:
                 if plec == 'M':
                     image_data = convert_image_to_bytea('Import_Image/me2.jpg')
@@ -711,10 +715,12 @@ def add_child(person_id):
             data_smierci = None
 
         if zdjecie.filename != '':
-            filename = secure_filename(zdjecie.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            zdjecie.save(file_path)
-            temp_image_path = file_path
+            pass
+            #TODO Zdjęcie
+            #filename = secure_filename(zdjecie.filename)
+            #file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            #zdjecie.save(file_path)
+            #temp_image_path = file_path
 
         if zdjecie and zdjecie != '' and os.path.exists(temp_image_path):
             image_data = convert_image_to_bytea(temp_image_path)
@@ -796,10 +802,12 @@ def add_spouse(person_id):
             data_smierci = None
 
         if zdjecie.filename != '':
-            filename = secure_filename(zdjecie.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            zdjecie.save(file_path)
-            temp_image_path = file_path
+            pass
+            #TODO Zdjęcie
+            #filename = secure_filename(zdjecie.filename)
+            #file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            #zdjecie.save(file_path)
+            #temp_image_path = file_path
 
         if zdjecie and zdjecie != '' and os.path.exists(temp_image_path):
             image_data = convert_image_to_bytea(temp_image_path)
