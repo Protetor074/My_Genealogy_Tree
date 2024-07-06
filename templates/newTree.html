@@ -1,63 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles2.css') }}" />
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles2.css') }}"/>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <title>{{ person[1] }} {{ person[2] }}</title>
-  </head>
-  <body>
-    <h1>{{ person[1] }} {{ person[2] }}</h1>
-    <p>Płeć: {% if person[3] == 'F' %}Kobieta{% elif person[3] == 'M' %}Mężczyzna{% else %}Nieznana{% endif %}</p>
-    <p>Miejsce urodzenia: {{ person[4] }}</p>
-    <p>Data urodzenia: {{ person[5] }}</p>
-    <p>Miejsce śmierci: {{ person[6] }}</p>
-    <p>Data śmierci: {{ person[7] }}</p>
-    <p>Data ślubu: {{ person[8] }}</p>
+</head>
+<body>
+<h1>{{ person[1] }} {{ person[2] }}</h1>
+<p>Płeć: {% if person[3] == 'F' %}Kobieta{% elif person[3] == 'M' %}Mężczyzna{% else %}Nieznana{% endif %}</p>
+<p>Miejsce urodzenia: {{ person[4] }}</p>
+<p>Data urodzenia: {{ person[5] }}</p>
+<p>Miejsce śmierci: {{ person[6] }}</p>
+<p>Data śmierci: {{ person[7] }}</p>
+<p>Data ślubu: {{ person[8] }}</p>
 
-    <div class="tree">
-      <ul>
+<div class="tree">
+    <ul>
         <li>
-          <div class="family">
-            {% if father %}
-              <div class="person child male" onclick="highlightPerson(this)">
-                <div class="name">{{ father[1] }} {{ father[2] }} - {{ father[5] }} - {{ father[7] }}</div>
-              </div>
-            {% endif %}
-            <div class="parent">
-              {% if mother %}
-                <div class="person female" onclick="highlightPerson(this)">
-                  <div class="name">{{ mother[1] }} {{ mother[2] }} - {{ mother[5] }} - {{ mother[7] }}</div>
-                </div>
-              {% endif %}
-              <ul>
-                {% for sibling in siblings %}
-                  <li>
-                    <div class="family" style="width: 172px">
-                      <div class="person child {{ 'male' if sibling[3] == 'M' else 'female' }}" onclick="highlightPerson(this)">
-                        <div class="name">{{ sibling[1] }}</div>
-                      </div>
+            <div class="family">
+                {% if father %}
+                    <div class="person child male" onclick="highlightPerson(this)">
+                        <div class="name">{{ father[1] }} {{ father[2] }} - {{ father[5] }} - {{ father[7] }}</div>
                     </div>
-                  </li>
-                {% endfor %}
-              </ul>
+                {% endif %}
+                <div class="parent">
+                    {% if mother %}
+                        <div class="person female" onclick="highlightPerson(this)">
+                            <div class="name">{{ mother[1] }} {{ mother[2] }} - {{ mother[5] }} - {{ mother[7] }}</div>
+                        </div>
+                    {% endif %}
+                    <ul>
+                        {% for sibling in siblings %}
+                            <li>
+                                <div class="family" style="width: 172px">
+                                    <div class="person child {{ 'male' if sibling[3] == 'M' else 'female' }}"
+                                         onclick="highlightPerson(this)">
+                                        <div class="name">{{ sibling[1] }}</div>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
             </div>
-          </div>
         </li>
-      </ul>
-    </div>
+    </ul>
+</div>
 
-    <script>
-      function highlightPerson(element) {
+<script>
+    function highlightPerson(element) {
         // Usuń podświetlenie z aktualnie podświetlonej osoby
         var currentHighlighted = document.querySelector('.person.highlight');
         if (currentHighlighted) {
-          currentHighlighted.classList.remove('highlight');
+            currentHighlighted.classList.remove('highlight');
         }
         // Dodaj podświetlenie do klikniętego elementu
         element.classList.add('highlight');
-      }
-    </script>
-  </body>
+    }
+</script>
+</body>
 </html>
