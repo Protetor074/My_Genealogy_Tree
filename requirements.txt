@@ -7,6 +7,7 @@ MarkupSafe==2.1.5
 pillow==10.4.0
 Werkzeug==3.0.1
 colorama==0.4.6
+psycopg2-binary==2.9.9
 
 
 

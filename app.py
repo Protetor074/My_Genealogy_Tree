@@ -1,30 +1,29 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, flash
-#from werkzeug.utils import secure_filename
+from werkzeug.utils import secure_filename
 import os
-#import psycopg2
+import psycopg2
 import base64
 from werkzeug.security import generate_password_hash, check_password_hash
 import string
 import random
 from datetime import datetime, timedelta
 from functools import wraps
-#from PIL import Image
+from PIL import Image
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
 # Konfiguracja połączenia z bazą danych
 def get_db_connection():
-    pass
-    # conn = psycopg2.connect(
-    #     dbname='gen_tree',  # Nazwa bazy danych
-    #     user='gen_tree_owner',  # Nazwa użytkownika bazy danych
-    #     password='zXpdLhHUR9F2',  # Hasło do bazy danych
-    #     host='ep-divine-term-a2ib4suo-pooler.eu-central-1.aws.neon.tech',  # Adres hosta
-    #     port='5432',  # Port (domyślny port PostgreSQL)
-    #     sslmode='require'
-    # )
-    # return conn
+    conn = psycopg2.connect(
+        dbname='gen_tree',  # Nazwa bazy danych
+        user='gen_tree_owner',  # Nazwa użytkownika bazy danych
+        password='zXpdLhHUR9F2',  # Hasło do bazy danych
+        host='ep-divine-term-a2ib4suo-pooler.eu-central-1.aws.neon.tech',  # Adres hosta
+        port='5432',  # Port (domyślny port PostgreSQL)
+        sslmode='require'
+    )
+    return conn
 
 #GLOBAL FUNCTION
 
@@ -64,22 +63,22 @@ def convert_image_to_bytea(image_path):
     return binary_data
 
 def convert_to_jpeg(input_path, output_path):
-    # try:
-    #     # Otwórz obraz wejściowy
-    #     with Image.open(input_path) as img:
-    #         # Jeśli obraz nie jest w formacie RGB, konwertuj go
-    #         if img.mode != 'RGB':
-    #             img = img.convert('RGB')
-    #
-    #         # Zapisz obraz w formacie JPEG
-    #         img.save(output_path, 'JPEG')
-    #
-    #         print(f'Konwersja zakończona pomyślnie: {input_path} -> {output_path}')
-    #         return True
-    #
-    # except IOError as e:
-    #     print(f'Błąd konwersji: {e}')
-    return False
+    try:
+        # Otwórz obraz wejściowy
+        with Image.open(input_path) as img:
+            # Jeśli obraz nie jest w formacie RGB, konwertuj go
+            if img.mode != 'RGB':
+                img = img.convert('RGB')
+
+            # Zapisz obraz w formacie JPEG
+            img.save(output_path, 'JPEG')
+
+            print(f'Konwersja zakończona pomyślnie: {input_path} -> {output_path}')
+            return True
+
+    except IOError as e:
+        print(f'Błąd konwersji: {e}')
+        return False
 
 ##MAIN SAIT
 @app.route('/')
