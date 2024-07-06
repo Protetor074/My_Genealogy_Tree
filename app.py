@@ -8,7 +8,7 @@ import string
 import random
 from datetime import datetime, timedelta
 from functools import wraps
-from PIL import Image
+#from PIL import Image
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
@@ -64,22 +64,22 @@ def convert_image_to_bytea(image_path):
     return binary_data
 
 def convert_to_jpeg(input_path, output_path):
-    try:
-        # Otwórz obraz wejściowy
-        with Image.open(input_path) as img:
-            # Jeśli obraz nie jest w formacie RGB, konwertuj go
-            if img.mode != 'RGB':
-                img = img.convert('RGB')
-
-            # Zapisz obraz w formacie JPEG
-            img.save(output_path, 'JPEG')
-
-            print(f'Konwersja zakończona pomyślnie: {input_path} -> {output_path}')
-            return True
-
-    except IOError as e:
-        print(f'Błąd konwersji: {e}')
-        return False
+    # try:
+    #     # Otwórz obraz wejściowy
+    #     with Image.open(input_path) as img:
+    #         # Jeśli obraz nie jest w formacie RGB, konwertuj go
+    #         if img.mode != 'RGB':
+    #             img = img.convert('RGB')
+    #
+    #         # Zapisz obraz w formacie JPEG
+    #         img.save(output_path, 'JPEG')
+    #
+    #         print(f'Konwersja zakończona pomyślnie: {input_path} -> {output_path}')
+    #         return True
+    #
+    # except IOError as e:
+    #     print(f'Błąd konwersji: {e}')
+    return False
 
 ##MAIN SAIT
 @app.route('/')
