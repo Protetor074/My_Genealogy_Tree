@@ -8,31 +8,37 @@
     <title>{{ username }}</title>
 </head>
 <body>
-    <div class="container">
-        <h1>{{ username }}</h1>
+<div class="container">
+    <h1>{{ username }}</h1>
 
-        <div class="options">
-            <form action="{{ url_for('change_password') }}" method="post">
-                <h2>Zmiana hasła</h2>
-                <input type="password" name="current_password" placeholder="Aktualne hasło" required>
-                <input type="password" name="new_password" placeholder="Nowe hasło" required>
+    <div class="options">
+        <h2>Zmiana hasła</h2>
+        <button class="change-pasword-button"  id="change-password-btn">Zmień hasło</button>
+        <div id="password-fields" style="display: none;">
+            <form id="change-password-form" action="{{ url_for('change_password') }}" method="post">
+                <input type="password" id="current_password" name="current_password" placeholder="Aktualne hasło" required>
+                <input type="password" id="new_password" name="new_password" placeholder="Nowe hasło" required>
                 <button type="submit">Zmień hasło</button>
             </form>
-            <button class="logout-button" onclick="window.location.href='{{ url_for('logout') }}'">Log out</button>
-            {% if user_permission_level[0] == 3 %}
-                <br>
-            <button class="admin-button" onclick="window.location.href='{{ url_for('admin') }}'">Admin Panel</button>
-            {% endif %}
         </div>
-
-        <h2>Wyszukaj osobę</h2>
-        <div class="search-container">
-            <input type="text" id="search" placeholder="Szukaj:" onkeyup="liveSearch()">
-            <div id="results-container"></div>
+        <div id="message-container">
+            <!-- Tutaj będzie wyświetlany komunikat o zmianie hasła -->
         </div>
-
-
+        <button class="logout-button" onclick="window.location.href='{{ url_for('logout') }}'">Wyloguj</button>
+        {% if user_permission_level[0] == 3 %}
+            <br>
+            <button class="admin-button" onclick="window.location.href='{{ url_for('admin') }}'">Panel Administratora</button>
+        {% endif %}
     </div>
-    <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+
+    <h2>Wyszukaj osobę</h2>
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Szukaj:" onkeyup="liveSearch()">
+        <div id="results-container"></div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/password_change.js') }}"></script>
+
 </body>
 </html>
