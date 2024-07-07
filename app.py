@@ -15,26 +15,26 @@ app.secret_key = 'supersecretkey'
 
 # Konfiguracja połączenia z bazą danych
 # ONLINE
-# def get_db_connection():
-#     conn = psycopg2.connect(
-#         dbname='gen_tree',  # Nazwa bazy danych
-#         user='gen_tree_owner',  # Nazwa użytkownika bazy danych
-#         password='zXpdLhHUR9F2',  # Hasło do bazy danych
-#         host='ep-divine-term-a2ib4suo-pooler.eu-central-1.aws.neon.tech',  # Adres hosta
-#         port='5432',  # Port (domyślny port PostgreSQL)
-#         sslmode='require'
-#     )
-#     return conn
-
-# LOCAL
 def get_db_connection():
     conn = psycopg2.connect(
-        dbname="gen_tree",
-        user="admin",
-        password="admin",
-        host="localhost"
+        dbname='gen_tree',  # Nazwa bazy danych
+        user='gen_tree_owner',  # Nazwa użytkownika bazy danych
+        password='zXpdLhHUR9F2',  # Hasło do bazy danych
+        host='ep-divine-term-a2ib4suo-pooler.eu-central-1.aws.neon.tech',  # Adres hosta
+        port='5432',  # Port (domyślny port PostgreSQL)
+        sslmode='require'
     )
     return conn
+
+# LOCAL
+# def get_db_connection():
+#     conn = psycopg2.connect(
+#         dbname="gen_tree",
+#         user="admin",
+#         password="admin",
+#         host="localhost"
+#     )
+#     return conn
 
 #GLOBAL FUNCTION
 
@@ -393,10 +393,15 @@ def search():
 
 
 # Wyświetlanie szczegółów osoby
-@app.route('/person/<int:person_id>')
+@app.route('/person/<int:person_id>', methods =['GET', 'POST'])
 def person(person_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
+
+    current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
+
+    user_id = session['user_id']  # Pobieranie user_id z sesji
+
     conn = get_db_connection()
     cur = conn.cursor()
 
@@ -518,6 +523,10 @@ def person(person_id):
     half = len(siblings2) // 2
     siblings_first_half = siblings2[:half]
     siblings_second_half = siblings2[half:]
+
+    # Aktualizacja czasu logowania
+    cur.execute("UPDATE users SET last_login = %s WHERE id = %s", (current_datetime, user_id))
+    conn.commit()
 
     cur.close()
     conn.close()
@@ -899,7 +908,6 @@ def add_spouse(person_id):
         )
         new_person_id = cur.fetchone()[0]
         cur.execute("CALL dodaj_relacje_malzenska(%s, %s)", (new_person_id, person_id))
-        conn.commit()
         conn.commit()
         cur.close()
         conn.close()
