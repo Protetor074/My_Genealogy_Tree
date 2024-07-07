@@ -143,7 +143,7 @@ def logout():
     return redirect(url_for('index'))  # Poprawiono url_for('/')
 
 
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']

@@ -11,8 +11,8 @@
     <div class="container">
         <h1>Rejestracja</h1>
         <div id="message-container"></div>
-        <form id="register-form">
-            <label for="username">Imie i Nazwisko:</label>
+        <form id="register-form" action="{{ url_for('register') }}" method="POST">
+            <label for="username">Imię i nazwisko:</label>
             <input type="text" id="username" name="username" required>
             <br>
             <label for="password">Hasło:</label>
