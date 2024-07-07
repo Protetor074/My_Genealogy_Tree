@@ -6,20 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_admin.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <title>Panel Administratora</title>
-    <script>
-        async function generateUniversalCode() {
-            const response = await fetch('/generate_universal_code', {method: 'POST'});
-            const data = await response.json();
-            document.getElementById('universal-code').innerText = 'Uniwersalny kod: ' + data.code;
-        }
-
-        async function generateTemporaryCode() {
-            const response = await fetch('/generate_temporary_code', {method: 'POST'});
-            const data = await response.json();
-            alert('Wygenerowany kod tymczasowy: ' + data.code);
-            location.reload();
-        }
-    </script>
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
 </head>
 <body>
     <div class="container">
@@ -77,6 +64,24 @@
                 <tr>
                     <td>{{ user[0] }}</td>
                     <td>{{ user[1] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <h2>Resetowanie hasła</h2>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Nazwa Użytkownika</th>
+                <th>Nowe Hasło</th>
+                <th>Reset</th>
+            </tr>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user[0] }}</td>
+                    <td>{{ user[1] }}</td>
+                    <td><input type="password" id="new-password-{{ user[0] }}"></td>
+                    <td><button onclick="resetPassword({{ user[0] }})">Resetuj</button></td>
                 </tr>
             {% endfor %}
         </table>

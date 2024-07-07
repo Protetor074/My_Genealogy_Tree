@@ -5,12 +5,14 @@
     <title>Rejestracja</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_register.css') }}">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <script src="{{ url_for('static', filename='js/register.js') }}"></script>
 </head>
 <body>
     <div class="container">
         <h1>Rejestracja</h1>
-        <form action="{{ url_for('register') }}" method="post">
-            <label for="username">Imie i Nazwisko:</label>
+        <div id="message-container"></div>
+        <form id="register-form" action="{{ url_for('register') }}" method="POST">
+            <label for="username">Imię i nazwisko:</label>
             <input type="text" id="username" name="username" required>
             <br>
             <label for="password">Hasło:</label>

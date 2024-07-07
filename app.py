@@ -14,6 +14,7 @@ app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
 # Konfiguracja połączenia z bazą danych
+# ONLINE
 def get_db_connection():
     conn = psycopg2.connect(
         dbname='gen_tree',  # Nazwa bazy danych
@@ -24,6 +25,16 @@ def get_db_connection():
         sslmode='require'
     )
     return conn
+
+# LOCAL
+# def get_db_connection():
+#     conn = psycopg2.connect(
+#         dbname="gen_tree",
+#         user="admin",
+#         password="admin",
+#         host="localhost"
+#     )
+#     return conn
 
 #GLOBAL FUNCTION
 
@@ -99,28 +110,29 @@ def login():
 
         conn = get_db_connection()
         cur = conn.cursor()
-        cur.execute("SELECT id, password, temp_key FROM Users WHERE username = %s", (username,))
+        cur.execute("SELECT id, password, temp_key FROM users WHERE username = %s", (username,))
         user = cur.fetchone()
 
-        if user and check_password_hash(user[1], password):
-            session['user_id'] = user[0]
-            temp_key = user[2]
+        if user:
+            if check_password_hash(user[1], password):
+                session['user_id'] = user[0]
+                temp_key = user[2]
 
-            cur.execute("SELECT level FROM accesskeys WHERE access_key = %s", (temp_key,))
-            level = cur.fetchone()
-            session['user_level'] = level[0]
+                cur.execute("SELECT level FROM accesskeys WHERE access_key = %s", (temp_key,))
+                level = cur.fetchone()
+                session['user_level'] = level[0] if level else None
 
-            # Aktualizacja czasu logowania
-            cur.execute("UPDATE Users SET last_login = %s WHERE id = %s", (current_datetime, user[0]))
-            conn.commit()
-            cur.close()
-            conn.close()
+                # Aktualizacja czasu logowania
+                cur.execute("UPDATE users SET last_login = %s WHERE id = %s", (current_datetime, user[0]))
+                conn.commit()
+                cur.close()
+                conn.close()
 
-            return redirect(url_for('index'))
+                return jsonify({'success': True, 'redirect': url_for('index')})
+            else:
+                return jsonify({'success': False, 'message': 'Niepoprawne hasło.'})
         else:
-            cur.close()
-            conn.close()
-            flash('Invalid username or password.', 'danger')
+            return jsonify({'success': False, 'message': 'Nie znaleziono użytkownika.'})
 
     return render_template('login.html')
 
@@ -138,8 +150,21 @@ def register():
         password = request.form['password']
         access_key = request.form['access_key']
 
+        current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
+
         conn = get_db_connection()
         cur = conn.cursor()
+
+        # Sprawdzenie, czy użytkownik o takiej nazwie już istnieje
+        cur.execute("SELECT id FROM Users WHERE username = %s", (username,))
+        existing_user = cur.fetchone()
+
+        if existing_user:
+            cur.close()
+            conn.close()
+            return jsonify({'success': False, 'message': 'Taki użytkownik już istnieje.'})
+
+        # Sprawdzenie poprawności klucza dostępu
         cur.execute("SELECT id, level, expiration_date, used FROM AccessKeys WHERE access_key = %s", (access_key,))
         key_data = cur.fetchone()
 
@@ -147,25 +172,31 @@ def register():
             key_id, level, expiration_date, used = key_data
 
             if expiration_date and expiration_date < datetime.now().date():
-                flash('This access key has expired.', 'danger')
-                return redirect(url_for('register'))
+                cur.close()
+                conn.close()
+                return jsonify({'success': False, 'message': 'Podany klucz stracił ważność.'})
 
             hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
             cur.execute("INSERT INTO Users (username, password, temp_key) VALUES (%s, %s, %s) RETURNING id",
                         (username, hashed_password, access_key))
             user_id = cur.fetchone()[0]
             cur.execute("UPDATE AccessKeys SET used = TRUE WHERE id = %s", (key_id,))
+
+            cur.execute("UPDATE Users SET last_login = %s WHERE id = %s", (current_datetime, user_id))
+
             conn.commit()
             cur.close()
             conn.close()
 
             session['user_id'] = user_id
             session['user_level'] = level
-            flash('You have successfully registered!', 'success')
-            return redirect(url_for('index'))
+            return jsonify({'success': True, 'redirect': url_for('index')})
         else:
-            flash('Invalid access key.', 'danger')
+            cur.close()
+            conn.close()
+            return jsonify({'success': False, 'message': 'Podano niepoprawny klucz proszę skontaktować się z administratorem.'})
 
+    # Jeżeli metoda nie jest POST, renderuj stronę rejestracji
     return render_template('register.html')
 
 ##ADMIN FUNCTION
@@ -194,6 +225,9 @@ def admin():
     """)
     users_with_temp_keys = cur.fetchall()
 
+    cur.execute("SELECT id, username FROM users")
+    users = cur.fetchall()
+
     cur.close()
     conn.close()
 
@@ -203,7 +237,26 @@ def admin():
     ]
 
     return render_template('admin.html', universal_key=universal_key, keys=keys,
-                           users_with_temp_keys=users_with_temp_keys, logged_in_users=logged_in_users)
+                           users_with_temp_keys=users_with_temp_keys, logged_in_users=formatted_logged_in_users, users=users)
+
+@app.route('/reset_password', methods=['POST'])
+@admin_required
+def reset_password():
+    user_id = request.form['user_id']
+    new_password = request.form['new_password']
+
+    # Hash the new password (example using werkzeug.security)
+    from werkzeug.security import generate_password_hash
+    hashed_password = generate_password_hash(new_password)
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("UPDATE users SET password = %s WHERE id = %s", (hashed_password, user_id))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    return jsonify({"message": "Hasło zostało zresetowane pomyślnie"})
 
 
 @app.route('/generate_universal_code', methods=['POST'])
@@ -259,26 +312,48 @@ def change_password():
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
-    current_password = request.form['current_password']
-    new_password = request.form['new_password']
+    current_password = request.form.get('current_password')
+    new_password = request.form.get('new_password')
+
+    if not current_password or not new_password:
+        flash('Proszę wypełnić wszystkie pole.', 'danger')
+        return jsonify({'success': False, 'message': 'Proszę wypełnić wszystkie pole.'})
+
+    if len(new_password) < 4:
+        flash('Hasło nie może być krótsze niż 4 znaki.', 'danger')
+        return jsonify({'success': False, 'message': 'Hasło nie może być krótsze niż 4 znaki.'})
 
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT password FROM users WHERE Id = %s", (session['user_id'],))
-    user = cur.fetchone()
 
-    if user and check_password_hash(user[0], current_password):
-        hashed_password = generate_password_hash(new_password, method='pbkdf2:sha256')
-        cur.execute("UPDATE users SET password = %s WHERE Id = %s", (hashed_password, session['user_id']))
-        conn.commit()
-        flash('Password changed successfully!', 'success')
-    else:
-        flash('Incorrect current password.', 'danger')
+    try:
+        # Pobranie hasła użytkownika i sprawdzenie jego poprawności
+        cur.execute("SELECT password FROM users WHERE Id = %s", (session['user_id'],))
+        user = cur.fetchone()
 
-    cur.close()
-    conn.close()
+        if user and check_password_hash(user[0], current_password):
+            hashed_password = generate_password_hash(new_password, method='pbkdf2:sha256')
 
-    return redirect(url_for('user_page'))
+            # Użycie transakcji SQL do wykonania aktualizacji
+            with conn:
+                with conn.cursor() as cursor:
+                    cursor.execute("UPDATE users SET password = %s WHERE Id = %s",
+                                   (hashed_password, session['user_id']))
+
+            flash('Hasło zmienione poprawnie!', 'success')
+            return jsonify({'success': True, 'message': 'Hasło zmienione poprawnie!!'})
+        else:
+            flash('Niepoprawne aktualne hasło', 'danger')
+            return jsonify({'success': False, 'message': 'Niepoprawne aktualne hasło.'})
+
+    except Exception as e:
+        flash(f'An error occurred: {str(e)}', 'danger')
+        return jsonify({'success': False, 'message': f'An error occurred: {str(e)}'})
+
+    finally:
+        cur.close()
+        conn.close()
+
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -318,10 +393,15 @@ def search():
 
 
 # Wyświetlanie szczegółów osoby
-@app.route('/person/<int:person_id>')
+@app.route('/person/<int:person_id>', methods =['GET', 'POST'])
 def person(person_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
+
+    current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
+
+    user_id = session['user_id']  # Pobieranie user_id z sesji
+
     conn = get_db_connection()
     cur = conn.cursor()
 
@@ -444,6 +524,10 @@ def person(person_id):
     siblings_first_half = siblings2[:half]
     siblings_second_half = siblings2[half:]
 
+    # Aktualizacja czasu logowania
+    cur.execute("UPDATE users SET last_login = %s WHERE id = %s", (current_datetime, user_id))
+    conn.commit()
+
     cur.close()
     conn.close()
 
@@ -513,12 +597,10 @@ def modify_person_data(person_id):
             data_smierci = None
 
         if zdjecie.filename != '':
-            pass
-            #TODO Zdjęcie
-            #filename = secure_filename(zdjecie.filename)
-            #file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            #zdjecie.save(file_path)
-            #temp_image_path = file_path
+            filename = secure_filename(zdjecie.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            zdjecie.save(file_path)
+            temp_image_path = file_path
 
         if zdjecie and zdjecie != '' and os.path.exists(temp_image_path):
             image_data = convert_image_to_bytea(temp_image_path)
@@ -626,13 +708,11 @@ def add_parent(person_id):
         def add_parent_to_db(imie, nazwisko, data_urodzenia, data_slubu, data_smierci, zdjecie, plec, person_id):
             image_data = None
             if zdjecie and zdjecie.filename != '':
-                pass
-                #TODO Zdjęcie
-                #filename = secure_filename(zdjecie.filename)
-                #file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                #zdjecie.save(file_path)
-                #image_data = convert_image_to_bytea(file_path)
-                #os.remove(file_path)
+                filename = secure_filename(zdjecie.filename)
+                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                zdjecie.save(file_path)
+                image_data = convert_image_to_bytea(file_path)
+                os.remove(file_path)
             else:
                 if plec == 'M':
                     image_data = convert_image_to_bytea('Import_Image/me2.jpg')
@@ -715,12 +795,10 @@ def add_child(person_id):
             data_smierci = None
 
         if zdjecie.filename != '':
-            pass
-            #TODO Zdjęcie
-            #filename = secure_filename(zdjecie.filename)
-            #file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            #zdjecie.save(file_path)
-            #temp_image_path = file_path
+            filename = secure_filename(zdjecie.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            zdjecie.save(file_path)
+            temp_image_path = file_path
 
         if zdjecie and zdjecie != '' and os.path.exists(temp_image_path):
             image_data = convert_image_to_bytea(temp_image_path)
@@ -802,12 +880,10 @@ def add_spouse(person_id):
             data_smierci = None
 
         if zdjecie.filename != '':
-            pass
-            #TODO Zdjęcie
-            #filename = secure_filename(zdjecie.filename)
-            #file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            #zdjecie.save(file_path)
-            #temp_image_path = file_path
+            filename = secure_filename(zdjecie.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            zdjecie.save(file_path)
+            temp_image_path = file_path
 
         if zdjecie and zdjecie != '' and os.path.exists(temp_image_path):
             image_data = convert_image_to_bytea(temp_image_path)
@@ -832,7 +908,6 @@ def add_spouse(person_id):
         )
         new_person_id = cur.fetchone()[0]
         cur.execute("CALL dodaj_relacje_malzenska(%s, %s)", (new_person_id, person_id))
-        conn.commit()
         conn.commit()
         cur.close()
         conn.close()
