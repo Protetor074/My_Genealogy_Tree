@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,37 +8,44 @@
     <title>Dodaj Dziecko</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Dodaj Dziecko</h1>
-        <form action="{{ url_for('add_child', person_id=person.id) }}" method="post" enctype="multipart/form-data">
-            <label for="imie">Imię:</label>
-            <input type="text" id="imie" name="imie" required>
+<div class="container">
+    <h1>Dodaj Dziecko</h1>
+    <p>Rodzic: {{ person.imie }} {{ person.nazwisko }}</p>
+    <form action="{{ url_for('add_child', parent_id=person.id) }}" method="post" enctype="multipart/form-data">
+        <label for="second_parent_id">Drugi rodzic:</label>
+        <select id="second_parent_id" name="second_parent_id" required>
+            {% for spouse in spouses %}
+                <option value="{{ spouse[0] }}" {% if loop.first %}selected{% endif %}>{{ spouse[1] }} {{ spouse[2] }}</option>
+            {% endfor %}
+        </select>
 
-            <label for="nazwisko">Nazwisko:</label>
-            <input type="text" id="nazwisko" name="nazwisko" required>
+        <label for="imie">Imię:</label>
+        <input type="text" id="imie" name="imie" required>
 
-            <label for="plec">Płeć:</label>
-            <select id="plec" name="plec" required>
-                <option value="Mężczyzna">Mężczyzna</option>
-                <option value="Kobieta">Kobieta</option>
-                <option value="Inna">Inna</option>
-            </select>
+        <label for="nazwisko">Nazwisko:</label>
+        <input type="text" id="nazwisko" name="nazwisko" required>
 
-            <label for="data_urodzenia">Data urodzenia:</label>
-            <input type="date" id="data_urodzenia" name="data_urodzenia" required>
+        <label for="plec">Płeć:</label>
+        <select id="plec" name="plec" required>
+            <option value="Mężczyzna">Mężczyzna</option>
+            <option value="Kobieta">Kobieta</option>
+            <option value="Inna">Inna</option>
+        </select>
 
-            <label for="data_slubu">Data ślubu:</label>
-            <input type="date" id="data_slubu" name="data_slubu">
+        <label for="data_urodzenia">Data urodzenia:</label>
+        <input type="date" id="data_urodzenia" name="data_urodzenia" required>
 
-            <label for="data_smierci">Data śmierci:</label>
-            <input type="date" id="data_smierci" name="data_smierci">
+        <label for="data_slubu">Data ślubu:</label>
+        <input type="date" id="data_slubu" name="data_slubu">
 
-            <label for="zdjecie">Zdjęcie (lokalne):</label>
-            <input type="file" id="zdjecie" name="zdjecie" accept="image/*">
+        <label for="data_smierci">Data śmierci:</label>
+        <input type="date" id="data_smierci" name="data_smierci">
 
-            <button type="submit">Dodaj Dziecko</button>
-        </form>
-        <a href="{{ url_for('person', person_id=person.id) }}" class="back-button">Wróć do profilu</a>
-    </div>
+        <label for="zdjecie">Zdjęcie (lokalne):</label>
+        <input type="file" id="zdjecie" name="zdjecie" accept="image/*">
+        <button type="submit">Dodaj Dziecko</button>
+    </form>
+    <a href="{{ url_for('person', person_id=person.id) }}" class="back-button">Wróć do profilu</a>
+</div>
 </body>
 </html>

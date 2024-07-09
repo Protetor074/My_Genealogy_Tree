@@ -10,7 +10,7 @@
 <body>
 <div class="container">
     <h1>Modyfikuj Dane Osoby</h1>
-    <form action="{{ url_for('modify_person_data', person_id=person.id) }}" method="post" enctype="multipart/form-data">
+    <form id="form" action="{{ url_for('modify_person_data', person_id=person.id) }}" method="post" enctype="multipart/form-data">
         <label for="imie">Imię:</label>
         <input type="text" id="imie" name="imie" value="{{ person.imie }}" required>
 
@@ -36,14 +36,33 @@
         <label for="zdjecie">Zdjęcie (lokalne):</label>
         <input type="file" id="zdjecie" name="zdjecie" accept="image/*">
 
-        <button type="submit">Modyfikuj Dane</button>
-    </form>
+        <div id="error-message" style="color: red;"></div>
 
-    <form action="{{ url_for('remove_person_image', person_id=person.id) }}" method="post">
-        <button type="submit" class="remove-button">Usuń zdjęcie</button>
+        <button type="submit">Modyfikuj Dane</button>
     </form>
 
     <a href="{{ url_for('person', person_id=person.id) }}" class="back-button">Wróć do profilu</a>
 </div>
+
+<script>
+    document.getElementById('form').addEventListener('submit', function(event) {
+        var fileInput = document.getElementById('zdjecie');
+        var errorMessage = document.getElementById('error-message');
+
+        if (fileInput.files.length > 0) {
+            var file = fileInput.files[0];
+            var fileType = file.type;
+
+            var validImageTypes = ['image/gif', 'image/jpeg', 'image/png', 'image/webp'];
+
+            if (!validImageTypes.includes(fileType)) {
+                errorMessage.textContent = 'Niewłaściwy format pliku. Proszę wybrać plik graficzny.';
+                event.preventDefault(); // Stop the form from submitting
+            } else {
+                errorMessage.textContent = ''; // Clear any previous error message
+            }
+        }
+    });
+</script>
 </body>
 </html>
