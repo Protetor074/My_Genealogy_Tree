@@ -16,26 +16,26 @@ app.secret_key = 'supersecretkey'
 
 # Konfiguracja połączenia z bazą danych
 # ONLINE
-# def get_db_connection():
-#     conn = psycopg2.connect(
-#         dbname='gen_tree',  # Nazwa bazy danych
-#         user='gen_tree_owner',  # Nazwa użytkownika bazy danych
-#         password='zXpdLhHUR9F2',  # Hasło do bazy danych
-#         host='ep-divine-term-a2ib4suo-pooler.eu-central-1.aws.neon.tech',  # Adres hosta
-#         port='5432',  # Port (domyślny port PostgreSQL)
-#         sslmode='require'
-#     )
-#     return conn
-
-# LOCAL
 def get_db_connection():
     conn = psycopg2.connect(
-        dbname="gen_tree",
-        user="admin",
-        password="admin",
-        host="localhost"
+        dbname='gen_tree',  # Nazwa bazy danych
+        user='gen_tree_owner',  # Nazwa użytkownika bazy danych
+        password='zXpdLhHUR9F2',  # Hasło do bazy danych
+        host='ep-divine-term-a2ib4suo-pooler.eu-central-1.aws.neon.tech',  # Adres hosta
+        port='5432',  # Port (domyślny port PostgreSQL)
+        sslmode='require'
     )
     return conn
+
+# LOCAL
+# def get_db_connection():
+#     conn = psycopg2.connect(
+#         dbname="gen_tree",
+#         user="admin",
+#         password="admin",
+#         host="localhost"
+#     )
+#     return conn
 
 #GLOBAL FUNCTION
 
