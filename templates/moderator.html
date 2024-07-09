@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_moderator.css') }}">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <title>Panel Moderatora</title>
+    <script src="{{ url_for('static', filename='js/moderator.js') }}"></script>
+</head>
+<body>
+    <div class="container">
+        <a href="{{ url_for('user_page') }}" class="back-button">Wróć do profilu</a>
+        <h1>Panel Moderatora</h1>
+
+        <h2>Lista zalogowanych użytkowników</h2>
+        <input type="text" id="logged-in-user-search" placeholder="Szukaj użytkownika..." onkeyup="searchTable('logged-in-user-search', 'logged-in-user-table')">
+        <table id="logged-in-user-table">
+            <tr>
+                <th>Nazwa Użytkownika</th>
+                <th>Ostatnie logowanie</th>
+            </tr>
+            {% for user in logged_in_users %}
+                <tr>
+                    <td>{{ user[0] }}</td>
+                    <td>{{ user[1] }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>

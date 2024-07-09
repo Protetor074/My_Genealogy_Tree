@@ -1,33 +1,101 @@
-async function generateUniversalCode() {
-    const response = await fetch('/generate_universal_code', { method: 'POST' });
-    const data = await response.json();
-    document.getElementById('universal-code').innerText = 'Uniwersalny kod: ' + data.code;
-}
-
-async function generateTemporaryCode() {
-    const response = await fetch('/generate_temporary_code', { method: 'POST' });
-    const data = await response.json();
-    alert('Wygenerowany kod tymczasowy: ' + data.code);
-    location.reload();
-}
-
-async function resetPassword(userId) {
-    const newPassword = prompt('Podaj nowe hasło dla użytkownika o ID: ' + userId);
-    if (newPassword) {
-        const response = await fetch('/reset_password', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-                'user_id': userId,
-                'new_password': newPassword,
+async function generateAccessKey(event) {
+            event.preventDefault();
+            const level = document.getElementById('level').value;
+            const expirationDate = document.getElementById('expiration_date').value;
+            fetch('/generate_key', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ level, expiration_date: expirationDate })
             })
-        });
+            .then(response => response.json())
+            .then(data => {
+                alert(`Generated Key: ${data.key}`);
+                location.reload();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
 
-        const data = await response.json();
-        alert(data.message);
-        location.reload();
-    }
-}
+        async function deleteKey(key) {
+            if (confirm(`Czy na pewno chcesz usunąć klucz: ${key}?`)) {
+                fetch('/delete_key', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        'key': key
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        }
 
+        async function resetPassword(userId) {
+            const newPassword = prompt('Podaj nowe hasło dla użytkownika o ID: ' + userId);
+            if (newPassword) {
+                const response = await fetch('/reset_password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        'user_id': userId,
+                        'new_password': newPassword,
+                    })
+                });
+
+                const data = await response.json();
+                alert(data.message);
+                location.reload();
+            }
+        }
+
+        async function updateUserKey(userId) {
+            const newKey = document.getElementById(`new-key-${userId}`).value;
+            const response = await fetch('/update_user_key', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'user_id': userId,
+                    'new_key': newKey,
+                })
+            });
+
+            const data = await response.json();
+            alert(data.message);
+            location.reload();
+        }
+
+        function searchTable(inputId, tableId) {
+            const input = document.getElementById(inputId);
+            const filter = input.value.toLowerCase();
+            const table = document.getElementById(tableId);
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                let found = false;
+                for (let j = 0; j < cells.length; j++) {
+                    if (cells[j]) {
+                        if (cells[j].textContent.toLowerCase().indexOf(filter) > -1) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                rows[i].style.display = found ? '' : 'none';
+            }
+        }

@@ -13,7 +13,7 @@
 
     <div class="options">
         <h2>Zmiana hasła</h2>
-        <button class="change-pasword-button"  id="change-password-btn">Zmień hasło</button>
+        <button class="change-password-button" id="change-password-btn">Zmień hasło</button>
         <div id="password-fields" style="display: none;">
             <form id="change-password-form" action="{{ url_for('change_password') }}" method="post">
                 <input type="password" id="current_password" name="current_password" placeholder="Aktualne hasło" required>
@@ -25,7 +25,11 @@
             <!-- Tutaj będzie wyświetlany komunikat o zmianie hasła -->
         </div>
         <button class="logout-button" onclick="window.location.href='{{ url_for('logout') }}'">Wyloguj</button>
-        {% if user_permission_level[0] == 3 %}
+        {% if user_permission_level[0] >= 5 %}
+            <br>
+            <button class="moderator-button" onclick="window.location.href='{{ url_for('moderator_panel') }}'">Panel Moderatora</button>
+        {% endif %}
+        {% if user_permission_level[0] >= 10 %}
             <br>
             <button class="admin-button" onclick="window.location.href='{{ url_for('admin') }}'">Panel Administratora</button>
         {% endif %}
