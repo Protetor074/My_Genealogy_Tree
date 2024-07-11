@@ -84,11 +84,14 @@ def inTest(f):
     return decorated_function
 
 
-def convert_image_to_bytea(image_path):
+def convert_image_to_bytea(image):
+    binary_data = image.read()
+    return binary_data
+
+def convert_image_to_bytea_from_path(image_path):
     with open(image_path, 'rb') as file:
         binary_data = file.read()
     return binary_data
-
 
 def convert_to_jpeg(input_path, output_path):
     try:
@@ -681,14 +684,7 @@ def modify_person_data(person_id):
                 image = Image.open(zdjecie)
                 image.verify()  # Verify if it is an image
                 zdjecie.seek(0)  # Reset the file pointer to the start
-
-                filename = secure_filename(zdjecie.filename)
-                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                zdjecie.save(file_path)
-                temp_image_path = file_path
-
-                image_data = convert_image_to_bytea(temp_image_path)
-                os.remove(temp_image_path)
+                image_data = convert_image_to_bytea(zdjecie)
             except (IOError, SyntaxError) as e:
                 return jsonify({'error': 'Plik nie jest prawidłowym obrazem'}), 400
 
@@ -767,12 +763,7 @@ def add_photo(person_id, user_id, person_modification_owner):
         return redirect(url_for('person', person_id=person_id))
 
     if zdjecie.filename != '':
-        filename = secure_filename(zdjecie.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        zdjecie.save(file_path)
-
-        image_data = convert_image_to_bytea(file_path)
-        os.remove(file_path)
+        image_data = convert_image_to_bytea(zdjecie)
 
         conn = get_db_connection()
         cur = conn.cursor()
@@ -799,9 +790,9 @@ def remove_photo(person_id):
 
     image_data = None
     if plec and plec[0] == 'M':
-        image_data = convert_image_to_bytea('Import_Image/me2.jpg')
+        image_data = convert_image_to_bytea_from_path('Import_Image/me2.jpg')
     elif plec and plec[0] == 'F':
-        image_data = convert_image_to_bytea('Import_Image/fe2.jpg')
+        image_data = convert_image_to_bytea_from_path('Import_Image/fe2.jpg')
     else:
         flash('Nieprawidłowa płeć', 'error')
         return redirect(url_for('person', person_id=person_id))
@@ -847,16 +838,12 @@ def add_parent(person_id):
             father_id = None
             mother_id = None
             if zdjecie and zdjecie.filename != '':
-                filename = secure_filename(zdjecie.filename)
-                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                zdjecie.save(file_path)
-                image_data = convert_image_to_bytea(file_path)
-                os.remove(file_path)
+                image_data = convert_image_to_bytea(zdjecie)
             else:
                 if plec == 'M':
-                    image_data = convert_image_to_bytea('Import_Image/me2.jpg')
+                    image_data = convert_image_to_bytea_from_path('Import_Image/me2.jpg')
                 else:
-                    image_data = convert_image_to_bytea('Import_Image/fe2.jpg')
+                    image_data = convert_image_to_bytea_from_path('Import_Image/fe2.jpg')
 
             if not data_slubu:
                 data_slubu = None
@@ -990,16 +977,12 @@ def add_child(parent_id):
 
         image_data = None
         if zdjecie and zdjecie.filename != '':
-            filename = secure_filename(zdjecie.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            zdjecie.save(file_path)
-            image_data = convert_image_to_bytea(file_path)
-            os.remove(file_path)
+            image_data = convert_image_to_bytea(zdjecie)
         else:
             if plec == 'M':
-                image_data = convert_image_to_bytea('Import_Image/me2.jpg')
+                image_data = convert_image_to_bytea_from_path('Import_Image/me2.jpg')
             else:
-                image_data = convert_image_to_bytea('Import_Image/fe2.jpg')
+                image_data = convert_image_to_bytea_from_path('Import_Image/fe2.jpg')
 
         user_id = session.get('user_id')
         cur.execute(
@@ -1060,19 +1043,12 @@ def add_spouse(person_id):
             data_smierci = None
 
         if zdjecie.filename != '':
-            filename = secure_filename(zdjecie.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            zdjecie.save(file_path)
-            temp_image_path = file_path
-
-        if zdjecie and zdjecie != '' and os.path.exists(temp_image_path):
-            image_data = convert_image_to_bytea(temp_image_path)
-            os.remove(temp_image_path)
+            image_data = convert_image_to_bytea(zdjecie)
         else:
             if plec == 'M':
-                image_data = convert_image_to_bytea('Import_Image/me2.jpg')
+                image_data = convert_image_to_bytea_from_path('Import_Image/me2.jpg')
             else:
-                image_data = convert_image_to_bytea('Import_Image/fe2.jpg')
+                image_data = convert_image_to_bytea_from_path('Import_Image/fe2.jpg')
 
         user_id = session.get('user_id')
 
@@ -1121,28 +1097,24 @@ def add_spouse(person_id):
 @app.route('/remove_person/<int:person_id>', methods=['POST'])
 @inTest
 def remove_person(person_id):
-    if session['user_level'] < 6:
-        return jsonify({'error': 'Zbyt niski poziom uprawnień'}), 403
-
-    password = request.form.get('password')
-
     user_id = session['user_id']
     # Pobranie hasła z bazy danych
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute(
         """
-       SELECT password FROM users WHERE id = %s
+       SELECT modified_by FROM osoba where id = %s
         """,
-        (user_id,)
+        (person_id,)
     )
-    user_password = cur.fetchone()[0]
+    owner_id = cur.fetchone()[0]
     cur.close()
     conn.close()
 
-    # Sprawdź poprawność hasła
-    if not check_password_hash(user_password, password):
-        return jsonify({'error': 'Nieprawidłowe hasło'}), 403
+    if owner_id != person_id:
+        if session['user_level'] < 6:
+            flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)','error')
+            return redirect(url_for('/person/',person_id = person_id))
 
     conn = get_db_connection()
     cur = conn.cursor()
@@ -1165,9 +1137,8 @@ def remove_person(person_id):
     cur.close()
     conn.close()
 
-    print("Osoba o id " + str(person_id) + " została usunięta")
-
-    return jsonify({'message': 'Osoba została usunięta poprawnie'}), 403
+    flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)','messages')
+    return redirect(url_for('ueser_page'))
 
 
 if __name__ == '__main__':
