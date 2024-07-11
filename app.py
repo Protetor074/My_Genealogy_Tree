@@ -63,6 +63,15 @@ def admin_required(f):
 
     return decorated_function
 
+def moderator_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session or session.get('user_level') < 5:
+            return redirect(url_for('login', next=request.url))
+        return f(*args, **kwargs)
+
+    return decorated_function
+
 
 def work_progres(f):
     @wraps(f)
@@ -79,6 +88,15 @@ def inTest(f):
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session or session.get('user_level') < 5:
             return redirect(url_for('work_sait'))
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+def login_test(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return redirect(url_for('index'))
         return f(*args, **kwargs)
 
     return decorated_function
@@ -275,6 +293,7 @@ def admin():
 
 
 @app.route('/generate_key', methods=['POST'])
+@admin_required
 def generate_key():
     data = request.get_json()
     level = data['level']
@@ -286,6 +305,7 @@ def generate_key():
 
 
 @app.route('/delete_key', methods=['POST'])
+@admin_required
 def delete_key():
     key = request.form['key']
     conn = get_db_connection()
@@ -298,6 +318,7 @@ def delete_key():
 
 
 @app.route('/reset_password', methods=['POST'])
+@admin_required
 def reset_password():
     user_id = request.form['user_id']
     new_password = request.form['new_password']
@@ -312,6 +333,7 @@ def reset_password():
 
 
 @app.route('/update_user_key', methods=['POST'])
+@admin_required
 def update_user_key():
     user_id = request.form['user_id']
     new_key = request.form['new_key']
@@ -325,6 +347,7 @@ def update_user_key():
 
 
 @app.route('/moderator')
+@moderator_required
 def moderator_panel():
     conn = get_db_connection()
     cur = conn.cursor()
@@ -339,17 +362,14 @@ def moderator_panel():
 
 
 @app.route('/work_sait')
+@login_test
 def work_sait():
-    if 'user_id' not in session:
-        return render_template('index.html')
     return render_template('work_sait.html')
 
 
 @app.route('/user_page')
+@login_test
 def user_page():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
     # Pobranie nazwy użytkownika
     conn = get_db_connection()
     cur = conn.cursor()
@@ -375,6 +395,7 @@ def user_page():
 
 
 @app.route('/change_password', methods=['POST'])
+@login_test
 def change_password():
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -423,10 +444,8 @@ def change_password():
 
 
 @app.route('/search', methods=['GET', 'POST'])
+@login_test
 def search():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
     if request.method == 'POST':
         query = request.form.get('name', '')
     else:
@@ -460,10 +479,8 @@ def search():
 
 # Wyświetlanie szczegółów osoby
 @app.route('/person/<int:person_id>', methods=['GET', 'POST'])
+@login_test
 def person(person_id):
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
 
     user_id = session['user_id']  # Pobieranie user_id z sesji
@@ -809,7 +826,7 @@ def remove_photo(person_id):
 
 
 @app.route('/add_parent/<int:person_id>', methods=['GET', 'POST'])
-@work_progres
+@inTest
 def add_parent(person_id):
     if request.method == 'POST':
         # Ojciec
@@ -922,7 +939,7 @@ def add_parent(person_id):
 
 
 @app.route('/add_child/<int:parent_id>', methods=['GET', 'POST'])
-@work_progres
+@inTest
 def add_child(parent_id):
     conn = get_db_connection()
     cur = conn.cursor()
@@ -1037,6 +1054,8 @@ def add_spouse(person_id):
         else:
             plec = 'F'
 
+        if data_urodzenia == "":
+            data_urodzenia = None
         if data_slubu == "":
             data_slubu = None
         if data_smierci == "":
@@ -1087,8 +1106,8 @@ def add_spouse(person_id):
         'nazwisko': person[2],
         'plec': person[3],
         'data_urodzenia': person[4],
-        'data_slubu': person[5],
-        'data_smierci': person[6],
+        'data_smierci': person[5],
+        'data_slubu': person[6],
         'image_url': person[7]
     }
     return render_template('add_spouse.html', person=person_dict)
