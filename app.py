@@ -490,7 +490,7 @@ def person(person_id):
 
     # Pobieranie informacji o osobie
     cur.execute("""
-        SELECT Id, Imię, Nazwisko, Płeć, EXTRACT(YEAR FROM data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM data_śmierci) AS rok_śmierci, Data_ślubu, zdjęcie
+        SELECT Id, Imię, Nazwisko, Płeć, EXTRACT(YEAR FROM data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM data_śmierci) AS rok_śmierci, EXTRACT(YEAR FROM data_ślubu), zdjęcie
         FROM Osoba
         WHERE Id = %s
     """, (person_id,))
@@ -748,8 +748,8 @@ def modify_person_data(person_id):
         'nazwisko': person[2],
         'plec': person[3],
         'data_urodzenia': person[4],
-        'data_slubu': person[5],
-        'data_smierci': person[6],
+        'data_smierci': person[5],
+        'data_slubu': person[6],
         'image_url': person[7]
     }
     return render_template('modify_person_data.html', person=person_dict)
@@ -931,8 +931,8 @@ def add_parent(person_id):
         'nazwisko': person[2],
         'plec': person[3],
         'data_urodzenia': person[4],
-        'data_slubu': person[5],
-        'data_smierci': person[6],
+        'data_smierci': person[5],
+        'data_slubu': person[6],
         'image_url': person[7]
     }
     return render_template('add_parent.html', person=person_dict)
@@ -1157,7 +1157,7 @@ def remove_person(person_id):
     conn.close()
 
     flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)','messages')
-    return redirect(url_for('ueser_page'))
+    return redirect(url_for('user_page'))
 
 
 if __name__ == '__main__':
