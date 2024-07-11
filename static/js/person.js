@@ -14,42 +14,6 @@ if (owner !== personId) {
 
 document.addEventListener('DOMContentLoaded', function () {
 
-
-    document.getElementById('add-photo-form').addEventListener('submit', function (event) {
-        event.preventDefault(); // Zapobiegaj domyślnemu wysyłaniu formularza
-
-        var formData = new FormData(this);
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', this.action, true);
-        xhr.onload = function () {
-            var response = JSON.parse(xhr.responseText);
-            if (xhr.status === 200) {
-                alert(response.message); // Komunikat
-                location.reload(); // Odświeżenie strony (opcjonalne)
-            } else {
-                alert(response.error); // Komunikat o błędzie
-            }
-        };
-        xhr.send(formData);
-    });
-
-    document.getElementById('remove-photo-form').addEventListener('submit', function (event) {
-        event.preventDefault(); // Zapobiegaj domyślnemu wysyłaniu formularza
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', this.action, true);
-        xhr.onload = function () {
-            var response = JSON.parse(xhr.responseText);
-            if (xhr.status === 200) {
-                alert(response.message); // Komunikat
-                location.reload(); // Odświeżenie strony (opcjonalne)
-            } else {
-                alert(response.error); // Komunikat o błędzie
-            }
-        };
-        xhr.send();
-    });
-
     document.getElementById('remove_person_form').addEventListener('submit', function (event) {
         event.preventDefault(); // Zapobiegaj domyślnemu wysyłaniu formularza
 

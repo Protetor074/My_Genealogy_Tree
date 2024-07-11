@@ -14,30 +14,32 @@ import io
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
 
+
 # Konfiguracja połączenia z bazą danych
 # ONLINE
-def get_db_connection():
-    conn = psycopg2.connect(
-        dbname='gen_tree',  # Nazwa bazy danych
-        user='gen_tree_owner',  # Nazwa użytkownika bazy danych
-        password='zXpdLhHUR9F2',  # Hasło do bazy danych
-        host='ep-divine-term-a2ib4suo-pooler.eu-central-1.aws.neon.tech',  # Adres hosta
-        port='5432',  # Port (domyślny port PostgreSQL)
-        sslmode='require'
-    )
-    return conn
-
-# LOCAL
 # def get_db_connection():
 #     conn = psycopg2.connect(
-#         dbname="gen_tree",
-#         user="admin",
-#         password="admin",
-#         host="localhost"
+#         dbname='gen_tree',  # Nazwa bazy danych
+#         user='gen_tree_owner',  # Nazwa użytkownika bazy danych
+#         password='zXpdLhHUR9F2',  # Hasło do bazy danych
+#         host='ep-divine-term-a2ib4suo-pooler.eu-central-1.aws.neon.tech',  # Adres hosta
+#         port='5432',  # Port (domyślny port PostgreSQL)
+#         sslmode='require'
 #     )
 #     return conn
 
-#GLOBAL FUNCTION
+# LOCAL
+def get_db_connection():
+    conn = psycopg2.connect(
+        dbname="gen_tree",
+        user="admin",
+        password="admin",
+        host="localhost"
+    )
+    return conn
+
+
+# GLOBAL FUNCTION
 
 def generate_access_key(level, expiration_days=None):
     key = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
@@ -61,6 +63,7 @@ def admin_required(f):
 
     return decorated_function
 
+
 def work_progres(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -69,6 +72,7 @@ def work_progres(f):
         return f(*args, **kwargs)
 
     return decorated_function
+
 
 def inTest(f):
     @wraps(f)
@@ -79,10 +83,12 @@ def inTest(f):
 
     return decorated_function
 
+
 def convert_image_to_bytea(image_path):
     with open(image_path, 'rb') as file:
         binary_data = file.read()
     return binary_data
+
 
 def convert_to_jpeg(input_path, output_path):
     try:
@@ -102,12 +108,14 @@ def convert_to_jpeg(input_path, output_path):
         print(f'Błąd konwersji: {e}')
         return False
 
+
 ##MAIN SAIT
 @app.route('/')
 def index():
     if 'user_id' not in session:
         return render_template('index.html')
     return redirect(url_for('user_page'))
+
 
 ##LOGIN/REGISTER - SAITS
 
@@ -146,6 +154,7 @@ def login():
             return jsonify({'success': False, 'message': 'Nie znaleziono użytkownika.'})
 
     return render_template('login.html')
+
 
 @app.route('/logout')
 def logout():
@@ -205,10 +214,12 @@ def register():
         else:
             cur.close()
             conn.close()
-            return jsonify({'success': False, 'message': 'Podano niepoprawny klucz proszę skontaktować się z administratorem.'})
+            return jsonify(
+                {'success': False, 'message': 'Podano niepoprawny klucz proszę skontaktować się z administratorem.'})
 
     # Jeżeli metoda nie jest POST, renderuj stronę rejestracji
     return render_template('register.html')
+
 
 ##ADMIN FUNCTION
 @app.route('/admin')
@@ -259,6 +270,7 @@ def admin():
                            users=users,
                            available_keys=available_keys)
 
+
 @app.route('/generate_key', methods=['POST'])
 def generate_key():
     data = request.get_json()
@@ -268,6 +280,7 @@ def generate_key():
     # ...
     generated_key = "example_key"  # Replace with actual key generation logic
     return jsonify({"key": generated_key})
+
 
 @app.route('/delete_key', methods=['POST'])
 def delete_key():
@@ -287,7 +300,8 @@ def reset_password():
     new_password = request.form['new_password']
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("UPDATE users SET password = %s WHERE id = %s", (new_password, user_id))  # Hash the password in a real application
+    cur.execute("UPDATE users SET password = %s WHERE id = %s",
+                (new_password, user_id))  # Hash the password in a real application
     conn.commit()
     cur.close()
     conn.close()
@@ -326,6 +340,7 @@ def work_sait():
     if 'user_id' not in session:
         return render_template('index.html')
     return render_template('work_sait.html')
+
 
 @app.route('/user_page')
 def user_page():
@@ -404,7 +419,6 @@ def change_password():
         conn.close()
 
 
-
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if 'user_id' not in session:
@@ -442,7 +456,7 @@ def search():
 
 
 # Wyświetlanie szczegółów osoby
-@app.route('/person/<int:person_id>', methods =['GET', 'POST'])
+@app.route('/person/<int:person_id>', methods=['GET', 'POST'])
 def person(person_id):
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -465,7 +479,6 @@ def person(person_id):
     if person == None:
         return redirect(url_for('user_page'))
 
-
     # Pobieranie informacji o uprawnieniach do modyfikacji
     cur.execute("""
          SELECT u.id, u.username
@@ -478,7 +491,6 @@ def person(person_id):
     owner = cur.fetchone()
 
     user_id = session.get('user_id')
-
 
     # Pobieranie małżonka
     cur.execute("""
@@ -635,8 +647,8 @@ def person(person_id):
 
     return render_template('person.html', person=person, spouses=spouses, children=children, childrens=childrens,
                            parents=parents, siblings=siblings, father=father, mother=mother,
-                           siblings_first_half=siblings_first_half, siblings_second_half=siblings_second_half, owner=owner, user_id=user_id)
-
+                           siblings_first_half=siblings_first_half, siblings_second_half=siblings_second_half,
+                           owner=owner, user_id=user_id)
 
 
 @app.route('/modify_person_data/<int:person_id>', methods=['GET', 'POST'])
@@ -730,17 +742,20 @@ def modify_person_data(person_id):
     return render_template('modify_person_data.html', person=person_dict)
 
 
-# Endpoint dla dodawania zdjęcia
-@app.route('/add_photo/<int:person_id>', methods=['POST'])
+# Endpoint dla dodawania i usuwania zdjęcia
+
+@app.route('/add_photo/<int:person_id>/<int:user_id>/<int:person_modification_owner>', methods=['POST'])
 @inTest
-def add_photo(person_id):
+def add_photo(person_id, user_id, person_modification_owner):
     if 'zdjecie' not in request.files:
-        return jsonify({'error': 'Brak pliku'}), 400
+        flash('Brak pliku', 'error')
+        return redirect(url_for('person', person_id=person_id))
 
     zdjecie = request.files['zdjecie']
 
     if zdjecie.filename == '':
-        return jsonify({'error': 'Nie wybrano pliku'}), 400
+        flash('Nie wybrano pliku', 'error')
+        return redirect(url_for('person', person_id=person_id))
 
     try:
         # Sprawdzenie czy plik jest plikiem graficznym
@@ -748,7 +763,8 @@ def add_photo(person_id):
         image.verify()  # Verify if it is an image
         zdjecie.seek(0)  # Reset the file pointer to the start
     except (IOError, SyntaxError) as e:
-        return jsonify({'error': 'Plik nie jest prawidłowym obrazem'}), 400
+        flash('Plik nie jest prawidłowym obrazem', 'error')
+        return redirect(url_for('person', person_id=person_id))
 
     if zdjecie.filename != '':
         filename = secure_filename(zdjecie.filename)
@@ -765,11 +781,13 @@ def add_photo(person_id):
         cur.close()
         conn.close()
 
-        return jsonify({'message': 'Zdjęcie zostało dodane'}), 200
+        flash('Zdjęcie zostało dodane', 'success')
+        return redirect(url_for('person', person_id=person_id))
     else:
-        return jsonify({'error': 'Niedozwolony format pliku'}), 400
+        flash('Niedozwolony format pliku', 'error')
+        return redirect(url_for('person', person_id=person_id))
 
-@app.route('/remove_photo/<int:person_id>', methods=['GET','POST'])
+@app.route('/remove_photo/<int:person_id>', methods=['POST'])
 @inTest
 def remove_photo(person_id):
     conn = get_db_connection()
@@ -785,7 +803,8 @@ def remove_photo(person_id):
     elif plec and plec[0] == 'F':
         image_data = convert_image_to_bytea('Import_Image/fe2.jpg')
     else:
-        return jsonify({'error': 'Nieprawidłowa płeć'}), 400
+        flash('Nieprawidłowa płeć', 'error')
+        return redirect(url_for('person', person_id=person_id))
 
     conn = get_db_connection()
     cur = conn.cursor()
@@ -794,7 +813,8 @@ def remove_photo(person_id):
     cur.close()
     conn.close()
 
-    return jsonify({'message': 'Zdjęcie zostało usunięte'}), 200
+    flash('Zdjęcie zostało usunięte', 'success')
+    return redirect(url_for('person', person_id=person_id))
 
 
 @app.route('/add_parent/<int:person_id>', methods=['GET', 'POST'])
@@ -877,7 +897,6 @@ def add_parent(person_id):
 
         cur.execute("CALL call dodaj_relacje_malzenska()(%s, %s)", (father_id, mother_id))
 
-
         conn.commit()
         cur.close()
         conn.close()
@@ -932,8 +951,9 @@ def add_child(parent_id):
     """, (parent_id,))
     spouses = cur.fetchall()
 
-    if(spouses.__len__() == 0):
-        return jsonify({'error': 'Osoba nie posiada partnera. Najpierw dodaj partnera lub wprowadź dane fikcyjne.'}), 404
+    if (spouses.__len__() == 0):
+        return jsonify(
+            {'error': 'Osoba nie posiada partnera. Najpierw dodaj partnera lub wprowadź dane fikcyjne.'}), 404
 
     if request.method == 'POST':
         imie = request.form['imie']
@@ -1092,8 +1112,7 @@ def add_spouse(person_id):
 @app.route('/remove_person/<int:person_id>', methods=['POST'])
 @inTest
 def remove_person(person_id):
-
-    if session['user_level']<6:
+    if session['user_level'] < 6:
         return jsonify({'error': 'Zbyt niski poziom uprawnień'}), 403
 
     password = request.form.get('password')
@@ -1144,4 +1163,4 @@ def remove_person(person_id):
 
 if __name__ == '__main__':
     app.config['UPLOAD_FOLDER'] = 'images'
-    app.run("192.168.1.108" ,debug=True)
+    app.run("192.168.1.108", debug=True)
