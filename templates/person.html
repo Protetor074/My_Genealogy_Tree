@@ -78,17 +78,16 @@
     </form>
 </div>
 
-<div id="message" class="message">
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div id="message-container">
-                {% for category, message in messages %}
-                    <div id="message" class="message {{ category }}">{{ message }}</div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-</div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div id="message-container">
+            {% for category, message in messages %}
+                <div id="message" class="message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
 
 <div class="tree-container">
     {% if spouses %}

@@ -908,8 +908,15 @@ def add_parent(person_id):
     cur = conn.cursor()
     cur.execute("SELECT * FROM Osoba WHERE Id = %s", (person_id,))
     person = cur.fetchone()
+
+    cur.execute("SELECT COUNT(*) FROM relacje WHERE id_osoby = %s AND relacja = 'rodzic'; ", (person_id,))
+    parents = cur.fetchone()
     cur.close()
     conn.close()
+
+    if parents !=0:
+        flash('Osoba posiada już rodziców', 'error')
+        return redirect(url_for('person', person_id=person_id))
 
     if person is None:
         return "Person not found", 404
@@ -940,7 +947,8 @@ def add_child(parent_id):
     if not parent:
         cur.close()
         conn.close()
-        return "Parent not found", 404
+        flash('Nie znleziono rodzica', 'error')
+        return redirect(url_for('person', person_id=parent_id))
 
     # Pobierz małżonków
     cur.execute("""
@@ -952,8 +960,9 @@ def add_child(parent_id):
     spouses = cur.fetchall()
 
     if (spouses.__len__() == 0):
-        return jsonify(
-            {'error': 'Osoba nie posiada partnera. Najpierw dodaj partnera lub wprowadź dane fikcyjne.'}), 404
+        flash('Osoba nie posiada partnera. Najpierw dodaj partnera lub wprowadź dane fikcyjne.', 'error')
+        return redirect(url_for('person', person_id=parent_id))
+
 
     if request.method == 'POST':
         imie = request.form['imie']
