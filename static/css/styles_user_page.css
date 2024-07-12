@@ -10,6 +10,10 @@ body {
 }
 
 .message {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
     padding: 10px;
     margin: 10px 0;
     border: 1px solid #ccc;

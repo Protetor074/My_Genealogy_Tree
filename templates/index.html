@@ -8,18 +8,24 @@
     <title>Moje drzewo genealogiczne</title>
 </head>
 <body>
+<div class="container">
     <div class="notification-bar">
+        !!!UWAGA!!!
+        <br>
+        <br>
+        Zaleca się kożystanie ze strony za pośrednictwem przeglądarki (laptopa/komputera).
+        <br>
+        <br>
         W godzinach 20:00-20:30 mogą wystąpić krótkie przerwy w dostępności z powodu prac technicznych.
     </div>
-    <div class="container">
-        <div class="header">
-            <h1>Moje drzewo genealogiczne</h1>
-            <img src="{{ url_for('static', filename='images/tree.jpg') }}" alt="Drzewo genealogiczne" class="tree-image">
-        </div>
-        <div class="buttons">
-            <a href="{{ url_for('login') }}" class="button">Logowanie</a>
-            <a href="{{ url_for('register') }}" class="button">Rejestracja</a>
-        </div>
+    <div class="header">
+        <h1>Moje drzewo genealogiczne</h1>
+        <img src="{{ url_for('static', filename='images/tree.jpg') }}" alt="Drzewo genealogiczne" class="tree-image">
     </div>
+    <div class="buttons">
+        <a href="{{ url_for('login') }}" class="button">Logowanie</a>
+        <a href="{{ url_for('register') }}" class="button">Rejestracja</a>
+    </div>
+</div>
 </body>
 </html>

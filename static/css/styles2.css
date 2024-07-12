@@ -169,10 +169,26 @@ body {
 }
 
 .message {
+    justify-content: center;
+    gap: 20px;
     padding: 10px;
     margin: 10px 0;
     border: 1px solid #ccc;
     align-items: center;
+}
+
+@media (max-width: 768px) {
+    .message {
+        text-align: center;
+        align-content: center;
+        justify-content: center;
+        min-width: 100px;
+        flex-direction: column; /* Układ kolumnowy na mniejszych ekranach */
+        gap: 10px; /* Zmniejszenie odstępów między elementami */
+        margin: 10px 0; /* Zmniejszenie marginesu na mniejszych ekranach */
+        align-items: center; /* Wyśrodkowanie zawartości na mniejszych ekranach */
+        margin-left: 1530px; /* Usunięcie marginesu z lewej strony */
+    }
 }
 
 .message.error {

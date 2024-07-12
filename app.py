@@ -914,7 +914,7 @@ def add_parent(person_id):
     person = cur.fetchone()
 
     cur.execute("SELECT COUNT(*) FROM relacje WHERE id_osoby = %s AND relacja = 'rodzic'; ", (person_id,))
-    parents = cur.fetchone()
+    parents = cur.fetchone()[0]
     cur.close()
     conn.close()
 
