@@ -70,12 +70,9 @@
         Małżonka/Żonę
     </button>
 
-    <form method="post" action="{{ url_for('remove_person', person_id=person[0]) }}" id="remove_person_form"
-          class="remove_person_form">
-        <button type="submit" class="remove-person-button" data-person-id="{{ user_id }}" data-owner="{{ owner[0] }}">
-            Usuń osobę
-        </button>
-    </form>
+        <button type="button" class="remove-person-button" data-person-id="{{ user_id }}" data-owner="{{ owner[0] }}"
+            onclick="window.location.href='{{ url_for('remove_person', person_id=person[0]) }}'">Usuń osobę
+    </button>
 </div>
 
 {% with messages = get_flashed_messages(with_categories=true) %}

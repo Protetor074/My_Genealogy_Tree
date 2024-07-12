@@ -16,7 +16,8 @@
         <button class="change-password-button" id="change-password-btn">Zmień hasło</button>
         <div id="password-fields" style="display: none;">
             <form id="change-password-form" action="{{ url_for('change_password') }}" method="post">
-                <input type="password" id="current_password" name="current_password" placeholder="Aktualne hasło" required>
+                <input type="password" id="current_password" name="current_password" placeholder="Aktualne hasło"
+                       required>
                 <input type="password" id="new_password" name="new_password" placeholder="Nowe hasło" required>
                 <button type="submit">Zmień hasło</button>
             </form>
@@ -27,13 +28,26 @@
         <button class="logout-button" onclick="window.location.href='{{ url_for('logout') }}'">Wyloguj</button>
         {% if user_permission_level[0] >= 5 %}
             <br>
-            <button class="moderator-button" onclick="window.location.href='{{ url_for('moderator_panel') }}'">Panel Moderatora</button>
+            <button class="moderator-button" onclick="window.location.href='{{ url_for('moderator_panel') }}'">Panel
+                Moderatora
+            </button>
         {% endif %}
         {% if user_permission_level[0] >= 10 %}
             <br>
-            <button class="admin-button" onclick="window.location.href='{{ url_for('admin') }}'">Panel Administratora</button>
+            <button class="admin-button" onclick="window.location.href='{{ url_for('admin') }}'">Panel Administratora
+            </button>
         {% endif %}
     </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div id="message-container">
+                {% for category, message in messages %}
+                    <div id="message" class="message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
 
     <h2>Wyszukaj osobę</h2>
     <div class="search-container">

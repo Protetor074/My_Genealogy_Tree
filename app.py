@@ -1113,7 +1113,7 @@ def add_spouse(person_id):
     return render_template('add_spouse.html', person=person_dict)
 
 
-@app.route('/remove_person/<int:person_id>', methods=['POST'])
+@app.route('/remove_person/<int:person_id>', methods=['GET','POST'])
 @inTest
 def remove_person(person_id):
     user_id = session['user_id']
@@ -1130,10 +1130,10 @@ def remove_person(person_id):
     cur.close()
     conn.close()
 
-    if owner_id != person_id:
+    if owner_id != user_id:
         if session['user_level'] < 6:
             flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)','error')
-            return redirect(url_for('/person/',person_id = person_id))
+            return redirect(url_for('person',person_id = person_id))
 
     conn = get_db_connection()
     cur = conn.cursor()
@@ -1147,6 +1147,14 @@ def remove_person(person_id):
 
     cur.execute(
         """
+       SELECT imię, nazwisko FROM osoba where id = %s
+        """,
+        (person_id,)
+    )
+    person = cur.fetchone()
+
+    cur.execute(
+        """
         DELETE FROM osoba
         WHERE id = %s;
         """,
@@ -1156,7 +1164,8 @@ def remove_person(person_id):
     cur.close()
     conn.close()
 
-    flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)','messages')
+    message = "Osoba : " + person[0] + " "  + person[1] + " została poprawnie usunięta."
+    flash(message,'messages')
     return redirect(url_for('user_page'))
 
 

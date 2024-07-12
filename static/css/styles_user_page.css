@@ -9,6 +9,23 @@ body {
     height: 100vh;
 }
 
+.message {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    align-items: center;
+}
+
+.message.error {
+    border-color: #f44336;
+    color: #f44336;
+}
+
+.message.success {
+    border-color: #4caf50;
+    color: #4caf50;
+}
+
 .container {
     text-align: center;
     background-color: #ffffff;
