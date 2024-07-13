@@ -12,7 +12,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
-online_mode = False
+online_mode = True
 
 
 # Konfiguracja połączenia z bazą danych
