@@ -54,6 +54,17 @@
         <input type="text" id="search" placeholder="Szukaj:" onkeyup="liveSearch()">
         <div id="results-container"></div>
     </div>
+
+    <div class="history-container">
+        <h2>Historia odwiedzin</h2>
+        <ul>
+            {% for entry in history %}
+                <li><a href="{{ entry[0] }}">{{ entry[1] }} {{ entry[2] }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+
+
 </div>
 
 <script src="{{ url_for('static', filename='js/password_change.js') }}"></script>

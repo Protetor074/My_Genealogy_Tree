@@ -1,6 +1,4 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, flash
-from werkzeug.utils import secure_filename
-import os
 import psycopg2
 import base64
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -10,33 +8,33 @@ from datetime import datetime, timedelta
 from functools import wraps
 from PIL import Image
 import io
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
+online_mode = True
 
 
 # Konfiguracja połączenia z bazą danych
 # ONLINE
 def get_db_connection():
-    conn = psycopg2.connect(
-        dbname='gen_tree',  # Nazwa bazy danych
-        user='gen_tree_owner',  # Nazwa użytkownika bazy danych
-        password='zXpdLhHUR9F2',  # Hasło do bazy danych
-        host='ep-divine-term-a2ib4suo-pooler.eu-central-1.aws.neon.tech',  # Adres hosta
-        port='5432',  # Port (domyślny port PostgreSQL)
-        sslmode='require'
-    )
+    if online_mode:
+        conn = psycopg2.connect(
+            dbname='gen_tree',  # Nazwa bazy danych
+            user='gen_tree_owner',  # Nazwa użytkownika bazy danych
+            password='zXpdLhHUR9F2',  # Hasło do bazy danych
+            host='ep-divine-term-a2ib4suo-pooler.eu-central-1.aws.neon.tech',  # Adres hosta
+            port='5432',  # Port (domyślny port PostgreSQL)
+            sslmode='require'
+        )
+    else:
+        conn = psycopg2.connect(
+            dbname="gen_tree",
+            user="admin",
+            password="admin",
+            host="localhost"
+        )
     return conn
-
-# LOCAL
-# def get_db_connection():
-#     conn = psycopg2.connect(
-#         dbname="gen_tree",
-#         user="admin",
-#         password="admin",
-#         host="localhost"
-#     )
-#     return conn
 
 
 # GLOBAL FUNCTION
@@ -62,6 +60,7 @@ def admin_required(f):
         return f(*args, **kwargs)
 
     return decorated_function
+
 
 def moderator_required(f):
     @wraps(f)
@@ -92,6 +91,7 @@ def inTest(f):
 
     return decorated_function
 
+
 def login_test(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -106,10 +106,12 @@ def convert_image_to_bytea(image):
     binary_data = image.read()
     return binary_data
 
+
 def convert_image_to_bytea_from_path(image_path):
     with open(image_path, 'rb') as file:
         binary_data = file.read()
     return binary_data
+
 
 def convert_to_jpeg(input_path, output_path):
     try:
@@ -384,14 +386,70 @@ def user_page():
     cur.execute("SELECT a.level FROM Users u JOIN accesskeys a ON a.access_key = u.temp_key WHERE u.Id = %s",
                 (session['user_id'],))
     user_permission_level = cur.fetchone()
+
+    # Pobierz historię odwiedzin
+    cur.execute(
+        "SELECT url, person_name FROM user_history WHERE user_id = %s ORDER BY visit_time DESC LIMIT 10",
+        (session['user_id'],))
+    history = cur.fetchall()
+
     cur.close()
     conn.close()
     # user_permission_level = 3
 
     if user and user_permission_level:
-        return render_template('user.html', username=user[0], user_permission_level=user_permission_level)
+        return render_template('user.html', username=user[0], user_permission_level=user_permission_level, history=history)
     else:
         return redirect(url_for('login'))
+
+
+def visit(user_id, url, person_name):
+    if not user_id or not url:
+        return "Missing user_id or url", 400
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("INSERT INTO user_history (user_id, url, person_name) VALUES (%s, %s, %s)",
+                (user_id, url, person_name))
+    conn.commit()
+
+    cur.execute("""
+        DELETE FROM user_history
+        WHERE id IN (
+            SELECT id FROM user_history
+            WHERE user_id = %s
+            ORDER BY visit_time DESC
+            OFFSET 10
+        )
+    """, (user_id,))
+    conn.commit()
+
+    cur.close()
+    conn.close()
+
+    return "Visit recorded", 200
+
+
+@app.route('/history', methods=['GET'])
+def history():
+    user_id = session.get('user_id')
+
+    if not user_id:
+        return "Missing user_id", 400
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT url FROM user_history
+        WHERE user_id = %s
+        ORDER BY visit_time DESC
+        LIMIT 10
+    """, (user_id,))
+    history = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    return jsonify({'history': [visit[0] for visit in history]})
 
 
 @app.route('/change_password', methods=['POST'])
@@ -627,6 +685,11 @@ def person(person_id):
     cur.execute("UPDATE users SET last_login = %s WHERE id = %s", (current_datetime, user_id))
     conn.commit()
 
+    # Zapisanie odwiedzin strony
+    visit_url = url_for('person', person_id=person_id, _external=True)
+    person_name = person[1] + " " + person[2]
+    visit(user_id, visit_url, person_name)
+
     cur.close()
     conn.close()
 
@@ -758,7 +821,7 @@ def modify_person_data(person_id):
 # Endpoint dla dodawania i usuwania zdjęcia
 
 @app.route('/add_photo/<int:person_id>/<int:user_id>/<int:person_modification_owner>', methods=['POST'])
-@inTest
+@login_test
 def add_photo(person_id, user_id, person_modification_owner):
     if 'zdjecie' not in request.files:
         flash('Brak pliku', 'error')
@@ -795,9 +858,29 @@ def add_photo(person_id, user_id, person_modification_owner):
         flash('Niedozwolony format pliku', 'error')
         return redirect(url_for('person', person_id=person_id))
 
+
 @app.route('/remove_photo/<int:person_id>', methods=['POST'])
-@inTest
+@login_test
 def remove_photo(person_id):
+    user_id = session['user_id']
+    # Pobranie hasła z bazy danych
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(
+        """
+       SELECT modified_by FROM osoba where id = %s
+        """,
+        (person_id,)
+    )
+    owner_id = cur.fetchone()[0]
+    cur.close()
+    conn.close()
+
+    if owner_id != user_id or owner_id != 1:
+        if session['user_level'] < 6:
+            flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)', 'error')
+            return redirect(url_for('person', person_id=person_id))
+
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("SELECT płeć FROM osoba WHERE Id = %s", (person_id,))
@@ -826,7 +909,7 @@ def remove_photo(person_id):
 
 
 @app.route('/add_parent/<int:person_id>', methods=['GET', 'POST'])
-@inTest
+@login_test
 def add_parent(person_id):
     if request.method == 'POST':
         # Ojciec
@@ -899,7 +982,7 @@ def add_parent(person_id):
                                          data_smierci_matki,
                                          zdjecie_matki, 'F', person_id)
 
-        cur.execute("CALL call dodaj_relacje_malzenska()(%s, %s)", (father_id, mother_id))
+        cur.execute("CALL dodaj_relacje_malzenska(%s,%s)", (father_id, mother_id))
 
         conn.commit()
         cur.close()
@@ -918,7 +1001,7 @@ def add_parent(person_id):
     cur.close()
     conn.close()
 
-    if parents !=0:
+    if parents != 0:
         flash('Osoba posiada już rodziców', 'error')
         return redirect(url_for('person', person_id=person_id))
 
@@ -939,7 +1022,7 @@ def add_parent(person_id):
 
 
 @app.route('/add_child/<int:parent_id>', methods=['GET', 'POST'])
-@inTest
+@login_test
 def add_child(parent_id):
     conn = get_db_connection()
     cur = conn.cursor()
@@ -966,7 +1049,6 @@ def add_child(parent_id):
     if (spouses.__len__() == 0):
         flash('Osoba nie posiada partnera. Najpierw dodaj partnera lub wprowadź dane fikcyjne.', 'error')
         return redirect(url_for('person', person_id=parent_id))
-
 
     if request.method == 'POST':
         imie = request.form['imie']
@@ -1036,7 +1118,7 @@ def add_child(parent_id):
 
 
 @app.route('/add_spouse/<int:person_id>', methods=['GET', 'POST'])
-@inTest
+@login_test
 def add_spouse(person_id):
     if request.method == 'POST':
         imie = request.form['imie']
@@ -1113,8 +1195,8 @@ def add_spouse(person_id):
     return render_template('add_spouse.html', person=person_dict)
 
 
-@app.route('/remove_person/<int:person_id>', methods=['GET','POST'])
-@inTest
+@app.route('/remove_person/<int:person_id>', methods=['GET', 'POST'])
+@login_test
 def remove_person(person_id):
     user_id = session['user_id']
     # Pobranie hasła z bazy danych
@@ -1132,8 +1214,8 @@ def remove_person(person_id):
 
     if owner_id != user_id:
         if session['user_level'] < 6:
-            flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)','error')
-            return redirect(url_for('person',person_id = person_id))
+            flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)', 'error')
+            return redirect(url_for('person', person_id=person_id))
 
     conn = get_db_connection()
     cur = conn.cursor()
@@ -1164,8 +1246,8 @@ def remove_person(person_id):
     cur.close()
     conn.close()
 
-    message = "Osoba : " + person[0] + " "  + person[1] + " została poprawnie usunięta."
-    flash(message,'messages')
+    message = "Osoba : " + person[0] + " " + person[1] + " została poprawnie usunięta."
+    flash(message, 'messages')
     return redirect(url_for('user_page'))
 
 
