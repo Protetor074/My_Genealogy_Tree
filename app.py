@@ -12,7 +12,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
-online_mode = True
+online_mode = False
 
 
 # Konfiguracja połączenia z bazą danych
@@ -409,25 +409,48 @@ def visit(user_id, url, person_name):
 
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("INSERT INTO user_history (user_id, url, person_name) VALUES (%s, %s, %s)",
-                (user_id, url, person_name))
-    conn.commit()
 
+    # Sprawdzenie czy osoba o danej nazwie jest już w historii użytkownika
+    cur.execute("""
+        SELECT id FROM user_history
+        WHERE user_id = %s AND person_name = %s
+        ORDER BY visit_time DESC
+        LIMIT 1
+    """, (user_id, person_name))
+    existing_entry = cur.fetchone()
+
+    if existing_entry:
+        # Jeśli istnieje wpis dla tej osoby, to zmień jego pozycję
+        cur.execute("""
+            UPDATE user_history
+            SET visit_time = CURRENT_TIMESTAMP, url = %s
+            WHERE id = %s
+        """, (url, existing_entry[0]))
+    else:
+        # Jeśli nie istnieje wpis dla tej osoby, dodaj nowy
+        cur.execute("""
+            INSERT INTO user_history (user_id, url, person_name)
+            VALUES (%s, %s, %s)
+        """, (user_id, url, person_name))
+
+    # Usunięcie powtarzających się ostatnio odwiedzonych wpisów
     cur.execute("""
         DELETE FROM user_history
         WHERE id IN (
             SELECT id FROM user_history
-            WHERE user_id = %s
+            WHERE user_id = %s AND person_name = %s
             ORDER BY visit_time DESC
             OFFSET 10
         )
-    """, (user_id,))
+    """, (user_id, person_name))
+
     conn.commit()
 
     cur.close()
     conn.close()
 
     return "Visit recorded", 200
+
 
 
 @app.route('/history', methods=['GET'])
@@ -1219,12 +1242,22 @@ def remove_person(person_id):
 
     conn = get_db_connection()
     cur = conn.cursor()
+
+    #Usuwanie relacji
     cur.execute(
         """
         DELETE FROM relacje
-        WHERE id_osoby = %s OR id_osoby_w_relacji = %s;
+        WHERE id_osoby = %s;
         """,
-        (person_id, person_id)
+        (person_id,)
+    )
+
+    cur.execute(
+        """
+        DELETE FROM relacje
+        WHERE id_osoby_w_relacji = %s;
+        """,
+        (person_id,)
     )
 
     cur.execute(
@@ -1235,6 +1268,7 @@ def remove_person(person_id):
     )
     person = cur.fetchone()
 
+    #Usuwanie osoby
     cur.execute(
         """
         DELETE FROM osoba
