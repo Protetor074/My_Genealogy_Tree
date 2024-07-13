@@ -17,7 +17,8 @@ body {
 }
 
 .notification-bar {
-    width: calc(100% - 40px); /* Dodanie odstępu od krawędzi */
+    display: flex;
+    align-content: center;
     background-color: yellow;
     color: black;
     text-align: center;
