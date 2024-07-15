@@ -786,7 +786,7 @@ def person(person_id):
 
 
 @app.route('/modify_person_data/<int:person_id>', methods=['GET', 'POST'])
-@inTest
+@login_test
 def modify_person_data(person_id):
     if request.method == 'POST':
         imie = request.form['imie']
