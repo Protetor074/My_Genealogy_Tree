@@ -1,82 +1,30 @@
 var personId = document.querySelector('.modify-button').getAttribute('data-person-id');
 var owner = document.querySelector('.modify-button').getAttribute('data-owner');
+var userId = document.querySelector('.modify-button').getAttribute('user-id');
 
-var buttons = document.querySelectorAll('.add-photo-button, .modify-button, .remove-photo-button');
+var buttons = document.querySelectorAll('.add-photo-button, .modify-button, .remove-photo-button, .remove-person-button, .file-label');
 
-if (owner !== personId) {
+if (owner !== personId && owner !== "1" && userId !== "1") {
     buttons.forEach(function (button) {
-        //button.disabled = true;
-        //button.style.backgroundColor = 'grey';
-        //button.style.cursor = 'not-allowed';
+        button.disabled = true;
+        button.style.backgroundColor = 'grey';
+        button.style.cursor = 'not-allowed';
     });
 }
 
 
-document.addEventListener('DOMContentLoaded', function () {
+window.onload = function () {
+    // Sprawdzenie szerokości ekranu
+    if (window.innerWidth <= 768) {
+        window.scrollTo(700, 300);
+    }
+};
 
-
-    document.getElementById('add-photo-form').addEventListener('submit', function (event) {
-        event.preventDefault(); // Zapobiegaj domyślnemu wysyłaniu formularza
-
-        var formData = new FormData(this);
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', this.action, true);
-        xhr.onload = function () {
-            var response = JSON.parse(xhr.responseText);
-            if (xhr.status === 200) {
-                alert(response.message); // Komunikat
-                location.reload(); // Odświeżenie strony (opcjonalne)
-            } else {
-                alert(response.error); // Komunikat o błędzie
-            }
-        };
-        xhr.send(formData);
-    });
-
-    document.getElementById('remove-photo-form').addEventListener('submit', function (event) {
-        event.preventDefault(); // Zapobiegaj domyślnemu wysyłaniu formularza
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', this.action, true);
-        xhr.onload = function () {
-            var response = JSON.parse(xhr.responseText);
-            if (xhr.status === 200) {
-                alert(response.message); // Komunikat
-                location.reload(); // Odświeżenie strony (opcjonalne)
-            } else {
-                alert(response.error); // Komunikat o błędzie
-            }
-        };
-        xhr.send();
-    });
-
-    document.getElementById('remove_person_form').addEventListener('submit', function (event) {
-        event.preventDefault(); // Zapobiegaj domyślnemu wysyłaniu formularza
-
-        // Zapytaj użytkownika o hasło
-        var password = prompt("Proszę wprowadzić swoje hasło, aby potwierdzić usunięcie:");
-
-        if (password === null) {
-            // Jeśli użytkownik anulował prompt, przerwij
-            return;
-        }
-
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', this.action, true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-        xhr.onload = function () {
-            var response = JSON.parse(xhr.responseText);
-            if (xhr.status === 200) {
-                alert(response.message); // Komunikat
-                window.location.href = '/user_page';
-            } else {
-                alert(response.error); // Komunikat o błędzie
-            }
-        };
-
-        var params = 'password=' + encodeURIComponent(password);
-        xhr.send(params);
-    });
-
-});
+// Opcjonalnie dodaj nasłuchiwacza zdarzeń na zmianę rozmiaru okna, aby dostosować przewijanie, gdy zmienia się rozmiar okna
+window.onresize = function () {
+    if (window.innerWidth <= 768) {
+        window.scrollTo(700, 300);
+    } else {
+        window.scrollTo(0, 0); // Opcjonalnie można dodać powrót do góry strony na większych ekranach
+    }
+};

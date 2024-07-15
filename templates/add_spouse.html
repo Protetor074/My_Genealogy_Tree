@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_add_person.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles_add_person.css') }}?v=20240713">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <title>Dodaj Małżonka</title>
 </head>
@@ -25,10 +25,10 @@
             </select>
 
             <label for="data_urodzenia">Data urodzenia:</label>
-            <input type="date" id="data_urodzenia" name="data_urodzenia" required>
+            <input type="date" id="data_urodzenia" name="data_urodzenia">
 
             <label for="data_slubu">Data ślubu:</label>
-            <input type="date" id="data_slubu" name="data_slubu" required>
+            <input type="date" id="data_slubu" name="data_slubu">
 
             <label for="data_smierci">Data śmierci:</label>
             <input type="date" id="data_smierci" name="data_smierci">

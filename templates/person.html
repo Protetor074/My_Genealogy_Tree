@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles2.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles2.css') }}?v=20240715">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <title>{{ person[1] }} {{ person[2] }}</title>
 </head>
@@ -22,7 +22,7 @@
 </div>
 <div class="info-container">
     <div class="info-box">
-        <p>Data urodzenia:<br> {% if person[4] != None %}{{ person[4] }}{% else %}-{% endif %}</p>
+        <p>Data urodzenia:<br> {% if person[4] != None %}{{ person[4].strftime('%Y-%m-%d') }}{% else %}-{% endif %}</p>
     </div>
     <div class="info-box">
         <p>Data śmierci:<br> {% if person[5] != None %}{{ person[5] }}{% else %}-{% endif %}</p>
@@ -36,53 +36,61 @@
 </div>
 
 <div class="button-container">
-    <form method="POST" action="{{ url_for('add_photo', person_id=person[0]) }}" enctype="multipart/form-data"
-          id="add-photo-form" class="add-photo-form">
+    <form method="POST"
+          action="{{ url_for('add_photo', person_id=person[0], user_id=user_id, person_modification_owner=owner[0]) }}"
+          enctype="multipart/form-data">
         <input type="file" name="zdjecie" id="file-upload" accept="image/*" class="file-input">
         <label for="file-upload" class="file-label">Wybierz Zdjęcie</label>
-        <button type="submit" class="add-photo-button" data-person-id="{{ user_id }}" data-owner="{{ owner[0] }}">Dodaj
-            Zdjęcie
-        </button>
+        <button type="submit" class="add-photo-button">Dodaj Zdjęcie</button>
     </form>
 
-    <form method="POST" action="{{ url_for('remove_photo', person_id=person[0]) }}" id="remove-photo-form"
-          class="remove-photo-form">
-        <button type="submit" class="remove-photo-button" data-person-id="{{ user_id }}" data-owner="{{ owner[0] }}">
-            Usuń Zdjęcie
-        </button>
+    <form method="POST" action="{{ url_for('remove_photo', person_id=person[0]) }}">
+        <button type="submit" class="remove-photo-button">Usuń Zdjęcie</button>
     </form>
+
+    <button type="button" class="remove-person-button" data-person-id="{{ user_id }}" data-owner="{{ owner[0] }}"
+            onclick="window.location.href='{{ url_for('remove_owner', person_id=person[0]) }}'">Zgoda na modyfikacje przez wszystkich
+    </button>
+
 </div>
 
 <div class="button-container">
 
-    <button type="button" class="modify-button" data-person-id="{{ user_id }}" data-owner="{{ owner[0] }}"
+    <button type="button" class="modify-button" data-person-id="{{ user_id }}" data-owner="{{ owner[0] }}" user-id = "{{ user_id }}"
             onclick="window.location.href='{{ url_for('modify_person_data', person_id=person[0]) }}'">Modyfikuj Dane
     </button>
 
     <button type="button" class="parent-button" data-person-id="{{ user_id }}" data-owner="{{ owner[0] }}"
             onclick="window.location.href='{{ url_for('add_parent', person_id=person[0]) }}'">Dodaj
-            Rodziców
+        Rodziców
     </button>
 
     <button type="button" class="child-button" data-person-id="{{ user_id }}" data-owner="{{ owner[0] }}"
             onclick="window.location.href='{{ url_for('add_child', parent_id=person[0]) }}'">Dodaj
-            Dziecko
+        Dziecko
     </button>
 
     <button type="button" class="spouse-button" data-person-id="{{ user_id }}" data-owner="{{ owner[0] }}"
             onclick="window.location.href='{{ url_for('add_spouse', person_id=person[0]) }}'">Dodaj
-            Małżonka/Żonę
+        Małżonka/Żonę
     </button>
 
-    <form method="post" action="{{ url_for('remove_person', person_id=person[0]) }}" id="remove_person_form"
-          class="remove_person_form">
-        <button type="submit" class="remove-person-button" data-person-id="{{ user_id }}" data-owner="{{ owner[0] }}">Usuń
-            osobę
-        </button>
-    </form>
+    <button type="button" class="remove-person-button" data-person-id="{{ user_id }}" data-owner="{{ owner[0] }}"
+            onclick="window.location.href='{{ url_for('remove_person', person_id=person[0]) }}'">Usuń osobę
+    </button>
 </div>
 
-<div id="message" class="message"></div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div id="message-container">
+            {% for category, message in messages %}
+                <div id="message" class="message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+
 <div class="tree-container">
     {% if spouses %}
         {% for spouse in spouses %}
@@ -137,7 +145,8 @@
                                                      class="profile-pic-small profile-pic-bordered">
                                                 <div class="name">{{ person[1] }} {{ person[2] }}<br>
                                                     {% if person[4] != None %}
-                                                        {{ person[4] }}{% else %}-{% endif %}{% if person[5] != None %}
+                                                        {{ person[4].strftime('%Y') }}{% else %}-{% endif %}
+                                                    {% if person[5] != None %}
                                                         -
                                                         {{ person[5] }}{% endif %}</div>
                                             </div>
@@ -350,8 +359,8 @@
     {% endif %}
 </div>
 
-<script src="{{ url_for('static', filename='js/search.js') }}"></script>
-<script src="{{ url_for('static', filename='js/person.js') }}"></script>
+<script src="{{ url_for('static', filename='js/search.js') }}?v=20240715"></script>
+<script src="{{ url_for('static', filename='js/person.js') }}?v=20240715"></script>
 
 
 </body>

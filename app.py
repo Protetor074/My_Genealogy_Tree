@@ -1,6 +1,4 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, flash
-from werkzeug.utils import secure_filename
-import os
 import psycopg2
 import base64
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -13,31 +11,32 @@ import io
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
+online_mode = True
+
 
 # Konfiguracja połączenia z bazą danych
 # ONLINE
 def get_db_connection():
-    conn = psycopg2.connect(
-        dbname='gen_tree',  # Nazwa bazy danych
-        user='gen_tree_owner',  # Nazwa użytkownika bazy danych
-        password='zXpdLhHUR9F2',  # Hasło do bazy danych
-        host='ep-divine-term-a2ib4suo-pooler.eu-central-1.aws.neon.tech',  # Adres hosta
-        port='5432',  # Port (domyślny port PostgreSQL)
-        sslmode='require'
-    )
+    if online_mode:
+        conn = psycopg2.connect(
+            dbname='gen_tree',  # Nazwa bazy danych
+            user='gen_tree_owner',  # Nazwa użytkownika bazy danych
+            password='zXpdLhHUR9F2',  # Hasło do bazy danych
+            host='ep-divine-term-a2ib4suo-pooler.eu-central-1.aws.neon.tech',  # Adres hosta
+            port='5432',  # Port (domyślny port PostgreSQL)
+            sslmode='require'
+        )
+    else:
+        conn = psycopg2.connect(
+            dbname="gen_tree",
+            user="admin",
+            password="admin",
+            host="localhost"
+        )
     return conn
 
-# LOCAL
-# def get_db_connection():
-#     conn = psycopg2.connect(
-#         dbname="gen_tree",
-#         user="admin",
-#         password="admin",
-#         host="localhost"
-#     )
-#     return conn
 
-#GLOBAL FUNCTION
+# GLOBAL FUNCTION
 
 def generate_access_key(level, expiration_days=None):
     key = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
@@ -61,6 +60,17 @@ def admin_required(f):
 
     return decorated_function
 
+
+def moderator_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session or session.get('user_level') < 5:
+            return redirect(url_for('login', next=request.url))
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
 def work_progres(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
@@ -69,6 +79,7 @@ def work_progres(f):
         return f(*args, **kwargs)
 
     return decorated_function
+
 
 def inTest(f):
     @wraps(f)
@@ -79,10 +90,27 @@ def inTest(f):
 
     return decorated_function
 
-def convert_image_to_bytea(image_path):
+
+def login_test(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            return redirect(url_for('index'))
+        return f(*args, **kwargs)
+
+    return decorated_function
+
+
+def convert_image_to_bytea(image):
+    binary_data = image.read()
+    return binary_data
+
+
+def convert_image_to_bytea_from_path(image_path):
     with open(image_path, 'rb') as file:
         binary_data = file.read()
     return binary_data
+
 
 def convert_to_jpeg(input_path, output_path):
     try:
@@ -102,12 +130,14 @@ def convert_to_jpeg(input_path, output_path):
         print(f'Błąd konwersji: {e}')
         return False
 
+
 ##MAIN SAIT
 @app.route('/')
 def index():
     if 'user_id' not in session:
         return render_template('index.html')
     return redirect(url_for('user_page'))
+
 
 ##LOGIN/REGISTER - SAITS
 
@@ -146,6 +176,7 @@ def login():
             return jsonify({'success': False, 'message': 'Nie znaleziono użytkownika.'})
 
     return render_template('login.html')
+
 
 @app.route('/logout')
 def logout():
@@ -205,10 +236,12 @@ def register():
         else:
             cur.close()
             conn.close()
-            return jsonify({'success': False, 'message': 'Podano niepoprawny klucz proszę skontaktować się z administratorem.'})
+            return jsonify(
+                {'success': False, 'message': 'Podano niepoprawny klucz proszę skontaktować się z administratorem.'})
 
     # Jeżeli metoda nie jest POST, renderuj stronę rejestracji
     return render_template('register.html')
+
 
 ##ADMIN FUNCTION
 @app.route('/admin')
@@ -226,7 +259,7 @@ def admin():
     cur.execute("SELECT * FROM accesskeys WHERE level = 1")
     universal_key = cur.fetchall()
 
-    cur.execute("SELECT access_key, level, expiration_date, used, created_by_id FROM accesskeys order by level")
+    cur.execute("SELECT access_key, level, expiration_date, used, created_by_id FROM accesskeys ORDER BY level")
     keys = cur.fetchall()
 
     cur.execute("SELECT access_key FROM accesskeys")
@@ -236,12 +269,15 @@ def admin():
         SELECT u.username, u.id, u.temp_key, a.level
         FROM users u
         JOIN accesskeys a ON u.temp_key = a.access_key
-        WHERE u.temp_key IS NOT NULL order by u.id
+        WHERE u.temp_key IS NOT NULL ORDER BY u.id
     """)
     users_with_temp_keys = cur.fetchall()
 
     cur.execute("SELECT id, username FROM users")
     users = cur.fetchall()
+
+    cur.execute("SELECT * FROM operacje_log_view")
+    operations = cur.fetchall()
 
     cur.close()
     conn.close()
@@ -252,6 +288,7 @@ def admin():
     ]
 
     return render_template('admin.html',
+                           operations=operations,
                            universal_key=universal_key,
                            keys=keys,
                            users_with_temp_keys=users_with_temp_keys,
@@ -259,7 +296,9 @@ def admin():
                            users=users,
                            available_keys=available_keys)
 
+
 @app.route('/generate_key', methods=['POST'])
+@admin_required
 def generate_key():
     data = request.get_json()
     level = data['level']
@@ -269,7 +308,9 @@ def generate_key():
     generated_key = "example_key"  # Replace with actual key generation logic
     return jsonify({"key": generated_key})
 
+
 @app.route('/delete_key', methods=['POST'])
+@admin_required
 def delete_key():
     key = request.form['key']
     conn = get_db_connection()
@@ -282,12 +323,14 @@ def delete_key():
 
 
 @app.route('/reset_password', methods=['POST'])
+@admin_required
 def reset_password():
     user_id = request.form['user_id']
     new_password = request.form['new_password']
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("UPDATE users SET password = %s WHERE id = %s", (new_password, user_id))  # Hash the password in a real application
+    cur.execute("UPDATE users SET password = %s WHERE id = %s",
+                (new_password, user_id))  # Hash the password in a real application
     conn.commit()
     cur.close()
     conn.close()
@@ -295,6 +338,7 @@ def reset_password():
 
 
 @app.route('/update_user_key', methods=['POST'])
+@admin_required
 def update_user_key():
     user_id = request.form['user_id']
     new_key = request.form['new_key']
@@ -307,7 +351,33 @@ def update_user_key():
     return jsonify({"message": "Zmieniono klucz użytkownika."})
 
 
+@app.route('/delete_logs', methods=['POST'])
+@admin_required
+def delete_logs():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    log_ids = request.json.get('log_ids', [])
+
+    if log_ids:
+        # Konwertujemy log_ids do listy typu integer
+        log_ids = [int(log_id) for log_id in log_ids]
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        query = "DELETE FROM operacje_log WHERE id = ANY(%s)"
+        cur.execute(query, (log_ids,))
+
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    return jsonify(success=True)
+
+
 @app.route('/moderator')
+@moderator_required
 def moderator_panel():
     conn = get_db_connection()
     cur = conn.cursor()
@@ -322,16 +392,14 @@ def moderator_panel():
 
 
 @app.route('/work_sait')
+@login_test
 def work_sait():
-    if 'user_id' not in session:
-        return render_template('index.html')
     return render_template('work_sait.html')
 
-@app.route('/user_page')
-def user_page():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
 
+@app.route('/user_page')
+@login_test
+def user_page():
     # Pobranie nazwy użytkownika
     conn = get_db_connection()
     cur = conn.cursor()
@@ -346,17 +414,97 @@ def user_page():
     cur.execute("SELECT a.level FROM Users u JOIN accesskeys a ON a.access_key = u.temp_key WHERE u.Id = %s",
                 (session['user_id'],))
     user_permission_level = cur.fetchone()
+
+    # Pobierz historię odwiedzin
+    cur.execute(
+        "SELECT url, person_name FROM user_history WHERE user_id = %s ORDER BY visit_time DESC LIMIT 10",
+        (session['user_id'],))
+    history = cur.fetchall()
+
     cur.close()
     conn.close()
     # user_permission_level = 3
 
     if user and user_permission_level:
-        return render_template('user.html', username=user[0], user_permission_level=user_permission_level)
+        return render_template('user.html', username=user[0], user_permission_level=user_permission_level, history=history)
     else:
         return redirect(url_for('login'))
 
 
+def visit(user_id, url, person_name):
+    if not user_id or not url:
+        return "Missing user_id or url", 400
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    # Sprawdzenie czy osoba o danej nazwie jest już w historii użytkownika
+    cur.execute("""
+        SELECT id FROM user_history
+        WHERE user_id = %s AND person_name = %s
+        ORDER BY visit_time DESC
+        LIMIT 1
+    """, (user_id, person_name))
+    existing_entry = cur.fetchone()
+
+    if existing_entry:
+        # Jeśli istnieje wpis dla tej osoby, to zmień jego pozycję
+        cur.execute("""
+            UPDATE user_history
+            SET visit_time = CURRENT_TIMESTAMP, url = %s
+            WHERE id = %s
+        """, (url, existing_entry[0]))
+    else:
+        # Jeśli nie istnieje wpis dla tej osoby, dodaj nowy
+        cur.execute("""
+            INSERT INTO user_history (user_id, url, person_name)
+            VALUES (%s, %s, %s)
+        """, (user_id, url, person_name))
+
+    # Usunięcie powtarzających się ostatnio odwiedzonych wpisów
+    cur.execute("""
+        DELETE FROM user_history
+        WHERE id IN (
+            SELECT id FROM user_history
+            WHERE user_id = %s AND person_name = %s
+            ORDER BY visit_time DESC
+            OFFSET 10
+        )
+    """, (user_id, person_name))
+
+    conn.commit()
+
+    cur.close()
+    conn.close()
+
+    return "Visit recorded", 200
+
+
+
+@app.route('/history', methods=['GET'])
+def history():
+    user_id = session.get('user_id')
+
+    if not user_id:
+        return "Missing user_id", 400
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT url FROM user_history
+        WHERE user_id = %s
+        ORDER BY visit_time DESC
+        LIMIT 10
+    """, (user_id,))
+    history = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    return jsonify({'history': [visit[0] for visit in history]})
+
+
 @app.route('/change_password', methods=['POST'])
+@login_test
 def change_password():
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -404,12 +552,9 @@ def change_password():
         conn.close()
 
 
-
 @app.route('/search', methods=['GET', 'POST'])
+@login_test
 def search():
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
     if request.method == 'POST':
         query = request.form.get('name', '')
     else:
@@ -442,11 +587,9 @@ def search():
 
 
 # Wyświetlanie szczegółów osoby
-@app.route('/person/<int:person_id>', methods =['GET', 'POST'])
+@app.route('/person/<int:person_id>', methods=['GET', 'POST'])
+@login_test
 def person(person_id):
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
-
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
 
     user_id = session['user_id']  # Pobieranie user_id z sesji
@@ -456,7 +599,7 @@ def person(person_id):
 
     # Pobieranie informacji o osobie
     cur.execute("""
-        SELECT Id, Imię, Nazwisko, Płeć, EXTRACT(YEAR FROM data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM data_śmierci) AS rok_śmierci, Data_ślubu, zdjęcie
+        SELECT Id, Imię, Nazwisko, Płeć, data_urodzenia AS rok_urodzenia, data_śmierci AS rok_śmierci, data_ślubu, zdjęcie
         FROM Osoba
         WHERE Id = %s
     """, (person_id,))
@@ -464,7 +607,6 @@ def person(person_id):
 
     if person == None:
         return redirect(url_for('user_page'))
-
 
     # Pobieranie informacji o uprawnieniach do modyfikacji
     cur.execute("""
@@ -478,7 +620,6 @@ def person(person_id):
     owner = cur.fetchone()
 
     user_id = session.get('user_id')
-
 
     # Pobieranie małżonka
     cur.execute("""
@@ -595,6 +736,11 @@ def person(person_id):
     cur.execute("UPDATE users SET last_login = %s WHERE id = %s", (current_datetime, user_id))
     conn.commit()
 
+    # Zapisanie odwiedzin strony
+    visit_url = url_for('person', person_id=person_id, _external=True)
+    person_name = person[1] + " " + person[2]
+    visit(user_id, visit_url, person_name)
+
     cur.close()
     conn.close()
 
@@ -635,13 +781,31 @@ def person(person_id):
 
     return render_template('person.html', person=person, spouses=spouses, children=children, childrens=childrens,
                            parents=parents, siblings=siblings, father=father, mother=mother,
-                           siblings_first_half=siblings_first_half, siblings_second_half=siblings_second_half, owner=owner, user_id=user_id)
-
+                           siblings_first_half=siblings_first_half, siblings_second_half=siblings_second_half,
+                           owner=owner, user_id=user_id)
 
 
 @app.route('/modify_person_data/<int:person_id>', methods=['GET', 'POST'])
-@inTest
+@login_test
 def modify_person_data(person_id):
+    user_id = session['user_id']
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(
+        """
+       SELECT modified_by FROM osoba where id = %s
+        """,
+        (person_id,)
+    )
+    owner_id = cur.fetchone()[0]
+    cur.close()
+    conn.close()
+
+    if owner_id != user_id or owner_id != 1:
+        if session['user_level'] < 6:
+            flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)', 'error')
+            return redirect(url_for('person', person_id=person_id))
+
     if request.method == 'POST':
         imie = request.form['imie']
         nazwisko = request.form['nazwisko']
@@ -653,7 +817,7 @@ def modify_person_data(person_id):
         image_data = None
         temp_image_path = None
 
-        if plec == "Mężczyzna":
+        if plec == "M":
             plec = 'M'
         else:
             plec = 'F'
@@ -669,14 +833,7 @@ def modify_person_data(person_id):
                 image = Image.open(zdjecie)
                 image.verify()  # Verify if it is an image
                 zdjecie.seek(0)  # Reset the file pointer to the start
-
-                filename = secure_filename(zdjecie.filename)
-                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                zdjecie.save(file_path)
-                temp_image_path = file_path
-
-                image_data = convert_image_to_bytea(temp_image_path)
-                os.remove(temp_image_path)
+                image_data = convert_image_to_bytea(zdjecie)
             except (IOError, SyntaxError) as e:
                 return jsonify({'error': 'Plik nie jest prawidłowym obrazem'}), 400
 
@@ -723,24 +880,45 @@ def modify_person_data(person_id):
         'nazwisko': person[2],
         'plec': person[3],
         'data_urodzenia': person[4],
-        'data_slubu': person[5],
-        'data_smierci': person[6],
+        'data_smierci': person[5],
+        'data_slubu': person[6],
         'image_url': person[7]
     }
     return render_template('modify_person_data.html', person=person_dict)
 
 
-# Endpoint dla dodawania zdjęcia
-@app.route('/add_photo/<int:person_id>', methods=['POST'])
-@inTest
-def add_photo(person_id):
+# Endpoint dla dodawania i usuwania zdjęcia
+
+@app.route('/add_photo/<int:person_id>/<int:user_id>/<int:person_modification_owner>', methods=['POST'])
+@login_test
+def add_photo(person_id, user_id, person_modification_owner):
+    user_id = session['user_id']
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(
+        """
+       SELECT modified_by FROM osoba where id = %s
+        """,
+        (person_id,)
+    )
+    owner_id = cur.fetchone()[0]
+    cur.close()
+    conn.close()
+
+    if owner_id != user_id or owner_id != 1:
+        if session['user_level'] < 6:
+            flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)', 'error')
+            return redirect(url_for('person', person_id=person_id))
+
     if 'zdjecie' not in request.files:
-        return jsonify({'error': 'Brak pliku'}), 400
+        flash('Brak pliku', 'error')
+        return redirect(url_for('person', person_id=person_id))
 
     zdjecie = request.files['zdjecie']
 
     if zdjecie.filename == '':
-        return jsonify({'error': 'Nie wybrano pliku'}), 400
+        flash('Nie wybrano pliku', 'error')
+        return redirect(url_for('person', person_id=person_id))
 
     try:
         # Sprawdzenie czy plik jest plikiem graficznym
@@ -748,15 +926,11 @@ def add_photo(person_id):
         image.verify()  # Verify if it is an image
         zdjecie.seek(0)  # Reset the file pointer to the start
     except (IOError, SyntaxError) as e:
-        return jsonify({'error': 'Plik nie jest prawidłowym obrazem'}), 400
+        flash('Plik nie jest prawidłowym obrazem', 'error')
+        return redirect(url_for('person', person_id=person_id))
 
     if zdjecie.filename != '':
-        filename = secure_filename(zdjecie.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        zdjecie.save(file_path)
-
-        image_data = convert_image_to_bytea(file_path)
-        os.remove(file_path)
+        image_data = convert_image_to_bytea(zdjecie)
 
         conn = get_db_connection()
         cur = conn.cursor()
@@ -765,13 +939,35 @@ def add_photo(person_id):
         cur.close()
         conn.close()
 
-        return jsonify({'message': 'Zdjęcie zostało dodane'}), 200
+        flash('Zdjęcie zostało dodane', 'success')
+        return redirect(url_for('person', person_id=person_id))
     else:
-        return jsonify({'error': 'Niedozwolony format pliku'}), 400
+        flash('Niedozwolony format pliku', 'error')
+        return redirect(url_for('person', person_id=person_id))
 
-@app.route('/remove_photo/<int:person_id>', methods=['GET','POST'])
-@inTest
+
+@app.route('/remove_photo/<int:person_id>', methods=['POST'])
+@login_test
 def remove_photo(person_id):
+    user_id = session['user_id']
+    # Pobranie hasła z bazy danych
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(
+        """
+       SELECT modified_by FROM osoba where id = %s
+        """,
+        (person_id,)
+    )
+    owner_id = cur.fetchone()[0]
+    cur.close()
+    conn.close()
+
+    if owner_id != user_id or owner_id != 1:
+        if session['user_level'] < 6:
+            flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)', 'error')
+            return redirect(url_for('person', person_id=person_id))
+
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("SELECT płeć FROM osoba WHERE Id = %s", (person_id,))
@@ -781,24 +977,57 @@ def remove_photo(person_id):
 
     image_data = None
     if plec and plec[0] == 'M':
-        image_data = convert_image_to_bytea('Import_Image/me2.jpg')
+        image_data = convert_image_to_bytea_from_path('Import_Image/me2.jpg')
     elif plec and plec[0] == 'F':
-        image_data = convert_image_to_bytea('Import_Image/fe2.jpg')
+        image_data = convert_image_to_bytea_from_path('Import_Image/fe2.jpg')
     else:
-        return jsonify({'error': 'Nieprawidłowa płeć'}), 400
+        flash('Nieprawidłowa płeć', 'error')
+        return redirect(url_for('person', person_id=person_id))
 
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("UPDATE osoba SET zdjęcie = %s WHERE Id = %s", (image_data, person_id))
+    cur.execute("UPDATE osoba SET zdjęcie = %s, modified_by = %s WHERE Id = %s", (image_data, user_id,person_id))
     conn.commit()
     cur.close()
     conn.close()
 
-    return jsonify({'message': 'Zdjęcie zostało usunięte'}), 200
+    flash('Zdjęcie zostało usunięte', 'success')
+    return redirect(url_for('person', person_id=person_id))
+
+@app.route('/remove_owner/<int:person_id>', methods=['GET','POST'])
+@login_test
+def remove_owner(person_id):
+    user_id = session['user_id']
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(
+        """
+       SELECT modified_by FROM osoba where id = %s
+        """,
+        (person_id,)
+    )
+    owner_id = cur.fetchone()[0]
+    cur.close()
+    conn.close()
+
+    if owner_id != user_id or owner_id != 1:
+        if session['user_level'] < 6:
+            flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)', 'error')
+            return redirect(url_for('person', person_id=person_id))
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("UPDATE osoba SET modified_by = %s WHERE Id = %s", (1,person_id))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    flash('Uprawnienia do modyfikacji zostały zmienione na publiczne.', 'success')
+    return redirect(url_for('person', person_id=person_id))
 
 
 @app.route('/add_parent/<int:person_id>', methods=['GET', 'POST'])
-@work_progres
+@login_test
 def add_parent(person_id):
     if request.method == 'POST':
         # Ojciec
@@ -827,16 +1056,12 @@ def add_parent(person_id):
             father_id = None
             mother_id = None
             if zdjecie and zdjecie.filename != '':
-                filename = secure_filename(zdjecie.filename)
-                file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                zdjecie.save(file_path)
-                image_data = convert_image_to_bytea(file_path)
-                os.remove(file_path)
+                image_data = convert_image_to_bytea(zdjecie)
             else:
                 if plec == 'M':
-                    image_data = convert_image_to_bytea('Import_Image/me2.jpg')
+                    image_data = convert_image_to_bytea_from_path('Import_Image/me2.jpg')
                 else:
-                    image_data = convert_image_to_bytea('Import_Image/fe2.jpg')
+                    image_data = convert_image_to_bytea_from_path('Import_Image/fe2.jpg')
 
             if not data_slubu:
                 data_slubu = None
@@ -856,7 +1081,7 @@ def add_parent(person_id):
                 (imie, nazwisko, plec, data_urodzenia, data_slubu, data_smierci, image_data, user_id)
             )
             new_parent_id = cur.fetchone()[0]
-            cur.execute("CALL dodaj_relacje_rodzic_dziecko(%s, %s)", (person_id, new_parent_id))
+            cur.execute("CALL dodaj_relacje_rodzic_dziecko(%s, %s, %s)", (person_id, new_parent_id,user_id))
             conn.commit()
             cur.close()
             conn.close()
@@ -875,8 +1100,7 @@ def add_parent(person_id):
                                          data_smierci_matki,
                                          zdjecie_matki, 'F', person_id)
 
-        cur.execute("CALL call dodaj_relacje_malzenska()(%s, %s)", (father_id, mother_id))
-
+        cur.execute("CALL dodaj_relacje_malzenska(%s,%s, %s)", (father_id, mother_id,user_id))
 
         conn.commit()
         cur.close()
@@ -889,8 +1113,15 @@ def add_parent(person_id):
     cur = conn.cursor()
     cur.execute("SELECT * FROM Osoba WHERE Id = %s", (person_id,))
     person = cur.fetchone()
+
+    cur.execute("SELECT COUNT(*) FROM relacje WHERE id_osoby = %s AND relacja = 'rodzic'; ", (person_id,))
+    parents = cur.fetchone()[0]
     cur.close()
     conn.close()
+
+    if parents != 0:
+        flash('Osoba posiada już rodziców', 'error')
+        return redirect(url_for('person', person_id=person_id))
 
     if person is None:
         return "Person not found", 404
@@ -901,15 +1132,15 @@ def add_parent(person_id):
         'nazwisko': person[2],
         'plec': person[3],
         'data_urodzenia': person[4],
-        'data_slubu': person[5],
-        'data_smierci': person[6],
+        'data_smierci': person[5],
+        'data_slubu': person[6],
         'image_url': person[7]
     }
     return render_template('add_parent.html', person=person_dict)
 
 
 @app.route('/add_child/<int:parent_id>', methods=['GET', 'POST'])
-@work_progres
+@login_test
 def add_child(parent_id):
     conn = get_db_connection()
     cur = conn.cursor()
@@ -921,7 +1152,8 @@ def add_child(parent_id):
     if not parent:
         cur.close()
         conn.close()
-        return "Parent not found", 404
+        flash('Nie znleziono rodzica', 'error')
+        return redirect(url_for('person', person_id=parent_id))
 
     # Pobierz małżonków
     cur.execute("""
@@ -932,8 +1164,9 @@ def add_child(parent_id):
     """, (parent_id,))
     spouses = cur.fetchall()
 
-    if(spouses.__len__() == 0):
-        return jsonify({'error': 'Osoba nie posiada partnera. Najpierw dodaj partnera lub wprowadź dane fikcyjne.'}), 404
+    if (spouses.__len__() == 0):
+        flash('Osoba nie posiada partnera. Najpierw dodaj partnera lub wprowadź dane fikcyjne.', 'error')
+        return redirect(url_for('person', person_id=parent_id))
 
     if request.method == 'POST':
         imie = request.form['imie']
@@ -961,16 +1194,12 @@ def add_child(parent_id):
 
         image_data = None
         if zdjecie and zdjecie.filename != '':
-            filename = secure_filename(zdjecie.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            zdjecie.save(file_path)
-            image_data = convert_image_to_bytea(file_path)
-            os.remove(file_path)
+            image_data = convert_image_to_bytea(zdjecie)
         else:
             if plec == 'M':
-                image_data = convert_image_to_bytea('Import_Image/me2.jpg')
+                image_data = convert_image_to_bytea_from_path('Import_Image/me2.jpg')
             else:
-                image_data = convert_image_to_bytea('Import_Image/fe2.jpg')
+                image_data = convert_image_to_bytea_from_path('Import_Image/fe2.jpg')
 
         user_id = session.get('user_id')
         cur.execute(
@@ -984,8 +1213,8 @@ def add_child(parent_id):
         new_person_id = cur.fetchone()[0]
 
         # Dodaj relacje dziecko-rodzic
-        cur.execute("CALL dodaj_relacje_rodzic_dziecko(%s, %s)", (new_person_id, parent_id))
-        cur.execute("CALL dodaj_relacje_rodzic_dziecko(%s, %s)", (new_person_id, second_parent_id))
+        cur.execute("CALL dodaj_relacje_rodzic_dziecko(%s, %s,%s)", (new_person_id, parent_id,user_id))
+        cur.execute("CALL dodaj_relacje_rodzic_dziecko(%s, %s, %s)", (new_person_id, second_parent_id,user_id))
 
         conn.commit()
         cur.close()
@@ -1007,7 +1236,7 @@ def add_child(parent_id):
 
 
 @app.route('/add_spouse/<int:person_id>', methods=['GET', 'POST'])
-@inTest
+@login_test
 def add_spouse(person_id):
     if request.method == 'POST':
         imie = request.form['imie']
@@ -1025,25 +1254,20 @@ def add_spouse(person_id):
         else:
             plec = 'F'
 
+        if data_urodzenia == "":
+            data_urodzenia = None
         if data_slubu == "":
             data_slubu = None
         if data_smierci == "":
             data_smierci = None
 
         if zdjecie.filename != '':
-            filename = secure_filename(zdjecie.filename)
-            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            zdjecie.save(file_path)
-            temp_image_path = file_path
-
-        if zdjecie and zdjecie != '' and os.path.exists(temp_image_path):
-            image_data = convert_image_to_bytea(temp_image_path)
-            os.remove(temp_image_path)
+            image_data = convert_image_to_bytea(zdjecie)
         else:
             if plec == 'M':
-                image_data = convert_image_to_bytea('Import_Image/me2.jpg')
+                image_data = convert_image_to_bytea_from_path('Import_Image/me2.jpg')
             else:
-                image_data = convert_image_to_bytea('Import_Image/fe2.jpg')
+                image_data = convert_image_to_bytea_from_path('Import_Image/fe2.jpg')
 
         user_id = session.get('user_id')
 
@@ -1058,7 +1282,7 @@ def add_spouse(person_id):
             (imie, nazwisko, plec, data_urodzenia, data_slubu, data_smierci, image_data, user_id)
         )
         new_person_id = cur.fetchone()[0]
-        cur.execute("CALL dodaj_relacje_malzenska(%s, %s)", (new_person_id, person_id))
+        cur.execute("CALL dodaj_relacje_malzenska(%s, %s,%s)", (new_person_id, person_id,user_id))
         conn.commit()
         cur.close()
         conn.close()
@@ -1082,50 +1306,64 @@ def add_spouse(person_id):
         'nazwisko': person[2],
         'plec': person[3],
         'data_urodzenia': person[4],
-        'data_slubu': person[5],
-        'data_smierci': person[6],
+        'data_smierci': person[5],
+        'data_slubu': person[6],
         'image_url': person[7]
     }
     return render_template('add_spouse.html', person=person_dict)
 
 
-@app.route('/remove_person/<int:person_id>', methods=['POST'])
-@inTest
+@app.route('/remove_person/<int:person_id>', methods=['GET', 'POST'])
+@login_test
 def remove_person(person_id):
-
-    if session['user_level']<6:
-        return jsonify({'error': 'Zbyt niski poziom uprawnień'}), 403
-
-    password = request.form.get('password')
-
     user_id = session['user_id']
     # Pobranie hasła z bazy danych
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute(
         """
-       SELECT password FROM users WHERE id = %s
+       SELECT modified_by FROM osoba where id = %s
         """,
-        (user_id,)
+        (person_id,)
     )
-    user_password = cur.fetchone()[0]
+    owner_id = cur.fetchone()[0]
     cur.close()
     conn.close()
 
-    # Sprawdź poprawność hasła
-    if not check_password_hash(user_password, password):
-        return jsonify({'error': 'Nieprawidłowe hasło'}), 403
+    if owner_id != user_id:
+        if session['user_level'] < 6:
+            flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)', 'error')
+            return redirect(url_for('person', person_id=person_id))
 
     conn = get_db_connection()
     cur = conn.cursor()
+
+    #Usuwanie relacji
     cur.execute(
         """
         DELETE FROM relacje
-        WHERE id_osoby = %s OR id_osoby_w_relacji = %s;
+        WHERE id_osoby = %s;
         """,
-        (person_id, person_id)
+        (person_id,)
     )
 
+    cur.execute(
+        """
+        DELETE FROM relacje
+        WHERE id_osoby_w_relacji = %s;
+        """,
+        (person_id,)
+    )
+
+    cur.execute(
+        """
+       SELECT imię, nazwisko FROM osoba where id = %s
+        """,
+        (person_id,)
+    )
+    person = cur.fetchone()
+
+    #Usuwanie osoby
     cur.execute(
         """
         DELETE FROM osoba
@@ -1137,11 +1375,11 @@ def remove_person(person_id):
     cur.close()
     conn.close()
 
-    print("Osoba o id " + str(person_id) + " została usunięta")
-
-    return jsonify({'message': 'Osoba została usunięta poprawnie'}), 403
+    message = "Osoba : " + person[0] + " " + person[1] + " została poprawnie usunięta."
+    flash(message, 'messages')
+    return redirect(url_for('user_page'))
 
 
 if __name__ == '__main__':
     app.config['UPLOAD_FOLDER'] = 'images'
-    app.run("192.168.1.108" ,debug=True)
+    app.run("192.168.1.108", debug=True)
