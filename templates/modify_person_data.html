@@ -10,7 +10,8 @@
 <body>
 <div class="container">
     <h1>Modyfikuj Dane Osoby</h1>
-    <form id="form" action="{{ url_for('modify_person_data', person_id=person.id) }}" method="post" enctype="multipart/form-data">
+    <form id="form" action="{{ url_for('modify_person_data', person_id=person.id) }}" method="post"
+          enctype="multipart/form-data">
         <label for="imie">Imię:</label>
         <input type="text" id="imie" name="imie" value="{{ person.imie }}" required>
 
@@ -19,10 +20,10 @@
 
         <label for="plec">Płeć:</label>
         <select id="plec" name="plec" required>
-            <option value="Mężczyzna" {% if person.plec == "Mężczyzna" %}selected{% endif %}>Mężczyzna</option>
-            <option value="Kobieta" {% if person.plec == "Kobieta" %}selected{% endif %}>Kobieta</option>
-            <option value="Inna" {% if person.plec == "Inna" %}selected{% endif %}>Inna</option>
+            <option value="M" {% if person.plec == "M" %}selected{% endif %}>Mężczyzna</option>
+            <option value="F" {% if person.plec == "F" %}selected{% endif %}>Kobieta</option>
         </select>
+
 
         <label for="data_urodzenia">Data urodzenia:</label>
         <input type="date" id="data_urodzenia" name="data_urodzenia" value="{{ person.data_urodzenia }}" required>
@@ -45,7 +46,7 @@
 </div>
 
 <script>
-    document.getElementById('form').addEventListener('submit', function(event) {
+    document.getElementById('form').addEventListener('submit', function (event) {
         var fileInput = document.getElementById('zdjecie');
         var errorMessage = document.getElementById('error-message');
 

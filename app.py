@@ -599,7 +599,7 @@ def person(person_id):
 
     # Pobieranie informacji o osobie
     cur.execute("""
-        SELECT Id, Imię, Nazwisko, Płeć, EXTRACT(YEAR FROM data_urodzenia) AS rok_urodzenia, EXTRACT(YEAR FROM data_śmierci) AS rok_śmierci, EXTRACT(YEAR FROM data_ślubu), zdjęcie
+        SELECT Id, Imię, Nazwisko, Płeć, data_urodzenia AS rok_urodzenia, data_śmierci AS rok_śmierci, data_ślubu, zdjęcie
         FROM Osoba
         WHERE Id = %s
     """, (person_id,))
@@ -799,7 +799,7 @@ def modify_person_data(person_id):
         image_data = None
         temp_image_path = None
 
-        if plec == "Mężczyzna":
+        if plec == "M":
             plec = 'M'
         else:
             plec = 'F'
@@ -956,6 +956,37 @@ def remove_photo(person_id):
     conn.close()
 
     flash('Zdjęcie zostało usunięte', 'success')
+    return redirect(url_for('person', person_id=person_id))
+
+@app.route('/remove_owner/<int:person_id>', methods=['GET','POST'])
+@login_test
+def remove_owner(person_id):
+    user_id = session['user_id']
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(
+        """
+       SELECT modified_by FROM osoba where id = %s
+        """,
+        (person_id,)
+    )
+    owner_id = cur.fetchone()[0]
+    cur.close()
+    conn.close()
+
+    if owner_id != user_id or owner_id != 1:
+        if session['user_level'] < 6:
+            flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)', 'error')
+            return redirect(url_for('person', person_id=person_id))
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute("UPDATE osoba SET modified_by = %s WHERE Id = %s", (1,person_id))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+    flash('Uprawnienia do modyfikacji zostały zmienione na publiczne.', 'success')
     return redirect(url_for('person', person_id=person_id))
 
 
