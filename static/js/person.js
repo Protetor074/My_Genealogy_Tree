@@ -1,13 +1,14 @@
 var personId = document.querySelector('.modify-button').getAttribute('data-person-id');
 var owner = document.querySelector('.modify-button').getAttribute('data-owner');
+var userId = document.querySelector('.modify-button').getAttribute('user-id');
 
-var buttons = document.querySelectorAll('.add-photo-button, .modify-button, .remove-photo-button');
+var buttons = document.querySelectorAll('.add-photo-button, .modify-button, .remove-photo-button, .remove-person-button, .file-label');
 
-if (owner !== personId) {
+if (owner !== personId && owner !== "1" && userId !== "1") {
     buttons.forEach(function (button) {
-        //button.disabled = true;
-        //button.style.backgroundColor = 'grey';
-        //button.style.cursor = 'not-allowed';
+        button.disabled = true;
+        button.style.backgroundColor = 'grey';
+        button.style.cursor = 'not-allowed';
     });
 }
 

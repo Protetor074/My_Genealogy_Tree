@@ -788,6 +788,24 @@ def person(person_id):
 @app.route('/modify_person_data/<int:person_id>', methods=['GET', 'POST'])
 @login_test
 def modify_person_data(person_id):
+    user_id = session['user_id']
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(
+        """
+       SELECT modified_by FROM osoba where id = %s
+        """,
+        (person_id,)
+    )
+    owner_id = cur.fetchone()[0]
+    cur.close()
+    conn.close()
+
+    if owner_id != user_id or owner_id != 1:
+        if session['user_level'] < 6:
+            flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)', 'error')
+            return redirect(url_for('person', person_id=person_id))
+
     if request.method == 'POST':
         imie = request.form['imie']
         nazwisko = request.form['nazwisko']
@@ -874,6 +892,24 @@ def modify_person_data(person_id):
 @app.route('/add_photo/<int:person_id>/<int:user_id>/<int:person_modification_owner>', methods=['POST'])
 @login_test
 def add_photo(person_id, user_id, person_modification_owner):
+    user_id = session['user_id']
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute(
+        """
+       SELECT modified_by FROM osoba where id = %s
+        """,
+        (person_id,)
+    )
+    owner_id = cur.fetchone()[0]
+    cur.close()
+    conn.close()
+
+    if owner_id != user_id or owner_id != 1:
+        if session['user_level'] < 6:
+            flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)', 'error')
+            return redirect(url_for('person', person_id=person_id))
+
     if 'zdjecie' not in request.files:
         flash('Brak pliku', 'error')
         return redirect(url_for('person', person_id=person_id))

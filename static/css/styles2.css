@@ -233,7 +233,7 @@ body {
     transition: background-color 0.3s, transform 0.3s;
 }
 
-.parent-button:hover, .child-button:hover, .spouse-button:hover, .add-photo-button:hover, .modify-button:hover, .remove-photo-button:hover, .file-label:hover {
+.parent-button:hover, .child-button:hover, .spouse-button:hover, .add-photo-button:hover, .modify-button:hover, .remove-photo-button:hover, .remove-person-button:hover, .file-label:hover {
     transform: scale(1.05);
 }
 

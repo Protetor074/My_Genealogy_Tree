@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles2.css') }}?v=20240713">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles2.css') }}?v=20240715">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <title>{{ person[1] }} {{ person[2] }}</title>
 </head>
@@ -56,7 +56,7 @@
 
 <div class="button-container">
 
-    <button type="button" class="modify-button" data-person-id="{{ user_id }}" data-owner="{{ owner[0] }}"
+    <button type="button" class="modify-button" data-person-id="{{ user_id }}" data-owner="{{ owner[0] }}" user-id = "{{ user_id }}"
             onclick="window.location.href='{{ url_for('modify_person_data', person_id=person[0]) }}'">Modyfikuj Dane
     </button>
 
@@ -359,8 +359,8 @@
     {% endif %}
 </div>
 
-<script src="{{ url_for('static', filename='js/search.js') }}"></script>
-<script src="{{ url_for('static', filename='js/person.js') }}"></script>
+<script src="{{ url_for('static', filename='js/search.js') }}?v=20240715"></script>
+<script src="{{ url_for('static', filename='js/person.js') }}?v=20240715"></script>
 
 
 </body>
