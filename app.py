@@ -12,7 +12,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.secret_key = 'supersecretkey'
-online_mode = True
+online_mode = False
 
 
 # Konfiguracja połączenia z bazą danych
@@ -260,7 +260,7 @@ def admin():
     cur.execute("SELECT * FROM accesskeys WHERE level = 1")
     universal_key = cur.fetchall()
 
-    cur.execute("SELECT access_key, level, expiration_date, used, created_by_id FROM accesskeys order by level")
+    cur.execute("SELECT access_key, level, expiration_date, used, created_by_id FROM accesskeys ORDER BY level")
     keys = cur.fetchall()
 
     cur.execute("SELECT access_key FROM accesskeys")
@@ -270,12 +270,15 @@ def admin():
         SELECT u.username, u.id, u.temp_key, a.level
         FROM users u
         JOIN accesskeys a ON u.temp_key = a.access_key
-        WHERE u.temp_key IS NOT NULL order by u.id
+        WHERE u.temp_key IS NOT NULL ORDER BY u.id
     """)
     users_with_temp_keys = cur.fetchall()
 
     cur.execute("SELECT id, username FROM users")
     users = cur.fetchall()
+
+    cur.execute("SELECT * FROM operacje_log_view")
+    operations = cur.fetchall()
 
     cur.close()
     conn.close()
@@ -286,6 +289,7 @@ def admin():
     ]
 
     return render_template('admin.html',
+                           operations=operations,
                            universal_key=universal_key,
                            keys=keys,
                            users_with_temp_keys=users_with_temp_keys,
@@ -346,6 +350,31 @@ def update_user_key():
     cur.close()
     conn.close()
     return jsonify({"message": "Zmieniono klucz użytkownika."})
+
+
+@app.route('/delete_logs', methods=['POST'])
+@admin_required
+def delete_logs():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
+
+    log_ids = request.json.get('log_ids', [])
+
+    if log_ids:
+        # Konwertujemy log_ids do listy typu integer
+        log_ids = [int(log_id) for log_id in log_ids]
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        query = "DELETE FROM operacje_log WHERE id = ANY(%s)"
+        cur.execute(query, (log_ids,))
+
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    return jsonify(success=True)
 
 
 @app.route('/moderator')
@@ -922,7 +951,7 @@ def remove_photo(person_id):
 
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("UPDATE osoba SET zdjęcie = %s WHERE Id = %s", (image_data, person_id))
+    cur.execute("UPDATE osoba SET zdjęcie = %s, modified_by = %s WHERE Id = %s", (image_data, user_id,person_id))
     conn.commit()
     cur.close()
     conn.close()
@@ -986,7 +1015,7 @@ def add_parent(person_id):
                 (imie, nazwisko, plec, data_urodzenia, data_slubu, data_smierci, image_data, user_id)
             )
             new_parent_id = cur.fetchone()[0]
-            cur.execute("CALL dodaj_relacje_rodzic_dziecko(%s, %s)", (person_id, new_parent_id))
+            cur.execute("CALL dodaj_relacje_rodzic_dziecko(%s, %s, %s)", (person_id, new_parent_id,user_id))
             conn.commit()
             cur.close()
             conn.close()
@@ -1005,7 +1034,7 @@ def add_parent(person_id):
                                          data_smierci_matki,
                                          zdjecie_matki, 'F', person_id)
 
-        cur.execute("CALL dodaj_relacje_malzenska(%s,%s)", (father_id, mother_id))
+        cur.execute("CALL dodaj_relacje_malzenska(%s,%s, %s)", (father_id, mother_id,user_id))
 
         conn.commit()
         cur.close()
@@ -1118,8 +1147,8 @@ def add_child(parent_id):
         new_person_id = cur.fetchone()[0]
 
         # Dodaj relacje dziecko-rodzic
-        cur.execute("CALL dodaj_relacje_rodzic_dziecko(%s, %s)", (new_person_id, parent_id))
-        cur.execute("CALL dodaj_relacje_rodzic_dziecko(%s, %s)", (new_person_id, second_parent_id))
+        cur.execute("CALL dodaj_relacje_rodzic_dziecko(%s, %s,%s)", (new_person_id, parent_id,user_id))
+        cur.execute("CALL dodaj_relacje_rodzic_dziecko(%s, %s, %s)", (new_person_id, second_parent_id,user_id))
 
         conn.commit()
         cur.close()
@@ -1187,7 +1216,7 @@ def add_spouse(person_id):
             (imie, nazwisko, plec, data_urodzenia, data_slubu, data_smierci, image_data, user_id)
         )
         new_person_id = cur.fetchone()[0]
-        cur.execute("CALL dodaj_relacje_malzenska(%s, %s)", (new_person_id, person_id))
+        cur.execute("CALL dodaj_relacje_malzenska(%s, %s,%s)", (new_person_id, person_id,user_id))
         conn.commit()
         cur.close()
         conn.close()
