@@ -426,6 +426,17 @@ def user_page():
     # user_permission_level = 3
 
     if user and user_permission_level:
+
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Aktualizacja czasu logowania
+        cur.execute("UPDATE users SET last_login = %s WHERE id = %s", (current_datetime, user_id))
+        conn.commit()
+
+        cur.close()
+        conn.close()
+
         return render_template('user.html', username=user[0], user_permission_level=user_permission_level, history=history)
     else:
         return redirect(url_for('login'))
