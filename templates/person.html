@@ -22,13 +22,28 @@
 </div>
 <div class="info-container">
     <div class="info-box">
-        <p>Data urodzenia:<br> {% if person[4] != None %}{{ person[4].strftime('%Y-%m-%d') }}{% else %}-{% endif %}</p>
+        <p>Data urodzenia:<br>
+            <span class="date-display"
+                  data-full-date="{% if person[4] != None %}{{ person[4].strftime('%d-%m-%Y') }}{% else %}-{% endif %}">
+                {% if person[4] != None %}{{ person[4].strftime('%Y') }}{% else %}-{% endif %}
+            </span>
+        </p>
     </div>
     <div class="info-box">
-        <p>Data śmierci:<br> {% if person[5] != None %}{{ person[5] }}{% else %}-{% endif %}</p>
+        <p>Data śmierci:<br>
+            <span class="date-display"
+                  data-full-date="{% if person[5] != None %}{{ person[5].strftime('%d-%m-%Y') }}{% else %}-{% endif %}">
+                {% if person[5] != None %}{{ person[5].strftime('%Y') }}{% else %}-{% endif %}
+            </span>
+        </p>
     </div>
     <div class="info-box">
-        <p>Data ślubu:<br> {% if person[6] != None %}{{ person[6] }}{% else %}-{% endif %}</p>
+        <p>Data ślubu:<br>
+            <span class="date-display"
+                  data-full-date="{% if person[6] != None %}{{ person[6].strftime('%d-%m-%Y') }}{% else %}-{% endif %}">
+                {% if person[6] != None %}{{ person[6].strftime('%Y') }}{% else %}-{% endif %}
+            </span>
+        </p>
     </div>
     <div class="info-box">
         <p>Osoba wprowadzona przez:<br> {% if owner != None %}{{ owner[1] }}{% else %}-{% endif %}</p>
@@ -49,14 +64,16 @@
     </form>
 
     <button type="button" class="remove-person-button" data-person-id="{{ user_id }}" data-owner="{{ owner[0] }}"
-            onclick="window.location.href='{{ url_for('remove_owner', person_id=person[0]) }}'">Zgoda na modyfikacje przez wszystkich
+            onclick="window.location.href='{{ url_for('remove_owner', person_id=person[0]) }}'">Zgoda na modyfikacje
+        przez wszystkich
     </button>
 
 </div>
 
 <div class="button-container">
 
-    <button type="button" class="modify-button" data-person-id="{{ user_id }}" data-owner="{{ owner[0] }}" user-id = "{{ user_id }}"
+    <button type="button" class="modify-button" data-person-id="{{ user_id }}" data-owner="{{ owner[0] }}"
+            user-id="{{ user_id }}"
             onclick="window.location.href='{{ url_for('modify_person_data', person_id=person[0]) }}'">Modyfikuj Dane
     </button>
 
@@ -290,7 +307,8 @@
                                                  class="profile-pic-small profile-pic-bordered">
                                             <div class="name">{{ person[1] }} {{ person[2] }}<br>
                                                 {% if person[4] != None %}
-                                                    {{ person[4] }}{% else %}-{% endif %}{% if person[5] != None %} -
+                                                    {{ person[4].strftime('%Y') }}{% else %}-{% endif %}
+                                                {% if person[5] != None %} -
                                                     {{ person[5] }}{% endif %}</div>
                                         </div>
                                         {% if spouse %}
@@ -360,7 +378,7 @@
 </div>
 
 <script src="{{ url_for('static', filename='js/search.js') }}?v=20240715"></script>
-<script src="{{ url_for('static', filename='js/person.js') }}?v=20240717"></script>
+<script src="{{ url_for('static', filename='js/person.js') }}?v=20240716v3"></script>
 
 
 </body>
