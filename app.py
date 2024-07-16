@@ -427,6 +427,8 @@ def user_page():
 
     if user and user_permission_level:
 
+         current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
+        
         conn = get_db_connection()
         cur = conn.cursor()
 
