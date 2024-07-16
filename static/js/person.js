@@ -2,10 +2,19 @@ var personId = document.querySelector('.modify-button').getAttribute('data-perso
 var owner = document.querySelector('.modify-button').getAttribute('data-owner');
 var userId = document.querySelector('.modify-button').getAttribute('user-id');
 
-var buttons = document.querySelectorAll('.add-photo-button, .modify-button, .remove-photo-button, .remove-person-button, .file-label');
+var buttons = document.querySelectorAll('.add-photo-button, .modify-button, .remove-person-button, .file-label');
+var buttons2  = document.querySelectorAll(' .remove-person-button');
 
 if (owner !== personId && owner !== "1" && userId !== "1") {
     buttons.forEach(function (button) {
+        button.disabled = true;
+        button.style.backgroundColor = 'grey';
+        button.style.cursor = 'not-allowed';
+    });
+}
+
+if (owner !== personId && userId !== "1") {
+    buttons2.forEach(function (button) {
         button.disabled = true;
         button.style.backgroundColor = 'grey';
         button.style.cursor = 'not-allowed';

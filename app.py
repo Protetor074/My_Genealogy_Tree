@@ -847,14 +847,14 @@ def modify_person_data(person_id):
                 "data_urodzenia = %s, data_ślubu = %s, data_śmierci = %s, "
                 "zdjęcie = %s, modified_by = %s "
                 "WHERE Id = %s",
-                (imie, nazwisko, plec, data_urodzenia, data_slubu, data_smierci, image_data, user_id, person_id)
+                (imie, nazwisko, plec, data_urodzenia, data_slubu, data_smierci, image_data, 1, person_id)
             )
         else:
             cur.execute(
                 "UPDATE osoba SET imię = %s, nazwisko = %s, płeć = %s, "
                 "data_urodzenia = %s, data_ślubu = %s, data_śmierci = %s, "
                 "modified_by = %s WHERE Id = %s",
-                (imie, nazwisko, plec, data_urodzenia, data_slubu, data_smierci, user_id, person_id)
+                (imie, nazwisko, plec, data_urodzenia, data_slubu, data_smierci, 1, person_id)
             )
 
         conn.commit()
@@ -1341,6 +1341,15 @@ def remove_person(person_id):
     #Usuwanie relacji
     cur.execute(
         """
+        UPDATE relacje
+        SET modified_by = %s
+        WHERE id_osoby = %s OR id_osoby_w_relacji = %s;
+        """,
+        (user_id, person_id, person_id)
+    )
+
+    cur.execute(
+        """
         DELETE FROM relacje
         WHERE id_osoby = %s;
         """,
@@ -1364,6 +1373,16 @@ def remove_person(person_id):
     person = cur.fetchone()
 
     #Usuwanie osoby
+
+    cur.execute(
+        """
+        UPDATE osoba
+        SET modified_by = %s
+        WHERE id= %s;
+        """,
+        (user_id, person_id)
+    )
+
     cur.execute(
         """
         DELETE FROM osoba
