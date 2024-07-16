@@ -417,7 +417,7 @@ def user_page():
 
     # Pobierz historię odwiedzin
     cur.execute(
-        "SELECT url, person_name FROM user_history WHERE user_id = %s ORDER BY visit_time DESC LIMIT 10",
+        "SELECT url, person_name FROM user_history WHERE user_id = %s ORDER BY visit_time DESC LIMIT 5",
         (session['user_id'],))
     history = cur.fetchall()
 
