@@ -801,7 +801,7 @@ def modify_person_data(person_id):
     cur.close()
     conn.close()
 
-    if owner_id != user_id or owner_id != 1:
+    if owner_id != user_id and owner_id != 1:
         if session['user_level'] < 6:
             flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)', 'error')
             return redirect(url_for('person', person_id=person_id))
@@ -905,7 +905,7 @@ def add_photo(person_id, user_id, person_modification_owner):
     cur.close()
     conn.close()
 
-    if owner_id != user_id or owner_id != 1:
+    if owner_id != user_id and owner_id != 1:
         if session['user_level'] < 6:
             flash('Nie masz uprawnień do zarządzania tą osobą(Nie jesteś jej twórcą)', 'error')
             return redirect(url_for('person', person_id=person_id))
