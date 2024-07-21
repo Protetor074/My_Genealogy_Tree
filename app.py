@@ -147,7 +147,14 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
+        # Obecny czas
         current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
+        # Parsowanie obecnego czasu
+        current_datetime_parsed = datetime.strptime(current_datetime, '%Y-%m-%d %H:%M')
+        # Dodawanie 2 godzin
+        new_datetime = current_datetime_parsed + timedelta(hours=2)
+        # Formatowanie nowego czasu
+        current_datetime = new_datetime.strftime('%Y-%m-%d %H:%M')
 
         conn = get_db_connection()
         cur = conn.cursor()
@@ -192,7 +199,14 @@ def register():
         password = request.form['password']
         access_key = request.form['access_key']
 
+        # Obecny czas
         current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
+        # Parsowanie obecnego czasu
+        current_datetime_parsed = datetime.strptime(current_datetime, '%Y-%m-%d %H:%M')
+        # Dodawanie 2 godzin
+        new_datetime = current_datetime_parsed + timedelta(hours=2)
+        # Formatowanie nowego czasu
+        current_datetime = new_datetime.strftime('%Y-%m-%d %H:%M')
 
         conn = get_db_connection()
         cur = conn.cursor()
@@ -427,6 +441,15 @@ def user_page():
 
     if user and user_permission_level:
 
+        # Obecny czas
+        current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
+        # Parsowanie obecnego czasu
+        current_datetime_parsed = datetime.strptime(current_datetime, '%Y-%m-%d %H:%M')
+        # Dodawanie 2 godzin
+        new_datetime = current_datetime_parsed + timedelta(hours=2)
+        # Formatowanie nowego czasu
+        current_datetime = new_datetime.strftime('%Y-%m-%d %H:%M')
+        user_id = session.get('user_id')
         conn = get_db_connection()
         cur = conn.cursor()
 
@@ -601,7 +624,14 @@ def search():
 @app.route('/person/<int:person_id>', methods=['GET', 'POST'])
 @login_test
 def person(person_id):
+    # Obecny czas
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
+    # Parsowanie obecnego czasu
+    current_datetime_parsed = datetime.strptime(current_datetime, '%Y-%m-%d %H:%M')
+    # Dodawanie 2 godzin
+    new_datetime = current_datetime_parsed + timedelta(hours=2)
+    # Formatowanie nowego czasu
+    current_datetime = new_datetime.strftime('%Y-%m-%d %H:%M')
 
     user_id = session['user_id']  # Pobieranie user_id z sesji
 
