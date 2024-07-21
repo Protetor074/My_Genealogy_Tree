@@ -442,7 +442,6 @@ def user_page():
     # user_permission_level = 3
 
     if user and user_permission_level:
-
         # Obecny czas
         current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
         # Parsowanie obecnego czasu
