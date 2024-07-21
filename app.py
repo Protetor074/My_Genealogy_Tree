@@ -298,7 +298,8 @@ def admin():
 
     # Formatowanie last_login dla każdego użytkownika
     formatted_logged_in_users = [
-        (username, last_login.strftime('%Y-%m-%d %H:%M')) for username, last_login in logged_in_users
+        (username, (last_login + timedelta(hours=2)).strftime('%Y-%m-%d %H:%M'))
+        for username, last_login in logged_in_users
     ]
 
     return render_template('admin.html',
@@ -400,7 +401,8 @@ def moderator_panel():
     cur.close()
     conn.close()
     formatted_logged_in_users = [
-        (username, last_login.strftime('%Y-%m-%d %H:%M')) for username, last_login in logged_in_users
+        (username, (last_login + timedelta(hours=2)).strftime('%Y-%m-%d %H:%M'))
+        for username, last_login in logged_in_users
     ]
     return render_template('moderator.html', logged_in_users=formatted_logged_in_users)
 
