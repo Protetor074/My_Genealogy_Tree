@@ -147,7 +147,14 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
+        # Obecny czas
         current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
+        # Parsowanie obecnego czasu
+        current_datetime_parsed = datetime.strptime(current_datetime, '%Y-%m-%d %H:%M')
+        # Dodawanie 2 godzin
+        new_datetime = current_datetime_parsed + timedelta(hours=2)
+        # Formatowanie nowego czasu
+        current_datetime = new_datetime.strftime('%Y-%m-%d %H:%M')
 
         conn = get_db_connection()
         cur = conn.cursor()
@@ -192,7 +199,14 @@ def register():
         password = request.form['password']
         access_key = request.form['access_key']
 
+        # Obecny czas
         current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
+        # Parsowanie obecnego czasu
+        current_datetime_parsed = datetime.strptime(current_datetime, '%Y-%m-%d %H:%M')
+        # Dodawanie 2 godzin
+        new_datetime = current_datetime_parsed + timedelta(hours=2)
+        # Formatowanie nowego czasu
+        current_datetime = new_datetime.strftime('%Y-%m-%d %H:%M')
 
         conn = get_db_connection()
         cur = conn.cursor()
@@ -284,7 +298,8 @@ def admin():
 
     # Formatowanie last_login dla każdego użytkownika
     formatted_logged_in_users = [
-        (username, last_login.strftime('%Y-%m-%d %H:%M')) for username, last_login in logged_in_users
+        (username, last_login.strftime('%Y-%m-%d %H:%M'))
+        for username, last_login in logged_in_users
     ]
 
     return render_template('admin.html',
@@ -386,7 +401,8 @@ def moderator_panel():
     cur.close()
     conn.close()
     formatted_logged_in_users = [
-        (username, last_login.strftime('%Y-%m-%d %H:%M')) for username, last_login in logged_in_users
+        (username, last_login.strftime('%Y-%m-%d %H:%M'))
+        for username, last_login in logged_in_users
     ]
     return render_template('moderator.html', logged_in_users=formatted_logged_in_users)
 
@@ -426,6 +442,25 @@ def user_page():
     # user_permission_level = 3
 
     if user and user_permission_level:
+        # Obecny czas
+        current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
+        # Parsowanie obecnego czasu
+        current_datetime_parsed = datetime.strptime(current_datetime, '%Y-%m-%d %H:%M')
+        # Dodawanie 2 godzin
+        new_datetime = current_datetime_parsed + timedelta(hours=2)
+        # Formatowanie nowego czasu
+        current_datetime = new_datetime.strftime('%Y-%m-%d %H:%M')
+        user_id = session.get('user_id')
+        conn = get_db_connection()
+        cur = conn.cursor()
+
+        # Aktualizacja czasu logowania
+        cur.execute("UPDATE users SET last_login = %s WHERE id = %s", (current_datetime, user_id))
+        conn.commit()
+
+        cur.close()
+        conn.close()
+
         return render_template('user.html', username=user[0], user_permission_level=user_permission_level, history=history)
     else:
         return redirect(url_for('login'))
@@ -590,7 +625,14 @@ def search():
 @app.route('/person/<int:person_id>', methods=['GET', 'POST'])
 @login_test
 def person(person_id):
+    # Obecny czas
     current_datetime = datetime.now().strftime('%Y-%m-%d %H:%M')
+    # Parsowanie obecnego czasu
+    current_datetime_parsed = datetime.strptime(current_datetime, '%Y-%m-%d %H:%M')
+    # Dodawanie 2 godzin
+    new_datetime = current_datetime_parsed + timedelta(hours=2)
+    # Formatowanie nowego czasu
+    current_datetime = new_datetime.strftime('%Y-%m-%d %H:%M')
 
     user_id = session['user_id']  # Pobieranie user_id z sesji
 
