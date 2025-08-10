@@ -41,24 +41,30 @@ async function deleteKey(key) {
     }
 }
 
-async function resetPassword(userId) {
-    const newPassword = prompt('Podaj nowe hasło dla użytkownika o ID: ' + userId);
-    if (newPassword) {
-        const response = await fetch('/reset_password', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({
-                'user_id': userId,
-                'new_password': newPassword,
-            })
-        });
-
-        const data = await response.json();
-        alert(data.message);
-        location.reload();
+function resetPassword(userId) {
+    const newPassword = document.getElementById(`new-password-${userId}`).value;
+    if (!newPassword) {
+        alert("Wprowadź nowe hasło.");
+        return;
     }
+
+    const formData = new FormData();
+    formData.append("user_id", userId);
+    formData.append("new_password", newPassword);
+
+    fetch("/reset_password", {
+        method: "POST",
+        body: formData
+    })
+        .then(r => r.json())
+        .then(data => {
+            alert(data.message);
+            document.getElementById(`new-password-${userId}`).value = "";
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Błąd przy resetowaniu hasła.");
+        });
 }
 
 async function updateUserKey(userId) {

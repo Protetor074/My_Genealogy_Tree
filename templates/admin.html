@@ -9,34 +9,34 @@
     <script src="{{ url_for('static', filename='js/admin.js') }}?v=20240716"></script>
 </head>
 <body>
-<div class="container">
-    <a href="{{ url_for('user_page') }}" class="back-button">Wróć do profilu</a>
-    <h1>Panel Administratora</h1>
+    <div class="container">
+        <a href="{{ url_for('user_page') }}" class="back-button">Wróć do profilu</a>
+        <h1>Panel Administratora</h1>
 
-    <!-- Existing sections ... -->
+        <!-- Existing sections ... -->
 
-    <h2>Generowanie klucza dostępu</h2>
-    <form id="generate-key-form" onsubmit="generateAccessKey(event)">
-        <label for="level">Poziom uprawnień (1-10):</label>
-        <input type="number" id="level" name="level" min="1" max="10" required>
+        <h2>Generowanie klucza dostępu</h2>
+        <form id="generate-key-form" onsubmit="generateAccessKey(event)">
+            <label for="level">Poziom uprawnień (1-10):</label>
+            <input type="number" id="level" name="level" min="1" max="10" required>
 
-        <label for="expiration_date">Data ważności (opcjonalne):</label>
-        <input type="date" id="expiration_date" name="expiration_date">
+            <label for="expiration_date">Data ważności (opcjonalne):</label>
+            <input type="date" id="expiration_date" name="expiration_date">
 
-        <button type="submit">Generuj klucz</button>
-    </form>
+            <button type="submit">Generuj klucz</button>
+        </form>
 
-    <h2>Aktualne klucze</h2>
-    <table>
-        <tr>
-            <th>Klucz</th>
-            <th>Poziom</th>
-            <th>Data Wygaśnięcia</th>
-            <th>W użyciu</th>
-            <th>Utworzone przez</th>
-            <th>Akcje</th>
-        </tr>
-        {% for key in keys %}
+        <h2>Aktualne klucze</h2>
+        <table>
+            <tr>
+                <th>Klucz</th>
+                <th>Poziom</th>
+                <th>Data Wygaśnięcia</th>
+                <th>W użyciu</th>
+                <th>Utworzone przez</th>
+                <th>Akcje</th>
+            </tr>
+            {% for key in keys %}
             <tr>
                 <td>{{ key[0] }}</td>
                 <td>{{ key[1] }}</td>
@@ -47,22 +47,22 @@
                     <button onclick="deleteKey('{{ key[0] }}')">Usuń</button>
                 </td>
             </tr>
-        {% endfor %}
-    </table>
+            {% endfor %}
+        </table>
 
-    <h2>Użytkownicy korzystający z kluczy</h2>
-    <input type="text" id="temp-key-user-search" placeholder="Szukaj użytkownika..."
-           onkeyup="searchTable('temp-key-user-search', 'temp-key-user-table')">
-    <table id="temp-key-user-table">
-        <tr>
-            <th>Nazwa Użytkownika</th>
-            <th>ID</th>
-            <th>Klucz</th>
-            <th>Poziom uprawnień</th>
-            <th>Zmień klucz</th>
-            <th>Zatwierdź</th>
-        </tr>
-        {% for user in users_with_temp_keys %}
+        <h2>Użytkownicy korzystający z kluczy</h2>
+        <input type="text" id="temp-key-user-search" placeholder="Szukaj użytkownika..."
+               onkeyup="searchTable('temp-key-user-search', 'temp-key-user-table')">
+        <table id="temp-key-user-table">
+            <tr>
+                <th>Nazwa Użytkownika</th>
+                <th>ID</th>
+                <th>Klucz</th>
+                <th>Poziom uprawnień</th>
+                <th>Zmień klucz</th>
+                <th>Zatwierdź</th>
+            </tr>
+            {% for user in users_with_temp_keys %}
             <tr>
                 <td>{{ user[0] }}</td>
                 <td>{{ user[1] }}</td>
@@ -71,7 +71,7 @@
                 <td>
                     <select id="new-key-{{ user[1] }}">
                         {% for key in available_keys %}
-                            <option value="{{ key[0] }}">{{ key[0] }}</option>
+                        <option value="{{ key[0] }}">{{ key[0] }}</option>
                         {% endfor %}
                     </select>
                 </td>
@@ -79,36 +79,37 @@
                     <button onclick="updateUserKey({{ user[1] }})">Zatwierdź</button>
                 </td>
             </tr>
-        {% endfor %}
-    </table>
+            {% endfor %}
+        </table>
 
-    <h2>Lista zalogowanych użytkowników</h2>
-    <input type="text" id="logged-in-user-search" placeholder="Szukaj użytkownika..."
-           onkeyup="searchTable('logged-in-user-search', 'logged-in-user-table')">
-    <table id="logged-in-user-table">
-        <tr>
-            <th>Nazwa Użytkownika</th>
-            <th>Ostatnie logowanie</th>
-        </tr>
-        {% for user in logged_in_users %}
+        <h2>Lista zalogowanych użytkowników</h2>
+        <input type="text" id="logged-in-user-search" placeholder="Szukaj użytkownika..."
+               onkeyup="searchTable('logged-in-user-search', 'logged-in-user-table')">
+        <table id="logged-in-user-table">
+            <tr>
+                <th>Nazwa Użytkownika</th>
+                <th>Ostatnie logowanie</th>
+            </tr>
+            {% for user in logged_in_users %}
             <tr>
                 <td>{{ user[0] }}</td>
                 <td>{{ user[1] }}</td>
             </tr>
-        {% endfor %}
-    </table>
+            {% endfor %}
+        </table>
 
-    <h2>Resetowanie hasła</h2>
-    <input type="text" id="reset-password-user-search" placeholder="Szukaj użytkownika..."
-           onkeyup="searchTable('reset-password-user-search', 'reset-password-user-table')">
-    <table id="reset-password-user-table">
-        <tr>
-            <th>ID</th>
-            <th>Nazwa Użytkownika</th>
-            <th>Nowe Hasło</th>
-            <th>Reset</th>
-        </tr>
-        {% for user in users %}
+        <h2>Resetowanie hasła</h2>
+        <input type="text" id="reset-password-user-search" placeholder="Szukaj użytkownika..."
+               onkeyup="searchTable('reset-password-user-search', 'reset-password-user-table')">
+
+        <table id="reset-password-user-table">
+            <tr>
+                <th>ID</th>
+                <th>Nazwa użytkownika</th>
+                <th>Nowe hasło</th>
+                <th>Reset</th>
+            </tr>
+            {% for user in users %}
             <tr>
                 <td>{{ user[0] }}</td>
                 <td>{{ user[1] }}</td>
@@ -117,10 +118,11 @@
                     <button onclick="resetPassword({{ user[0] }})">Resetuj</button>
                 </td>
             </tr>
-        {% endfor %}
-    </table>
+            {% endfor %}
+        </table>
 
-    <h2>Logi Operacji</h2>
+
+        <h2>Logi Operacji</h2>
         <button onclick="deleteSelectedLogs()">Usuń wybrane</button>
         <table>
             <tr>
@@ -135,18 +137,18 @@
                 <th>Akcje</th>
             </tr>
             {% for operation in operations %}
-                <tr>
-                    <td><input type="checkbox" class="log-checkbox" value="{{ operation[0] }}"></td>
-                    <td>{{ operation[1] }}</td>
-                    <td>{{ operation[2] }}</td>
-                    <td>{{ operation[3] }}</td>
-                    <td>{{ operation[5] }}</td>
-                    <td>{{ operation[7] }}</td>
-                    <td>{{ operation[8] }}</td>
-                     <td>{{ operation[9].strftime('%Y-%m-%d %H:%M') }}</td>
-                    <td><button onclick="deleteLog({{ operation[0] }})">Usuń</button></td>
-                </tr>
+            <tr>
+                <td><input type="checkbox" class="log-checkbox" value="{{ operation[0] }}"></td>
+                <td>{{ operation[1] }}</td>
+                <td>{{ operation[2] }}</td>
+                <td>{{ operation[3] }}</td>
+                <td>{{ operation[5] }}</td>
+                <td>{{ operation[7] }}</td>
+                <td>{{ operation[8] }}</td>
+                <td>{{ operation[9].strftime('%Y-%m-%d %H:%M') }}</td>
+                <td><button onclick="deleteLog({{ operation[0] }})">Usuń</button></td>
+            </tr>
             {% endfor %}
         </table>
-</div>
+    </div>
 </body>

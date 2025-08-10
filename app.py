@@ -290,6 +290,7 @@ def admin():
     cur.execute("SELECT id, username FROM users")
     users = cur.fetchall()
 
+
     cur.execute("SELECT * FROM operacje_log_view")
     operations = cur.fetchall()
 
@@ -340,16 +341,23 @@ def delete_key():
 @app.route('/reset_password', methods=['POST'])
 @admin_required
 def reset_password():
-    user_id = request.form['user_id']
-    new_password = request.form['new_password']
+    user_id = request.form.get('user_id')
+    new_password = request.form.get('new_password')
+
+    if not user_id or not new_password:
+        return jsonify({"success": False, "message": "Brak danych."}), 400
+
+    hashed_password = generate_password_hash(new_password, method='pbkdf2:sha256')
+
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("UPDATE users SET password = %s WHERE id = %s",
-                (new_password, user_id))  # Hash the password in a real application
+    cur.execute("UPDATE users SET password = %s WHERE id = %s", (hashed_password, user_id))
     conn.commit()
     cur.close()
     conn.close()
-    return jsonify({"message": "Hasło zostało zresetowane."})
+
+    return jsonify({"success": True, "message": "Hasło zostało zresetowane."})
+
 
 
 @app.route('/update_user_key', methods=['POST'])
